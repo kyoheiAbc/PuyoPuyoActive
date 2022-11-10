@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        Application.targetFrameRate = 30;
+
+        // Camera
+        Camera cam = Camera.main;
+        float aspect = (float)Screen.height / (float)Screen.width;
+        if (aspect >= 2) cam.orthographicSize = cam.orthographicSize * aspect / 2;
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        
+
     }
 }
