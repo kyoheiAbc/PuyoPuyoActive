@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    InputController InputController;
+
     private void Awake()
     {
         Application.targetFrameRate = 30;
@@ -16,11 +18,13 @@ public class Main : MonoBehaviour
 
     void Start()
     {
+        InputController = new InputController();
 
     }
 
     void Update()
     {
-
+        int inputKey = InputController.update();
+        if (inputKey != 0) Debug.Log(inputKey);
     }
 }
