@@ -13,18 +13,28 @@ public class Field
         {
             for (int x = 0; x < ary.GetLength(1); x++)
             {
-                ary[y, x] = null;
+                if (y == 0 || y == ary.GetLength(0) - 1 ||
+                    x == 0 || x == ary.GetLength(1) - 1)
+                {
+                    ary[y, x] = new Puyo();
+                }
+                else
+                {
+                    ary[y, x] = null;
+                }
             }
         }
     }
-    public int[] getSize()
+
+    public void setPuyo(Puyo puyo)
     {
-        return new int[2] { ary.GetLength(0), ary.GetLength(1) };
+        Vector2 pos = puyo.getPos();
+        ary[(int)pos.y, (int)pos.x] = puyo;
     }
 
-    public void setPuyo(Puyo p)
+    public Puyo getPuyo(Vector2 pos)
     {
-        Vector2 pos = p.getPos();
-        ary[(int)pos.y, (int)pos.x] = p;
+        // Debug.Log(pos);
+        return ary[(int)pos.y, (int)pos.x];
     }
 }

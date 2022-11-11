@@ -6,11 +6,14 @@ public class Main : MonoBehaviour
 {
     InputController InputController;
     PuyoPuyo puyoPuyo;
+    PuyoManager puyoManager;
     Field field;
+
+    Puyo debug;
 
     private void Awake()
     {
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 10;
 
         // Camera
         Camera cam = Camera.main;
@@ -21,47 +24,38 @@ public class Main : MonoBehaviour
     void Start()
     {
         InputController = new InputController();
-
-
-
-        puyoPuyo = new PuyoPuyo(
-                        new Puyo(0, Instantiate(Resources.Load<GameObject>("puyoA"), new Vector2(3.5f, 12.5f), Quaternion.identity)),
-                        new Puyo(1, Instantiate(Resources.Load<GameObject>("puyoB"), new Vector2(4.5f, 12.5f), Quaternion.identity))
-                    );
-
         field = new Field();
+        puyoManager = new PuyoManager();
+        puyoPuyo = new PuyoPuyo();
 
-        int[] fieldSize = field.getSize();
-        for (int y = 0; y < fieldSize[0]; y++)
-        {
-            for (int x = 0; x < fieldSize[1]; x++)
-            {
-                if (y == 0 || y == fieldSize[0] - 1 ||
-                    x == 0 || x == fieldSize[1] - 1)
-                {
-                    field.setPuyo(
-                        new Puyo(0, Instantiate(Resources.Load<GameObject>("puyo"),
-                            new Vector2(x + 0.5f, y + 0.5f), Quaternion.identity)
-                        )
-                    );
-                }
-            }
-        }
+        // GameObject[] g = new GameObject[2]{
+        //     Instantiate(Resources.Load<GameObject>("puyoA"), new Vector2(3.5f, 12.5f), Quaternion.identity),
+        //     Instantiate(Resources.Load<GameObject>("puyoB"), new Vector2(4.5f, 12.5f), Quaternion.identity)
+        // };
 
+        // puyoPuyo.init(g, field, puyoManager);
+
+
+        debug = new Puyo();
+        debug.init(
+            Instantiate(Resources.Load<GameObject>("puyoA"), new Vector2(3.5f, 12.5f), Quaternion.identity),
+            field,
+            puyoManager
+        );
     }
 
     void Update()
     {
-
         int inputKey = InputController.update();
 
+        if (inputKey == 4) debug.move(new Vector2(-1, 0));
+        if (inputKey == 6) debug.move(new Vector2(1, 0));
+        if (inputKey == 2) debug.move(new Vector2(0, -1));
+        if (inputKey == 8) debug.move(new Vector2(0, 1));
 
-        puyoPuyo.move(new Vector2(0, -0.05f));
+        debug.move(new Vector2(0, -0.1f));
 
-        if (inputKey == 4) puyoPuyo.move(new Vector2(-1, 0));
-        if (inputKey == 6) puyoPuyo.move(new Vector2(1, 0));
-        if (inputKey == 2) puyoPuyo.move(new Vector2(0, -1));
-        if (inputKey == 8) puyoPuyo.move(new Vector2(0, 1));
-
+        debug.render();
     }
+
 }

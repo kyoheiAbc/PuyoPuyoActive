@@ -19,8 +19,7 @@ public class InputController
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
 
-            if ((firstPosition.x - pos.x) * (firstPosition.x - pos.x)
-             >= (firstPosition.y - pos.y) * (firstPosition.y - pos.y))
+            if ((firstPosition.x - pos.x) * (firstPosition.x - pos.x) >= (firstPosition.y - pos.y) * (firstPosition.y - pos.y))
             {
                 if (firstPosition.x - pos.x > 1)
                 {
