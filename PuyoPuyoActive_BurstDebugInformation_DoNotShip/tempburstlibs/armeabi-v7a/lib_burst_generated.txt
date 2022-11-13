@@ -160,9 +160,9 @@ Library: lib_burst_generated
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.2D.Tilemap.Extras.dll
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.Services.Core.Networking.dll
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.Profiling.Core.dll
+--root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.InternalAPIEngineBridge.001.dll
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.Services.Core.Configuration.dll
---root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
 --root-assembly=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/Unity.Subsystem.Registration.dll
 --assembly-folder=/Users/kyohei/Desktop/PuyoPuyoActive/Temp/StagingArea/Data/Managed/
 --pdb-search-paths=Temp/ManagedSymbols/

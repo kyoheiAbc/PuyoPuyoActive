@@ -4,29 +4,25 @@ using UnityEngine;
 
 public class Puyo
 {
-    int color;
     Vector2 pos;
     GameObject gO;
     Field field;
-    PuyoManager pM;
 
-    public Puyo()
+    public Puyo(Field f, GameObject g)
     {
+        field = f;
+        gO = g;
+        if (gO != null) pos = gO.transform.position;
     }
 
     ~Puyo()
     {
+        // Debug.Log("---");
+        // Debug.Log(pos);
         // Debug.Log("~Puyo()");
+        gO = null;
+        field = null;
     }
-
-    public void init(GameObject gO_, Field f, PuyoManager pM_)
-    {
-        gO = gO_;
-        pos = gO.transform.position;
-        field = f;
-        pM = pM_;
-    }
-
 
     public void setPos(Vector2 p)
     {
@@ -44,22 +40,31 @@ public class Puyo
 
         if (vec.x != 0)
         {
-            if (field.getPuyo(pos + new Vector2(0, 0.49f) + vec) == null ||
-                field.getPuyo(pos + new Vector2(0, -0.49f) + vec) == null)
+            if (field.getPuyo(pos + new Vector2(0, C.PUYO_R) + vec) == null &&
+                field.getPuyo(pos + new Vector2(0, -C.PUYO_R) + vec) == null)
             {
                 pos += vec;
+            }
+            else if (field.getPuyo(pos + new Vector2(0, C.PUYO_R / 2) + vec) == null)
+            {
+                pos += new Vector2(0, C.PUYO_R / 2) + vec;
+                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
+            }
+            else if (field.getPuyo(pos - new Vector2(0, C.PUYO_R / 2) + vec) == null)
+            {
+                pos += -new Vector2(0, C.PUYO_R / 2) + vec;
+                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
             }
         }
         else
         {
             pos += vec;
-            int sign = (int)Mathf.Sign(vec.y);
-            if (field.getPuyo(pos + new Vector2(0, 0.49f) * sign) != null)
+            if (field.getPuyo(pos + new Vector2(0, C.PUYO_R) * Mathf.Sign(vec.y)) != null)
             {
-                pos = new Vector2(pos.x, (int)pos.y + 0.49f);
-                if (field.getPuyo(pos + new Vector2(0, 0.49f) * sign) != null)
+                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
+                if (field.getPuyo(pos) != null)
                 {
-                    pos -= vec;
+                    pos -= new Vector2(0, 1) * Mathf.Sign(vec.y);
                 }
             }
         }
@@ -70,9 +75,26 @@ public class Puyo
     {
         return pos;
     }
+
+    public void setToField()
+    {
+        field.setPuyo(this);
+    }
+
+    public bool error()
+    {
+        return field.getPuyo(pos + new Vector2(0, C.PUYO_R)) != null
+            || field.getPuyo(pos + new Vector2(0, -C.PUYO_R)) != null;
+    }
+
     public void render()
     {
         gO.transform.position = pos;
+    }
+
+    public GameObject getGameObject()
+    {
+        return gO;
     }
 
 

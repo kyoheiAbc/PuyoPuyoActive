@@ -4,48 +4,74 @@ using UnityEngine;
 
 public class InputController
 {
-    Vector2 firstPosition;
+    Vector2 stdPos;
+    int cnt;
+
+    public InputController()
+    {
+        stdPos = new Vector2(0, 0);
+        cnt = 0;
+    }
 
     public int update()
     {
-
         if (Input.GetMouseButtonDown(0))
         {
-            firstPosition = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
-            return 5;
+            stdPos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
+            cnt = 0;
         }
-
         else if (Input.GetMouseButton(0))
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
 
-            if ((firstPosition.x - pos.x) * (firstPosition.x - pos.x) >= (firstPosition.y - pos.y) * (firstPosition.y - pos.y))
+            cnt++;
+            if (cnt > C.TOUCH_CNT) cnt = 255;
+
+            if ((stdPos.x - pos.x) * (stdPos.x - pos.x) >= (stdPos.y - pos.y) * (stdPos.y - pos.y))
             {
-                if (firstPosition.x - pos.x > 1)
+                if (stdPos.x - pos.x > 1)
                 {
-                    firstPosition = pos;
+                    stdPos = pos;
+                    cnt = 255;
                     return 4;
                 }
-                else if (firstPosition.x - pos.x < -1)
+                else if (stdPos.x - pos.x < -1)
                 {
-                    firstPosition = pos;
+                    stdPos = pos;
+                    cnt = 255;
                     return 6;
                 }
             }
             else
             {
-                if (firstPosition.y - pos.y > 1)
+                if (stdPos.y - pos.y > 0.5f)
                 {
-                    firstPosition = pos;
+                    stdPos = pos;
+                    cnt = 255;
                     return 2;
                 }
-                else if (firstPosition.y - pos.y < -1)
+                else if (stdPos.y - pos.y < -0.5f)
                 {
-                    firstPosition = pos;
+                    stdPos = pos;
+                    cnt = 255;
                     return 8;
                 }
             }
-            return 5;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (cnt <= C.TOUCH_CNT)
+            {
+                stdPos = new Vector2(0, 0);
+                cnt = 0;
+                if (Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition).x >= 4) return 16;
+                else return 14;
+            }
+        }
+        else
+        {
+            stdPos = new Vector2(0, 0);
+            cnt = 0;
         }
         return 0;
     }

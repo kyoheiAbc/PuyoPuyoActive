@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 646041793148938285}
   m_Layer: 0
   m_Name: puyoA
-  m_TagString: Untagged
+  m_TagString: PUYO
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

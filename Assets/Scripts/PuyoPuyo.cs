@@ -6,41 +6,68 @@ public class PuyoPuyo
 {
     Puyo[] puyo;
     int rot;
-    Field field;
-    PuyoManager puyoManager;
 
-    public PuyoPuyo()
+    public PuyoPuyo(Puyo p0, Puyo p1)
     {
-        puyo = new Puyo[2] { new Puyo(), new Puyo() };
+        puyo = new Puyo[2] { p0, p1 };
         rot = 0;
-    }
-
-    public void init(GameObject[] g, Field f, PuyoManager pM)
-    {
-        field = f;
-        puyoManager = pM;
-        for (int i = 0; i < 2; i++) puyo[i].init(g[i], field, puyoManager);
     }
 
     public Vector2 move(Vector2 vec)
     {
-        Vector2 p = puyo[0].getPos();
+        Vector2 initPos = puyo[0].getPos();
         for (int i = 0; i < 2; i++)
         {
             if (puyo[i].move(vec) != vec)
             {
                 sync(i);
-                return puyo[0].getPos() - p;
+                if (puyo[1 - i].error())
+                {
+                    puyo[0].setPos(initPos);
+                    sync(0);
+                }
+                return puyo[0].getPos() - initPos;
             }
         }
-        return puyo[0].getPos() - p;
+        return puyo[0].getPos() - initPos;
     }
 
-    public void sync(int index)
+    public void rotate(int r)
     {
-        puyo[1 - index].setPos(
-            puyo[index].getPos() +
-            new Vector2(1 - rot, 0) * (1 - 2 * index)
+        rot = (rot + r) % 4;
+        if (rot < 0) rot = 3;
+
+        Vector2 pos = puyo[0].getPos();
+        puyo[1].setPos(pos);
+        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2));
+        sync(1);
+
+        if (puyo[0].error())
+        {
+            rot = (rot - r) % 4;
+            if (rot < 0) rot = 3;
+
+            rot = (rot + 2) % 4;
+            puyo[1].setPos(pos);
+            sync(1);
+        }
+    }
+
+    public Puyo[] getPuyo()
+    {
+        return puyo;
+    }
+
+    public void sync(int i)
+    {
+        puyo[1 - i].setPos(
+            puyo[i].getPos() +
+            new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
         );
+    }
+
+    public void render()
+    {
+        for (int i = 0; i < 2; i++) puyo[i].render();
     }
 }
