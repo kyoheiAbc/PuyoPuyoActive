@@ -9,16 +9,20 @@ public class InputController
 
     public InputController()
     {
-        stdPos = new Vector2(0, 0);
+        reset();
+    }
+    public void reset()
+    {
         cnt = 0;
+        stdPos = new Vector2(0, 0);
     }
 
     public int update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            cnt++;
             stdPos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
-            cnt = 0;
         }
         else if (Input.GetMouseButton(0))
         {
@@ -26,6 +30,8 @@ public class InputController
 
             cnt++;
             if (cnt > C.TOUCH_CNT) cnt = 255;
+
+            Vector2 d = pos - stdPos;
 
             if ((stdPos.x - pos.x) * (stdPos.x - pos.x) >= (stdPos.y - pos.y) * (stdPos.y - pos.y))
             {

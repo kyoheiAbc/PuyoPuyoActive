@@ -11,24 +11,39 @@ public class PuyoManager
         puyoList = new List<Puyo>();
     }
 
-    public bool update()
+    public bool update(Field field, List<Puyo> addList)
     {
         bool update = false;
-        for (int i = 0; i < puyoList.Count; i++)
+        List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
+        puyoListPlus.AddRange(addList);
+
+        for (int i = 0 + 46; i < puyoListPlus.Count - 2; i++)
         {
-            if (C.VEC_DROP_QUICK == puyoList[i].move(C.VEC_DROP_QUICK)) update = true;
-            else
+            if (puyoListPlus[i] == field.getPuyo(puyoListPlus[i].getPos())) continue;
+            if (!puyoListPlus[i].update(puyoListPlus))
             {
-                puyoList[i].setToField();
-                puyoList.Remove(puyoList[i]);
-                i--;
+                if (null != field.getPuyo(puyoListPlus[i].getPos() - C.VEC_Y)) field.setPuyo(puyoListPlus[i]);
             }
+            else update = true;
         }
+
         return update;
     }
 
     public void addPuyo(Puyo puyo)
     {
+        Vector2 pos = puyo.getPos();
+        for (int i = 0 + 46; i < puyoList.Count; i++)
+        {
+            if (pos.x == puyoList[i].getPos().x)
+            {
+                if (pos.y < puyoList[i].getPos().y)
+                {
+                    puyoList.Insert(i, puyo);
+                    return;
+                }
+            }
+        }
         puyoList.Add(puyo);
     }
 
@@ -37,8 +52,13 @@ public class PuyoManager
         puyoList.Clear();
     }
 
+    public List<Puyo> getList()
+    {
+        return puyoList;
+    }
+
     public void render()
     {
-        for (int i = 0; i < puyoList.Count; i++) puyoList[i].render();
+        for (int i = 0 + 46; i < puyoList.Count; i++) puyoList[i].render();
     }
 }

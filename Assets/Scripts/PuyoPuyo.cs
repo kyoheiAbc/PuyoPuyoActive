@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class PuyoPuyo
 {
-    Puyo[] puyo;
+    List<Puyo> puyo;
     int rot;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
-        puyo = new Puyo[2] { p0, p1 };
+        puyo = new List<Puyo> { p0, p1 };
         rot = 0;
     }
 
-    public Vector2 move(Vector2 vec)
+    public Vector2 move(Vector2 vec, List<Puyo> pList)
     {
         Vector2 initPos = puyo[0].getPos();
         for (int i = 0; i < 2; i++)
         {
-            if (puyo[i].move(vec) != vec)
+            if (puyo[i].move(vec, pList) != vec)
             {
                 sync(i);
-                if (puyo[1 - i].error())
+                if (!puyo[1 - i].canPut(pList))
                 {
                     puyo[0].setPos(initPos);
                     sync(0);
@@ -32,17 +32,17 @@ public class PuyoPuyo
         return puyo[0].getPos() - initPos;
     }
 
-    public void rotate(int r)
+    public void rotate(int r, List<Puyo> pList)
     {
         rot = (rot + r) % 4;
         if (rot < 0) rot = 3;
 
         Vector2 pos = puyo[0].getPos();
         puyo[1].setPos(pos);
-        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2));
+        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2), pList);
         sync(1);
 
-        if (puyo[0].error())
+        if (!puyo[0].canPut(pList))
         {
             rot = (rot - r) % 4;
             if (rot < 0) rot = 3;
@@ -53,7 +53,7 @@ public class PuyoPuyo
         }
     }
 
-    public Puyo[] getPuyo()
+    public List<Puyo> getPuyo()
     {
         return puyo;
     }

@@ -6,22 +6,24 @@ public class Puyo
 {
     Vector2 pos;
     GameObject gO;
-    Field field;
+    Transform t;
 
-    public Puyo(Field f, GameObject g)
+    public Puyo(GameObject g)
     {
-        field = f;
         gO = g;
-        if (gO != null) pos = gO.transform.position;
+        t = gO.transform;
+        pos = t.position;
     }
 
     ~Puyo()
     {
-        // Debug.Log("---");
-        // Debug.Log(pos);
-        // Debug.Log("~Puyo()");
         gO = null;
-        field = null;
+        t = null;
+    }
+
+    public bool update(List<Puyo> pList)
+    {
+        return C.VEC_DROP_QUICK == move(C.VEC_DROP_QUICK, pList);
     }
 
     public void setPos(Vector2 p)
@@ -29,46 +31,51 @@ public class Puyo
         pos = p;
     }
 
-    public Vector2 move(Vector2 vec)
+    public Vector2 move(Vector2 vec, List<Puyo> pList)
     {
         Vector2 initPos = pos;
 
-        // if collision puyoList return 0
-        //
-        //
-        //
+        pos += vec;
 
-        if (vec.x != 0)
+        for (int i = 0; i < pList.Count; i++)
         {
-            if (field.getPuyo(pos + new Vector2(0, C.PUYO_R) + vec) == null &&
-                field.getPuyo(pos + new Vector2(0, -C.PUYO_R) + vec) == null)
+            Puyo p = pList[i];
+
+            if (p == this) continue;
+            if (Vector2.Distance(pos, p.getPos()) >= 1) continue;
+
+
+            if (vec.x != 0)
             {
-                pos += vec;
-            }
-            else if (field.getPuyo(pos + new Vector2(0, C.PUYO_R / 2) + vec) == null)
-            {
-                pos += new Vector2(0, C.PUYO_R / 2) + vec;
-                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
-            }
-            else if (field.getPuyo(pos - new Vector2(0, C.PUYO_R / 2) + vec) == null)
-            {
-                pos += -new Vector2(0, C.PUYO_R / 2) + vec;
-                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
-            }
-        }
-        else
-        {
-            pos += vec;
-            if (field.getPuyo(pos + new Vector2(0, C.PUYO_R) * Mathf.Sign(vec.y)) != null)
-            {
-                pos = new Vector2(pos.x, (int)pos.y + 0.5f);
-                if (field.getPuyo(pos) != null)
+                if (Mathf.Abs(pos.y - p.getPos().y) < 0.25)
                 {
-                    pos -= new Vector2(0, 1) * Mathf.Sign(vec.y);
+                    pos = initPos;
+                    return pos - initPos;
+                }
+                pos.y = p.getPos().y + C.VEC_Y.y * Mathf.Sign(pos.y - p.getPos().y);
+                if (!canPut(pList))
+                {
+                    pos = initPos;
+                    return pos - initPos;
                 }
             }
+            else
+            {
+                pos.y = p.getPos().y - C.VEC_Y.y * Mathf.Sign(vec.y);
+            }
         }
+
         return pos - initPos;
+    }
+
+    public bool canPut(List<Puyo> pList)
+    {
+        for (int i = 0; i < pList.Count; i++)
+        {
+            if (pList[i] == this) continue;
+            if (Vector2.Distance(pos, pList[i].getPos()) < 1) return false;
+        }
+        return true;
     }
 
     public Vector2 getPos()
@@ -76,26 +83,9 @@ public class Puyo
         return pos;
     }
 
-    public void setToField()
-    {
-        field.setPuyo(this);
-    }
-
-    public bool error()
-    {
-        return field.getPuyo(pos + new Vector2(0, C.PUYO_R)) != null
-            || field.getPuyo(pos + new Vector2(0, -C.PUYO_R)) != null;
-    }
-
     public void render()
     {
-        gO.transform.position = pos;
+        t.position = pos;
     }
-
-    public GameObject getGameObject()
-    {
-        return gO;
-    }
-
 
 }
