@@ -42,7 +42,7 @@ public class Puyo
             Puyo p = pList[i];
 
             if (p == this) continue;
-            if (Vector2.Distance(pos, p.getPos()) >= 1) continue;
+            if (Vector2.SqrMagnitude(pos - p.getPos()) >= 1) continue;
 
 
             if (vec.x != 0)
@@ -73,7 +73,7 @@ public class Puyo
         for (int i = 0; i < pList.Count; i++)
         {
             if (pList[i] == this) continue;
-            if (Vector2.Distance(pos, pList[i].getPos()) < 1) return false;
+            if (Vector2.SqrMagnitude(pos - pList[i].getPos()) < 1) return false;
         }
         return true;
     }
