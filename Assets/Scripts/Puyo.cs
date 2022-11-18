@@ -9,7 +9,9 @@ public class Puyo
     Transform t;
     int color;
     int ctrl;
-    float cnt;
+    float fixEffectCnt;
+    int effect;
+    int rmEffectCnt;
 
     public Puyo(GameObject g)
     {
@@ -25,7 +27,9 @@ public class Puyo
             default: color = 255; break;
         }
         ctrl = 0;
-        cnt = 0;
+        fixEffectCnt = C.EFFECT_FIX_CNT + 1;
+        effect = 0;
+        rmEffectCnt = 0;
     }
 
     ~Puyo()
@@ -41,22 +45,26 @@ public class Puyo
         Vector2 retVec = move(C.VEC_DROP_QUICK, pList);
         if (retVec != C.VEC_0)
         {
-            cnt = 0;
+            fixEffectCnt = 0;
+            effect = 0;
             return retVec;
         };
 
-        if (cnt == C.EFFECT_FIX_CNT + 1)
+        if (fixEffectCnt == C.EFFECT_FIX_CNT)
         {
             return C.VEC_0;
         }
 
+        // float x = cnt / C.EFFECT_FIX_CNT;
+        // float b = 0.5f;
+        // t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
 
-        float x = cnt / C.EFFECT_FIX_CNT;
-        float b = 0.5f;
-        t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
-
-        cnt++;
+        fixEffectCnt++;
         return C.VEC_255;
+    }
+    public void setFixEffectCnt(int c)
+    {
+        fixEffectCnt = c;
     }
 
     public void setPos(Vector2 p)
@@ -126,7 +134,8 @@ public class Puyo
     }
     public void setColor(int c)
     {
-        t.localScale = new Vector2(1.2f, 1.5f);
+        effect = 1;
+        rmEffectCnt = 0;
         color = c;
     }
 
@@ -140,14 +149,50 @@ public class Puyo
         gO.tag = "REMOVE";
     }
 
-    public GameObject getGameObject()
-    {
-        return gO;
-    }
-
     public void render()
     {
-        t.position = pos;
+        if (effect == 1)
+        {
+            if (rmEffectCnt == 0)
+            {
+                t.localScale = new Vector2(0.9f, 1.1f);
+            }
+            if (rmEffectCnt == C.EFFECT_REMOVE_CNT / 3f)
+            {
+                t.localScale = C.VEC_0;
+            }
+            if (rmEffectCnt == C.EFFECT_REMOVE_CNT * 2f / 3f)
+            {
+                t.localScale = new Vector2(0.9f, 1.1f);
+            }
+            rmEffectCnt++;
+        }
+        // if (effect == 2)
+        // {
+        //     if (fixEffectCnt == C.EFFECT_FIX_CNT)
+        //     {
+        //         effect = 0;
+        //         Debug.Log(fixEffectCnt);
+
+        //     }
+        // }
+        else
+        {
+
+            float x = fixEffectCnt / C.EFFECT_FIX_CNT;
+            float b = 0.5f;
+            // t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
+
+            // t.localScale = C.VEC_1;
+            t.position = new Vector2(pos.x, pos.y + ((x - b) * (x - b) - 0.25f));
+
+            t.localScale = new Vector2(1 - ((x - b) * (x - b) - 0.25f), 1 + ((x - b) * (x - b) - 0.25f));
+
+            // Debug.Log("-----");
+            // Debug.Log(pos);
+            // Debug.Log(t.position);
+
+        }
     }
 
 }

@@ -74,7 +74,7 @@ public class PuyoManager
         puyoList.Remove(p);
     }
 
-    public void reset()
+    public void init()
     {
         puyoList.Clear();
     }

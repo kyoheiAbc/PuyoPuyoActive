@@ -1,73 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InputController
 {
-    Vector2 stdPos = new Vector2(0, 0);
-    int cnt = 0;
+    Camera cam;
+    Vector2 pos;
+    int ctrl;
+
+    public InputController()
+    {
+        cam = Camera.main;
+    }
+
+    public void init()
+    {
+        pos = C.VEC_0;
+        ctrl = 0;
+    }
 
     public int update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && ctrl == 0)
         {
-            cnt++;
-            stdPos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
+            pos = cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
+            ctrl = 1;
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && ctrl > 0)
         {
-            Vector2 pos = Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition);
 
-            cnt++;
-            if (cnt > C.TOUCH_CNT) cnt = 255;
+            Vector2 p = (Vector2)cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
+            Vector2 d = p - pos;
 
+            if (d.x * d.x < 1 && d.y * d.y < 0.25) return 0;
 
-            if ((stdPos.x - pos.x) * (stdPos.x - pos.x) >= (stdPos.y - pos.y) * (stdPos.y - pos.y))
+            ctrl = 2;
+            pos = p;
+
+            if (Mathf.Abs(d.x) > Mathf.Abs(d.y))
             {
-                if (stdPos.x - pos.x > 1)
-                {
-                    stdPos = pos;
-                    cnt = 255;
-                    return 4;
-                }
-                else if (stdPos.x - pos.x < -1)
-                {
-                    stdPos = pos;
-                    cnt = 255;
-                    return 6;
-                }
+                // pos.x = pos.x + (int)Mathf.Sign(d.x);
+                return 5 + (int)Mathf.Sign(d.x);
             }
             else
             {
-                if (stdPos.y - pos.y > 0.5f)
-                {
-                    stdPos = pos;
-                    cnt = 255;
-                    return 2;
-                }
-                else if (stdPos.y - pos.y < -0.5f)
-                {
-                    stdPos = pos;
-                    cnt = 255;
-                    return 8;
-                }
+                // pos.y = pos.y + (int)Mathf.Sign(d.y) * 0.5f;
+                return 5 + (int)Mathf.Sign(d.y) * 3;
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && ctrl > 0)
         {
-            if (cnt <= C.TOUCH_CNT)
+            if (ctrl == 2)
             {
-                stdPos = new Vector2(0, 0);
-                cnt = 0;
-                if (Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition).x >= 4) return 16;
-                else return 14;
+                init();
+                return 0;
             }
+            init();
+            return 15 + (int)Mathf.Sign(cam.ScreenToWorldPoint((Vector2)Input.mousePosition).x - 4);
         }
-        else
-        {
-            stdPos = new Vector2(0, 0);
-            cnt = 0;
-        }
+
         return 0;
     }
 }

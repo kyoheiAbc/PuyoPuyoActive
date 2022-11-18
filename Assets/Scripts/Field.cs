@@ -28,7 +28,7 @@ public class Field
         ary[(int)pos.y, (int)pos.x] = null;
         p.rm();
     }
-    public bool rmCheck(List<Puyo> pList)
+    public bool rmCheck()
     {
         bool remove = false;
         for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
@@ -39,9 +39,7 @@ public class Field
                 if (cntSameColor(ary[y, x], cnt) >= C.REMOVE_NUMBER)
                 {
                     remove = true;
-                    Debug.Log("remove true");
-
-                    rmSameColor(ary[y, x], pList);
+                    rmSameColor(ary[y, x]);
                 }
             }
         }
@@ -79,7 +77,6 @@ public class Field
     {
         if (p == null) return cnt;
         int color = p.getColor();
-        Debug.Log(color);
         if (color == 255) return cnt;
         if (p.getCtrl() == 255) return cnt;
 
@@ -99,7 +96,7 @@ public class Field
         return cnt;
     }
 
-    private void rmSameColor(Puyo p, List<Puyo> pList)
+    private void rmSameColor(Puyo p)
     {
         if (p == null) return;
         int color = p.getColor();
@@ -107,14 +104,11 @@ public class Field
         p.setColor(255);
 
 
-        // rmPuyo(p);
-        // pList.Remove(p);
-        // p.rm();
         Puyo[] rtlb = getRtlb(p);
         for (int i = 0; i < 4; i++)
         {
             if (rtlb[i] == null) continue;
-            if (color == rtlb[i].getColor()) rmSameColor(rtlb[i], pList);
+            if (color == rtlb[i].getColor()) rmSameColor(rtlb[i]);
         }
     }
 
@@ -130,7 +124,7 @@ public class Field
         return rtlb;
     }
 
-    public void reset()
+    public void init()
     {
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)
         {

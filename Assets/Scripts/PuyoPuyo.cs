@@ -55,9 +55,8 @@ public class PuyoPuyo
 
     public List<Puyo> getPuyo()
     {
-        return puyo;
-        // if (puyo[0].getPos().y <= puyo[1].getPos().y) return puyo;
-        // else return new List<Puyo>() { puyo[1], puyo[0] };
+        if (puyo[0].getPos().y <= puyo[1].getPos().y) return puyo;
+        else return new List<Puyo>() { puyo[1], puyo[0] };
     }
 
     public void sync(int i)
@@ -68,6 +67,10 @@ public class PuyoPuyo
         );
     }
 
+    public void setFixEffectCnt(int c)
+    {
+        for (int i = 0; i < 2; i++) puyo[i].setFixEffectCnt(c);
+    }
     public void render()
     {
         for (int i = 0; i < 2; i++) puyo[i].render();
