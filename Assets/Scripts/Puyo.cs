@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class Puyo
 {
-    Vector2 pos;
+    private Vector2 pos;
     GameObject gO;
     Transform t;
+    int color;
+    int ctrl;
+    float cnt;
 
     public Puyo(GameObject g)
     {
         gO = g;
         t = gO.transform;
         pos = t.position;
+        switch (gO.name)
+        {
+            case "puyoA(Clone)": color = 0; break;
+            case "puyoB(Clone)": color = 1; break;
+            case "puyoC(Clone)": color = 2; break;
+            case "puyoD(Clone)": color = 3; break;
+            default: color = 255; break;
+        }
+        ctrl = 0;
+        cnt = 0;
     }
 
     ~Puyo()
@@ -21,9 +34,29 @@ public class Puyo
         t = null;
     }
 
-    public bool update(List<Puyo> pList)
+    public Vector2 update(List<Puyo> pList)
     {
-        return C.VEC_DROP_QUICK == move(C.VEC_DROP_QUICK, pList);
+
+
+        Vector2 retVec = move(C.VEC_DROP_QUICK, pList);
+        if (retVec != C.VEC_0)
+        {
+            cnt = 0;
+            return retVec;
+        };
+
+        if (cnt == C.EFFECT_FIX_CNT + 1)
+        {
+            return C.VEC_0;
+        }
+
+
+        float x = cnt / C.EFFECT_FIX_CNT;
+        float b = 0.5f;
+        t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
+
+        cnt++;
+        return C.VEC_255;
     }
 
     public void setPos(Vector2 p)
@@ -78,9 +111,38 @@ public class Puyo
         return true;
     }
 
+    public int getCtrl()
+    {
+        return ctrl;
+    }
+    public void setCtrl(int c)
+    {
+        ctrl = c;
+    }
+
+    public int getColor()
+    {
+        return color;
+    }
+    public void setColor(int c)
+    {
+        t.localScale = new Vector2(1.2f, 1.5f);
+        color = c;
+    }
+
     public Vector2 getPos()
     {
         return pos;
+    }
+
+    public void rm()
+    {
+        gO.tag = "REMOVE";
+    }
+
+    public GameObject getGameObject()
+    {
+        return gO;
     }
 
     public void render()

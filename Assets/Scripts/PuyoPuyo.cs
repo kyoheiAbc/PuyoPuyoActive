@@ -56,6 +56,8 @@ public class PuyoPuyo
     public List<Puyo> getPuyo()
     {
         return puyo;
+        // if (puyo[0].getPos().y <= puyo[1].getPos().y) return puyo;
+        // else return new List<Puyo>() { puyo[1], puyo[0] };
     }
 
     public void sync(int i)

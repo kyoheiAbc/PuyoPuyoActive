@@ -6,23 +6,31 @@ public class PuyoManager
 {
     List<Puyo> puyoList;
 
+
     public PuyoManager()
     {
         puyoList = new List<Puyo>();
     }
 
-    public bool update(Field field, List<Puyo> addList)
+
+
+    public bool update(Field field, List<Puyo> puyoPuyo)
     {
         bool update = false;
-        List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
-        puyoListPlus.AddRange(addList);
-
-        for (int i = 0 + 46; i < puyoListPlus.Count - 2; i++)
+        List<Puyo> allPuyos = new List<Puyo>(puyoList);
+        int a = 0;
+        if (puyoPuyo != null)
         {
-            if (puyoListPlus[i] == field.getPuyo(puyoListPlus[i].getPos())) continue;
-            if (!puyoListPlus[i].update(puyoListPlus))
+            allPuyos.AddRange(puyoPuyo);
+            a = 2;
+        }
+
+        for (int i = 0 + 46; i < allPuyos.Count - a; i++)
+        {
+            // if (allPuyos[i] == field.getPuyo(allPuyos[i].getPos())) continue;
+            if (allPuyos[i].update(allPuyos) == C.VEC_0)
             {
-                if (null != field.getPuyo(puyoListPlus[i].getPos() - C.VEC_Y)) field.setPuyo(puyoListPlus[i]);
+                if (null != field.getPuyo(allPuyos[i].getPos() - C.VEC_Y)) field.setPuyo(allPuyos[i]);
             }
             else update = true;
         }
@@ -45,6 +53,25 @@ public class PuyoManager
             }
         }
         puyoList.Add(puyo);
+    }
+
+    public void rm()
+    {
+        for (int i = 0 + 46; i < puyoList.Count; i++)
+        {
+            if (puyoList[i].getColor() == 255)
+            {
+                puyoList[i].rm();
+                puyoList.Remove(puyoList[i]);
+                i--;
+            }
+        }
+
+    }
+
+    public void rmPuyo(Puyo p)
+    {
+        puyoList.Remove(p);
     }
 
     public void reset()

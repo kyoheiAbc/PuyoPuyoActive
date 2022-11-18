@@ -4,18 +4,8 @@ using UnityEngine;
 
 public class InputController
 {
-    Vector2 stdPos;
-    int cnt;
-
-    public InputController()
-    {
-        reset();
-    }
-    public void reset()
-    {
-        cnt = 0;
-        stdPos = new Vector2(0, 0);
-    }
+    Vector2 stdPos = new Vector2(0, 0);
+    int cnt = 0;
 
     public int update()
     {
@@ -31,7 +21,6 @@ public class InputController
             cnt++;
             if (cnt > C.TOUCH_CNT) cnt = 255;
 
-            Vector2 d = pos - stdPos;
 
             if ((stdPos.x - pos.x) * (stdPos.x - pos.x) >= (stdPos.y - pos.y) * (stdPos.y - pos.y))
             {
