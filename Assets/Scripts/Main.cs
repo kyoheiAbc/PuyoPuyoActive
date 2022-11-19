@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class C
 {
@@ -15,6 +16,7 @@ public static class C
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
     public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.3f);
     public static readonly float RESOLUTION = 0.001f;
+    public static readonly int NEXT_GAME_CNT = 45;
     public static readonly int FIX_CNT = 30;
     public static readonly float EFFECT_REMOVE_CNT = 30;
     public static readonly float EFFECT_FIX_CNT = 30;
@@ -48,7 +50,7 @@ public class ColorBag
         cnt = -1;
         for (int i = bag.Length - 1; i > 0; i--)
         {
-            int j = Random.Range(0, i + 1);
+            int j = UnityEngine.Random.Range(0, i + 1);
             int tmp = bag[i];
             bag[i] = bag[j];
             bag[j] = tmp;
@@ -101,6 +103,14 @@ public class Main : MonoBehaviour
 
     public void reset()
     {
+        GameObject[] gOary;
+        gOary = GameObject.FindGameObjectsWithTag("PUYO");
+        for (int i = 0; i < gOary.Length; i++) Destroy(gOary[i]);
+
+        gOary = GameObject.FindGameObjectsWithTag("REMOVE");
+        for (int i = 0; i < gOary.Length; i++) Destroy(gOary[i]);
+
+
         inputController.init();
         field.init();
         puyoManager.init();
@@ -131,6 +141,22 @@ public class Main : MonoBehaviour
 
     void Update()
     {
+        int oldTime = DateTime.Now.Millisecond;
+
+        if (cnt >= 300)
+        {
+            cnt++;
+            if (cnt == 300 + C.NEXT_GAME_CNT) reset();
+            return;
+        }
+
+        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null ||
+            field.getPuyo(new Vector2(4.5f, 12.5f)) != null)
+        {
+            cnt = 300;
+            return;
+        }
+
         if (puyoPuyo == null)
         {
             nextPuyo();
@@ -212,6 +238,12 @@ public class Main : MonoBehaviour
         // render
         if (puyoPuyo != null) puyoPuyo.render();
         puyoManager.render();
+
+        int nowTime = DateTime.Now.Millisecond;
+        if (nowTime - oldTime > 0)
+        {
+            Debug.Log(nowTime - oldTime);
+        }
     }
 
     private bool nextPuyo()
