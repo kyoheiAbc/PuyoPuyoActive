@@ -6,7 +6,8 @@ public static class C
     public static readonly int FPS = 30;
     public static readonly int FIELD_SIZE_X = 8;
     public static readonly int FIELD_SIZE_Y = 17;
-    public static readonly int COLOR_NUMBER = 3;
+    public static readonly int COLOR_NUMBER = 4;
+    public static readonly int COLOR_ADJUST = 8;
     public static readonly int REMOVE_NUMBER = 4;
     public static readonly Vector2 VEC_0 = new Vector2(0, 0);
     public static readonly Vector2 VEC_X = new Vector2(1, 0);
@@ -30,12 +31,49 @@ public static class C
     }
 }
 
+public class ColorBag
+{
+    int[] bag;
+    int cnt;
+    public ColorBag()
+    {
+        bag = new int[C.COLOR_NUMBER * C.COLOR_ADJUST];
+        for (int i = 0; i < bag.Length; i++)
+        {
+            bag[i] = i % C.COLOR_NUMBER;
+        }
+    }
+    public void init()
+    {
+        cnt = -1;
+        for (int i = bag.Length - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            int tmp = bag[i];
+            bag[i] = bag[j];
+            bag[j] = tmp;
+        }
+    }
+
+    public int getColor()
+    {
+        if (cnt == bag.Length - 1)
+        {
+            init();
+        }
+        cnt++;
+        return bag[cnt];
+    }
+}
+
 public class Main : MonoBehaviour
 {
     InputController inputController;
     Field field;
     PuyoManager puyoManager;
     PuyoPuyo puyoPuyo;
+    PuyoPuyo[] puyoPuyoNext;
+    ColorBag colorBag;
     int cnt;
 
     private void Awake()
@@ -55,6 +93,8 @@ public class Main : MonoBehaviour
         inputController = new InputController();
         field = new Field();
         puyoManager = new PuyoManager();
+        puyoPuyoNext = new PuyoPuyo[2];
+        colorBag = new ColorBag();
 
         reset();
     }
@@ -64,6 +104,7 @@ public class Main : MonoBehaviour
         inputController.init();
         field.init();
         puyoManager.init();
+        colorBag.init();
 
         GameObject gO = Resources.Load<GameObject>("puyo");
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)
@@ -81,7 +122,10 @@ public class Main : MonoBehaviour
             }
         }
 
-        puyoPuyo = null;
+        puyoPuyo = newPuyoPuyo(new Vector2(3.5f, 12.5f));
+        puyoPuyoNext[0] = newPuyoPuyo(new Vector2(3.5f, 15.5f));
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(6.5f, 15.5f));
+
         cnt = 0;
     }
 
@@ -89,7 +133,7 @@ public class Main : MonoBehaviour
     {
         if (puyoPuyo == null)
         {
-            newPuyoPuyo();
+            nextPuyo();
             inputController.init();
         }
 
@@ -170,17 +214,37 @@ public class Main : MonoBehaviour
         puyoManager.render();
     }
 
-
-    private bool newPuyoPuyo()
+    private bool nextPuyo()
     {
-        puyoPuyo = new PuyoPuyo(
-            new Puyo(
-                Instantiate(C.PUYO[UnityEngine.Random.Range(0, C.COLOR_NUMBER)], new Vector2(3.5f, 12.5f), Quaternion.identity)
-            ),
-            new Puyo(
-                Instantiate(C.PUYO[UnityEngine.Random.Range(0, C.COLOR_NUMBER)], new Vector2(4.5f, 12.5f), Quaternion.identity)
-            )
-        );
+        puyoPuyo = puyoPuyoNext[0];
+        puyoPuyoNext[0] = puyoPuyoNext[1];
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(6.5f, 15.5f));
+
+        puyoPuyo.setPos(new Vector2(3.5f, 12.5f));
+        puyoPuyoNext[0].setPos(new Vector2(3.5f, 15.5f));
+        puyoPuyoNext[1].setPos(new Vector2(6.5f, 15.5f));
+
+        puyoPuyo.render();
+        puyoPuyoNext[0].render();
+        puyoPuyoNext[1].render();
+
         return true;
     }
+
+
+
+    private PuyoPuyo newPuyoPuyo(Vector2 pos)
+    {
+        return new PuyoPuyo(
+            newPuyo(colorBag.getColor(), pos),
+            newPuyo(colorBag.getColor(), pos + C.VEC_X)
+        );
+    }
+
+    private Puyo newPuyo(int color, Vector2 pos)
+    {
+        return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
+    }
+
+
 }

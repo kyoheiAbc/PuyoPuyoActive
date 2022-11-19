@@ -45,6 +45,13 @@ public class PuyoPuyo
         return puyo[0].getPos() - initPos;
     }
 
+    public bool setPos(Vector2 pos)
+    {
+        puyo[0].setPos(pos);
+        sync(0);
+        return true;
+    }
+
     public void rotate(int r, List<Puyo> pList)
     {
         rot = (rot + r) % 4;
