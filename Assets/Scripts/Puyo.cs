@@ -179,14 +179,12 @@ public class Puyo
         else
         {
 
-            float x = fixEffectCnt / C.EFFECT_FIX_CNT;
-            float b = 0.5f;
             // t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
 
             // t.localScale = C.VEC_1;
-            t.position = new Vector2(pos.x, pos.y + ((x - b) * (x - b) - 0.25f));
+            t.position = new Vector2(pos.x, pos.y - C.QuadraticF(fixEffectCnt / C.EFFECT_FIX_CNT, 0.1f));
 
-            t.localScale = new Vector2(1 - ((x - b) * (x - b) - 0.25f), 1 + ((x - b) * (x - b) - 0.25f));
+            t.localScale = new Vector2(1 + C.QuadraticF(fixEffectCnt / C.EFFECT_FIX_CNT, 0.1f), 1);
 
             // Debug.Log("-----");
             // Debug.Log(pos);

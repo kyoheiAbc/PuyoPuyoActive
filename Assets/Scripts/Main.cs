@@ -14,9 +14,9 @@ public static class C
     public static readonly Vector2 VEC_X = new Vector2(1, 0);
     public static readonly Vector2 VEC_Y = new Vector2(0, 1);
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
-    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.5f);
+    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
     public static readonly int FIX_CNT = 30;
-    public static readonly float EFFECT_REMOVE_CNT = 30;
+    public static readonly float EFFECT_REMOVE_CNT = 24;
     public static readonly float EFFECT_FIX_CNT = 10;
     public static readonly GameObject[] PUYO = new GameObject[4] {
         Resources.Load<GameObject>("puyoA"),
@@ -24,6 +24,11 @@ public static class C
         Resources.Load<GameObject>("puyoC"),
         Resources.Load<GameObject>("puyoD")
     };
+
+    public static float QuadraticF(float x, float max)
+    {
+        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
+    }
 }
 
 public class Main : MonoBehaviour
