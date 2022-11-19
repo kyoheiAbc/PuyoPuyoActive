@@ -17,24 +17,34 @@ public class PuyoManager
     public bool update(Field field, List<Puyo> puyoPuyo)
     {
         bool update = false;
-        List<Puyo> allPuyos = new List<Puyo>(puyoList);
-        int a = 0;
-        if (puyoPuyo != null)
-        {
-            allPuyos.AddRange(puyoPuyo);
-            a = 2;
-        }
+        List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
+        puyoListPlus.AddRange(puyoPuyo);
 
-        for (int i = 0 + 46; i < allPuyos.Count - a; i++)
+        for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
         {
-            // if (allPuyos[i] == field.getPuyo(allPuyos[i].getPos())) continue;
-            if (allPuyos[i].update(allPuyos) == C.VEC_0)
+            if (puyoListPlus[i].update(puyoListPlus) == C.VEC_0)
             {
-                if (null != field.getPuyo(allPuyos[i].getPos() - C.VEC_Y)) field.setPuyo(allPuyos[i]);
-            }
-            else update = true;
-        }
+                if (field.getPuyo(puyoListPlus[i].getPos()) == puyoListPlus[i])
+                {
+                    if (puyoListPlus[i].getCnt() < C.EFFECT_FIX_CNT)
+                    {
+                        update = true;
+                    }
+                    continue;
+                }
 
+                Vector2 p = puyoListPlus[i].getPos() - new Vector2(0, 0.5f + C.RESOLUTION);
+                if (field.getPuyo(p) != null)
+                {
+                    field.setPuyo(puyoListPlus[i]);
+                    update = true;
+                }
+            }
+            else
+            {
+                update = true;
+            }
+        }
         return update;
     }
 
@@ -67,11 +77,6 @@ public class PuyoManager
             }
         }
 
-    }
-
-    public void rmPuyo(Puyo p)
-    {
-        puyoList.Remove(p);
     }
 
     public void init()

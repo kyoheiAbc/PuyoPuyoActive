@@ -22,11 +22,10 @@ public class Field
         return ary[(int)pos.y, (int)pos.x];
     }
 
-    public void rmPuyo(Puyo p)
+    private void rmPuyo(Puyo p)
     {
         Vector2 pos = p.getPos();
         ary[(int)pos.y, (int)pos.x] = null;
-        p.rm();
     }
     public bool rmCheck()
     {
@@ -48,9 +47,11 @@ public class Field
             for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
             {
                 if (ary[y, x] == null) continue;
-                ary[y, x].setCtrl(0);
-                if (getPuyo(ary[y, x].getPos() - C.VEC_Y) != null) continue;
-                ary[y, x] = null;
+                int color = ary[y, x].getColor();
+                if (color != 255 && color >= 100)
+                {
+                    ary[y, x].setColor(color - 100);
+                }
             }
         }
         return remove;
@@ -68,7 +69,13 @@ public class Field
                 if (ary[y, x].getColor() == 255)
                 {
                     ary[y, x] = null;
+                    continue;
                 }
+
+
+                Vector2 p = ary[y, x].getPos() - new Vector2(0, 0.5f + C.RESOLUTION);
+                if (getPuyo(p) == null) rmPuyo(ary[y, x]);
+
             }
         }
     }
@@ -77,13 +84,12 @@ public class Field
     {
         if (p == null) return cnt;
         int color = p.getColor();
-        if (color == 255) return cnt;
-        if (p.getCtrl() == 255) return cnt;
+        if (color >= 100) return cnt;
 
         cnt++;
 
         Puyo[] rtlb = getRtlb(p);
-        p.setCtrl(255);
+        p.setColor(color + 100);
 
         for (int i = 0; i < 4; i++)
         {
@@ -103,7 +109,6 @@ public class Field
         if (color == 255) return;
         p.setColor(255);
 
-
         Puyo[] rtlb = getRtlb(p);
         for (int i = 0; i < 4; i++)
         {
@@ -112,7 +117,7 @@ public class Field
         }
     }
 
-    public Puyo[] getRtlb(Puyo puyo)
+    private Puyo[] getRtlb(Puyo puyo)
     {
         Puyo[] rtlb = new Puyo[4];
         for (int i = 0; i < 4; i++)

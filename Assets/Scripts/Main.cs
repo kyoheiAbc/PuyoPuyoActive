@@ -6,18 +6,17 @@ public static class C
     public static readonly int FPS = 30;
     public static readonly int FIELD_SIZE_X = 8;
     public static readonly int FIELD_SIZE_Y = 17;
-    public static readonly int COLOR_NUMBER = 4;
+    public static readonly int COLOR_NUMBER = 3;
     public static readonly int REMOVE_NUMBER = 4;
     public static readonly Vector2 VEC_0 = new Vector2(0, 0);
-    public static readonly Vector2 VEC_1 = new Vector2(1, 1);
-    public static readonly Vector2 VEC_255 = new Vector2(255, 255);
     public static readonly Vector2 VEC_X = new Vector2(1, 0);
     public static readonly Vector2 VEC_Y = new Vector2(0, 1);
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
-    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
+    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.3f);
+    public static readonly float RESOLUTION = 0.001f;
     public static readonly int FIX_CNT = 30;
-    public static readonly float EFFECT_REMOVE_CNT = 24;
-    public static readonly float EFFECT_FIX_CNT = 10;
+    public static readonly float EFFECT_REMOVE_CNT = 30;
+    public static readonly float EFFECT_FIX_CNT = 30;
     public static readonly GameObject[] PUYO = new GameObject[4] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),
@@ -37,8 +36,8 @@ public class Main : MonoBehaviour
     Field field;
     PuyoManager puyoManager;
     PuyoPuyo puyoPuyo;
-    int fixCnt;
-    int rmCnt;
+    int cnt;
+
     private void Awake()
     {
         Application.targetFrameRate = C.FPS;
@@ -82,97 +81,81 @@ public class Main : MonoBehaviour
             }
         }
 
-        newPuyoPuyo();
-        fixCnt = 0;
-        rmCnt = 0;
+        puyoPuyo = null;
+        cnt = 0;
     }
 
     void Update()
     {
-        switch (inputController.update())
+        if (puyoPuyo == null)
         {
-            case 0:
-                puyoPuyo.setFixEffectCnt((int)C.EFFECT_FIX_CNT);
-                break;
+            newPuyoPuyo();
+            inputController.init();
+        }
+
+
+        int input = inputController.update();
+        switch (input)
+        {
             case 4:
-                if (-C.VEC_X == puyoPuyo.move(-C.VEC_X, puyoManager.getList())) fixCnt = 0;
-                break;
             case 6:
-                if (C.VEC_X == puyoPuyo.move(C.VEC_X, puyoManager.getList())) fixCnt = 0;
+                puyoPuyo.move(C.VEC_X * Mathf.Sign(input - 5), puyoManager.getList());
                 break;
             case 2:
                 if (C.VEC_0 == puyoPuyo.move(-C.VEC_Y / 2, puyoManager.getList()))
                 {
-                    puyoPuyo.setFixEffectCnt(0);
-                    fixCnt = C.FIX_CNT;
-                }
-                else
-                {
-                    fixCnt = 0;
+                    puyoPuyo.setCnt((int)C.FIX_CNT);
+                    List<Puyo> puyo = puyoPuyo.getPuyo();
+                    for (int i = 0; i < puyo.Count; i++) puyo[i].setCnt(0);
                 }
                 break;
             case 14:
-                puyoPuyo.rotate(-1, puyoManager.getList());
-                fixCnt = 0;
-                break;
             case 16:
-                puyoPuyo.rotate(1, puyoManager.getList());
-                fixCnt = 0;
+                puyoPuyo.rotate((int)Mathf.Sign(input - 15), puyoManager.getList());
                 break;
         }
 
 
-        if (C.VEC_0 == puyoPuyo.move(C.VEC_DROP, puyoManager.getList()))
-        {
-            fixCnt++;
-        }
-        else
-        {
-            fixCnt = 0;
-        }
+        puyoPuyo.update(puyoManager.getList());
 
 
-        if (fixCnt > C.FIX_CNT)
+        if (puyoPuyo.getCnt() == C.FIX_CNT)
         {
             List<Puyo> puyo = puyoPuyo.getPuyo();
-
-            if (field.getPuyo(puyo[0].getPos() - C.VEC_Y) != null ||
-                field.getPuyo(puyo[1].getPos() - C.VEC_Y) != null)
+            if (field.getPuyo(puyo[0].getPos() - new Vector2(0, 0.5f + C.RESOLUTION)) == null &&
+                field.getPuyo(puyo[1].getPos() - new Vector2(0, 0.5f + C.RESOLUTION)) == null)
             {
-
-                fixCnt = 0;
-
-                puyoManager.addPuyo(puyo[0]);
-                puyoManager.addPuyo(puyo[1]);
-
-                if (rmCnt < 0) rmCnt = 0;
-
-                newPuyoPuyo();
-                inputController.init();
+                puyoPuyo.setCnt(C.FIX_CNT - 1);
+                for (int i = 0; i < puyo.Count; i++) puyo[i].setCnt((int)C.EFFECT_FIX_CNT);
             }
             else
             {
-                fixCnt--;
+                puyoPuyo = null;
+                for (int i = 0; i < puyo.Count; i++) puyoManager.addPuyo(puyo[i]);
+
+                if (cnt == 0) cnt = 100;
             }
         }
 
 
-        if (!puyoManager.update(field, puyoPuyo.getPuyo()) && rmCnt == 0)
+        List<Puyo> puyoPuyoList;
+        if (puyoPuyo != null) puyoPuyoList = puyoPuyo.getPuyo();
+        else puyoPuyoList = new List<Puyo>();
+
+        if (!puyoManager.update(field, puyoPuyoList) && cnt == 100)
         {
-            rmCnt = -1;
-            if (field.rmCheck())
-            {
-                rmCnt = 1;
-            }
+            if (field.rmCheck()) cnt = 200;
+            else cnt = 0;
         }
 
 
-        if (rmCnt > 0)
+
+        if (cnt >= 200)
         {
-            rmCnt++;
-            if (rmCnt == C.EFFECT_REMOVE_CNT)
+            cnt++;
+            if (cnt == 200 + C.EFFECT_REMOVE_CNT)
             {
-                rmCnt = 0;
+                cnt = 100;
 
                 field.rm();
                 puyoManager.rm();
@@ -183,9 +166,10 @@ public class Main : MonoBehaviour
 
 
         // render
-        puyoPuyo.render();
+        if (puyoPuyo != null) puyoPuyo.render();
         puyoManager.render();
     }
+
 
     private bool newPuyoPuyo()
     {

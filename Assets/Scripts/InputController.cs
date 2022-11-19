@@ -26,7 +26,6 @@ public class InputController
         }
         else if (Input.GetMouseButton(0) && ctrl > 0)
         {
-
             Vector2 p = (Vector2)cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
             Vector2 d = p - pos;
 
@@ -37,12 +36,10 @@ public class InputController
 
             if (Mathf.Abs(d.x) > Mathf.Abs(d.y))
             {
-                // pos.x = pos.x + (int)Mathf.Sign(d.x);
                 return 5 + (int)Mathf.Sign(d.x);
             }
             else
             {
-                // pos.y = pos.y + (int)Mathf.Sign(d.y) * 0.5f;
                 return 5 + (int)Mathf.Sign(d.y) * 3;
             }
         }

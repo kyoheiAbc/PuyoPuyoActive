@@ -8,10 +8,7 @@ public class Puyo
     GameObject gO;
     Transform t;
     int color;
-    int ctrl;
-    float fixEffectCnt;
-    int effect;
-    int rmEffectCnt;
+    float cnt;
 
     public Puyo(GameObject g)
     {
@@ -26,45 +23,29 @@ public class Puyo
             case "puyoD(Clone)": color = 3; break;
             default: color = 255; break;
         }
-        ctrl = 0;
-        fixEffectCnt = C.EFFECT_FIX_CNT + 1;
-        effect = 0;
-        rmEffectCnt = 0;
-    }
-
-    ~Puyo()
-    {
-        gO = null;
-        t = null;
+        cnt = C.EFFECT_FIX_CNT;
     }
 
     public Vector2 update(List<Puyo> pList)
     {
-
-
         Vector2 retVec = move(C.VEC_DROP_QUICK, pList);
         if (retVec != C.VEC_0)
         {
-            fixEffectCnt = 0;
-            effect = 0;
+            cnt = 0;
             return retVec;
-        };
+        }
 
-        if (fixEffectCnt == C.EFFECT_FIX_CNT)
+        if (cnt >= C.EFFECT_FIX_CNT)
         {
+            if (color == 255)
+            {
+                cnt++;
+            }
             return C.VEC_0;
         }
 
-        // float x = cnt / C.EFFECT_FIX_CNT;
-        // float b = 0.5f;
-        // t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
-
-        fixEffectCnt++;
-        return C.VEC_255;
-    }
-    public void setFixEffectCnt(int c)
-    {
-        fixEffectCnt = c;
+        cnt++;
+        return C.VEC_0;
     }
 
     public void setPos(Vector2 p)
@@ -119,29 +100,27 @@ public class Puyo
         return true;
     }
 
-    public int getCtrl()
-    {
-        return ctrl;
-    }
-    public void setCtrl(int c)
-    {
-        ctrl = c;
-    }
-
     public int getColor()
     {
         return color;
     }
     public void setColor(int c)
     {
-        effect = 1;
-        rmEffectCnt = 0;
         color = c;
     }
 
     public Vector2 getPos()
     {
         return pos;
+    }
+
+    public void setCnt(int c)
+    {
+        cnt = c;
+    }
+    public int getCnt()
+    {
+        return (int)cnt;
     }
 
     public void rm()
@@ -151,46 +130,25 @@ public class Puyo
 
     public void render()
     {
-        if (effect == 1)
+        if (color == 255)
         {
-            if (rmEffectCnt == 0)
+            if (cnt == C.EFFECT_FIX_CNT)
             {
                 t.localScale = new Vector2(0.9f, 1.1f);
             }
-            if (rmEffectCnt == C.EFFECT_REMOVE_CNT / 3f)
+            if (cnt == C.EFFECT_FIX_CNT + C.EFFECT_REMOVE_CNT / 3f)
             {
                 t.localScale = C.VEC_0;
             }
-            if (rmEffectCnt == C.EFFECT_REMOVE_CNT * 2f / 3f)
+            if (cnt == C.EFFECT_FIX_CNT + C.EFFECT_REMOVE_CNT * 2f / 3f)
             {
                 t.localScale = new Vector2(0.9f, 1.1f);
             }
-            rmEffectCnt++;
+            return;
         }
-        // if (effect == 2)
-        // {
-        //     if (fixEffectCnt == C.EFFECT_FIX_CNT)
-        //     {
-        //         effect = 0;
-        //         Debug.Log(fixEffectCnt);
 
-        //     }
-        // }
-        else
-        {
-
-            // t.localScale = new Vector2(1, 1) * (-2 * ((x - b) * (x - b)) + 1.5f);
-
-            // t.localScale = C.VEC_1;
-            t.position = new Vector2(pos.x, pos.y - C.QuadraticF(fixEffectCnt / C.EFFECT_FIX_CNT, 0.1f));
-
-            t.localScale = new Vector2(1 + C.QuadraticF(fixEffectCnt / C.EFFECT_FIX_CNT, 0.1f), 1);
-
-            // Debug.Log("-----");
-            // Debug.Log(pos);
-            // Debug.Log(t.position);
-
-        }
+        t.position = new Vector2(pos.x, pos.y - C.QuadraticF(cnt / C.EFFECT_FIX_CNT, 0.1f));
+        t.localScale = new Vector2(1 + C.QuadraticF(cnt / C.EFFECT_FIX_CNT, 0.1f), 1);
     }
 
 }

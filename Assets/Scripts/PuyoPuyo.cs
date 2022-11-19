@@ -6,11 +6,18 @@ public class PuyoPuyo
 {
     List<Puyo> puyo;
     int rot;
+    int cnt;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
         puyo = new List<Puyo> { p0, p1 };
         rot = 0;
+        cnt = 0;
+    }
+
+    public Vector2 update(List<Puyo> pList)
+    {
+        return move(C.VEC_DROP, pList);
     }
 
     public Vector2 move(Vector2 vec, List<Puyo> pList)
@@ -26,9 +33,15 @@ public class PuyoPuyo
                     puyo[0].setPos(initPos);
                     sync(0);
                 }
-                return puyo[0].getPos() - initPos;
+                break;
             }
         }
+        if (puyo[0].getPos() == initPos)
+        {
+            if (cnt < C.FIX_CNT) cnt++;
+        }
+        else cnt = 0;
+
         return puyo[0].getPos() - initPos;
     }
 
@@ -51,6 +64,7 @@ public class PuyoPuyo
             puyo[1].setPos(pos);
             sync(1);
         }
+        cnt = 0;
     }
 
     public List<Puyo> getPuyo()
@@ -59,18 +73,22 @@ public class PuyoPuyo
         else return new List<Puyo>() { puyo[1], puyo[0] };
     }
 
-    public void sync(int i)
+    private void sync(int i)
     {
         puyo[1 - i].setPos(
             puyo[i].getPos() +
             new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
         );
     }
-
-    public void setFixEffectCnt(int c)
+    public void setCnt(int c)
     {
-        for (int i = 0; i < 2; i++) puyo[i].setFixEffectCnt(c);
+        cnt = c;
     }
+    public int getCnt()
+    {
+        return cnt;
+    }
+
     public void render()
     {
         for (int i = 0; i < 2; i++) puyo[i].render();
