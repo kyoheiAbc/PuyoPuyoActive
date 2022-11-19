@@ -136,11 +136,11 @@ public class Puyo
             {
                 t.localScale = new Vector2(0.9f, 1.1f);
             }
-            if (cnt == C.EFFECT_FIX_CNT + C.EFFECT_REMOVE_CNT / 3f)
+            if (cnt == C.EFFECT_FIX_CNT + (int)(C.EFFECT_REMOVE_CNT / 3f))
             {
                 t.localScale = C.VEC_0;
             }
-            if (cnt == C.EFFECT_FIX_CNT + C.EFFECT_REMOVE_CNT * 2f / 3f)
+            if (cnt == C.EFFECT_FIX_CNT + (int)(C.EFFECT_REMOVE_CNT * 2f / 3f))
             {
                 t.localScale = new Vector2(0.9f, 1.1f);
             }
