@@ -27,6 +27,7 @@ public static class C
         Resources.Load<GameObject>("puyoC"),
         Resources.Load<GameObject>("puyoD")
     };
+    public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
 
     public static float QuadraticF(float x, float max)
     {

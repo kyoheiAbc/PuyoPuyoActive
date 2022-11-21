@@ -10,6 +10,7 @@ public class Main : MonoBehaviour
     PuyoPuyo[] puyoPuyoNext;
     ColorBag colorBag;
     ComboManager comboManager;
+    List<EffectExplosion> eElist;
     int cnt;
 
     private void Awake()
@@ -32,6 +33,7 @@ public class Main : MonoBehaviour
         puyoPuyoNext = new PuyoPuyo[2];
         colorBag = new ColorBag();
         comboManager = new ComboManager();
+        eElist = new List<EffectExplosion>();
 
         reset();
     }
@@ -198,7 +200,11 @@ public class Main : MonoBehaviour
                 field.rm();
                 puyoManager.rm();
                 GameObject[] gO = GameObject.FindGameObjectsWithTag("REMOVE");
-                for (int i = 0; i < gO.Length; i++) Destroy(gO[i]);
+                for (int i = 0; i < gO.Length; i++)
+                {
+                    eElist.Add(new EffectExplosion(gO[i], Instantiate(C.EFFECT_EXPLOSION)));
+                    Destroy(gO[i]);
+                }
                 comboManager.comboPlus();
                 comboManager.setCnt(0);
             }
@@ -207,6 +213,18 @@ public class Main : MonoBehaviour
         // render
         if (puyoPuyo != null) puyoPuyo.render();
         puyoManager.render();
+
+        for (int i = 0; i < eElist.Count; i++)
+        {
+            if (!eElist[i].update())
+            {
+                Destroy(eElist[i].getGameObject());
+                eElist.Remove(eElist[i]);
+                i--;
+            }
+        }
+
+
 
         int nowTime = DateTime.Now.Millisecond;
         if (nowTime - oldTime > 0)
