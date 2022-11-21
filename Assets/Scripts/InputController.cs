@@ -29,19 +29,39 @@ public class InputController
             Vector2 p = (Vector2)cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
             Vector2 d = p - pos;
 
-            if (d.x * d.x < 1 && d.y * d.y < 0.25) return 0;
-
-            ctrl = 2;
-            pos = p;
-
-            if (Mathf.Abs(d.x) > Mathf.Abs(d.y))
+            if (d.x > 1)
             {
-                return 5 + (int)Mathf.Sign(d.x);
+                ctrl = 2;
+                pos = p;
+                return 6;
             }
-            else
+            if (d.x < -1)
             {
-                return 5 + (int)Mathf.Sign(d.y) * 3;
+                ctrl = 2;
+                pos = p;
+                return 4;
             }
+            if (d.y > 1f)
+            {
+                ctrl = 2;
+                pos = p;
+                return 8;
+            }
+            if (d.y < -0.5)
+            {
+                ctrl = 2;
+                pos = p;
+                return 2;
+            }
+
+            // if (Mathf.Abs(d.x) > Mathf.Abs(d.y))
+            // {
+            //     return 5 + (int)Mathf.Sign(d.x);
+            // }
+            // else
+            // {
+            //     return 5 + (int)Mathf.Sign(d.y) * 3;
+            // }
         }
         else if (Input.GetMouseButtonUp(0) && ctrl > 0)
         {

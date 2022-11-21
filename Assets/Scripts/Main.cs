@@ -1,73 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
-public static class C
-{
-    public static readonly int FPS = 30;
-    public static readonly int FIELD_SIZE_X = 8;
-    public static readonly int FIELD_SIZE_Y = 17;
-    public static readonly int COLOR_NUMBER = 4;
-    public static readonly int COLOR_ADJUST = 8;
-    public static readonly int REMOVE_NUMBER = 4;
-    public static readonly Vector2 VEC_0 = new Vector2(0, 0);
-    public static readonly Vector2 VEC_X = new Vector2(1, 0);
-    public static readonly Vector2 VEC_Y = new Vector2(0, 1);
-    public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
-    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
-    public static readonly float RESOLUTION = 0.001f;
-    public static readonly int NEXT_GAME_CNT = 30;
-    public static readonly int FIX_CNT = 30;
-    public static readonly float EFFECT_REMOVE_CNT = 20;
-    public static readonly float EFFECT_FIX_CNT = 10;
-    public static readonly GameObject[] PUYO = new GameObject[4] {
-        Resources.Load<GameObject>("puyoA"),
-        Resources.Load<GameObject>("puyoB"),
-        Resources.Load<GameObject>("puyoC"),
-        Resources.Load<GameObject>("puyoD")
-    };
-
-    public static float QuadraticF(float x, float max)
-    {
-        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
-    }
-}
-
-public class ColorBag
-{
-    int[] bag;
-    int cnt;
-    public ColorBag()
-    {
-        bag = new int[C.COLOR_NUMBER * C.COLOR_ADJUST];
-        for (int i = 0; i < bag.Length; i++)
-        {
-            bag[i] = i % C.COLOR_NUMBER;
-        }
-    }
-    public void init()
-    {
-        cnt = -1;
-        for (int i = bag.Length - 1; i > 0; i--)
-        {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            int tmp = bag[i];
-            bag[i] = bag[j];
-            bag[j] = tmp;
-        }
-    }
-
-    public int getColor()
-    {
-        if (cnt == bag.Length - 1)
-        {
-            init();
-        }
-        cnt++;
-        return bag[cnt];
-    }
-}
-
 public class Main : MonoBehaviour
 {
     InputController inputController;
@@ -76,6 +9,7 @@ public class Main : MonoBehaviour
     PuyoPuyo puyoPuyo;
     PuyoPuyo[] puyoPuyoNext;
     ColorBag colorBag;
+    ComboManager comboManager;
     int cnt;
 
     private void Awake()
@@ -97,11 +31,9 @@ public class Main : MonoBehaviour
         puyoManager = new PuyoManager();
         puyoPuyoNext = new PuyoPuyo[2];
         colorBag = new ColorBag();
-
+        comboManager = new ComboManager();
 
         reset();
-
-
     }
 
     public void reset()
@@ -166,6 +98,8 @@ public class Main : MonoBehaviour
             inputController.init();
         }
 
+        comboManager.update();
+
 
         int input = inputController.update();
         switch (input)
@@ -181,6 +115,15 @@ public class Main : MonoBehaviour
                     List<Puyo> puyo = puyoPuyo.getPuyo();
                     for (int i = 0; i < puyo.Count; i++) puyo[i].setCnt(0);
                 }
+                break;
+            case 8:
+                for (int n = 0; n < C.FIELD_SIZE_Y; n++)
+                {
+                    if (C.VEC_0 == puyoPuyo.move(-C.VEC_Y, puyoManager.getList())) break;
+                }
+                puyoPuyo.setCnt((int)C.FIX_CNT);
+                List<Puyo> pL = puyoPuyo.getPuyo();
+                for (int i = 0; i < pL.Count; i++) pL[i].setCnt(0);
                 break;
             case 14:
             case 16:
@@ -215,14 +158,36 @@ public class Main : MonoBehaviour
         if (puyoPuyo != null) puyoPuyoList = puyoPuyo.getPuyo();
         else puyoPuyoList = new List<Puyo>();
 
-        if (!puyoManager.update(field, puyoPuyoList) && cnt == 100)
+        if (!puyoManager.update(field, puyoPuyoList))
         {
-            if (field.rmCheck()) cnt = 200;
-            else cnt = 0;
+            if (cnt == 100)
+            {
+                {
+                    if (field.rmCheck(false))
+                    {
+                        cnt = 200;
+                    }
+                    else cnt = 0;
+                }
+            }
         }
 
-
-
+        if (comboManager.getCnt() == 0 && cnt < 200)
+        {
+            if (!puyoManager.canDrop(field, puyoPuyoList))
+            {
+                if (!field.rmCheck(true))
+                {
+                    comboManager.setCnt(1);
+                }
+                else
+                {
+                }
+            }
+            else
+            {
+            }
+        }
         if (cnt >= 200)
         {
             cnt++;
@@ -234,9 +199,10 @@ public class Main : MonoBehaviour
                 puyoManager.rm();
                 GameObject[] gO = GameObject.FindGameObjectsWithTag("REMOVE");
                 for (int i = 0; i < gO.Length; i++) Destroy(gO[i]);
+                comboManager.comboPlus();
+                comboManager.setCnt(0);
             }
         }
-
 
         // render
         if (puyoPuyo != null) puyoPuyo.render();
@@ -245,7 +211,7 @@ public class Main : MonoBehaviour
         int nowTime = DateTime.Now.Millisecond;
         if (nowTime - oldTime > 0)
         {
-            // Debug.Log(nowTime - oldTime);
+            Debug.Log(nowTime - oldTime);
         }
     }
 

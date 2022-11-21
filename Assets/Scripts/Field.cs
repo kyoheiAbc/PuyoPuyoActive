@@ -27,7 +27,7 @@ public class Field
         Vector2 pos = p.getPos();
         ary[(int)pos.y, (int)pos.x] = null;
     }
-    public bool rmCheck()
+    public bool rmCheck(bool simple)
     {
         bool remove = false;
         for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
@@ -38,10 +38,13 @@ public class Field
                 if (cntSameColor(ary[y, x], cnt) >= C.REMOVE_NUMBER)
                 {
                     remove = true;
+                    if (simple) goto reset;
                     rmSameColor(ary[y, x]);
                 }
             }
         }
+
+    reset:
         for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
         {
             for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)

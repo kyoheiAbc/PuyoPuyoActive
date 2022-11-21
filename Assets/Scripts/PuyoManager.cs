@@ -48,6 +48,51 @@ public class PuyoManager
         return update;
     }
 
+    public bool canDrop(Field field, List<Puyo> puyoPuyo)
+    {
+        List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
+        puyoListPlus.AddRange(puyoPuyo);
+
+        for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
+        {
+            Vector2 p = puyoListPlus[i].getPos() - new Vector2(0, 0.5f + C.RESOLUTION);
+            if (field.getPuyo(p) == null)
+            {
+                if (puyoPuyo.Count == 0)
+                {
+                    return true;
+                }
+
+                for (int n = 0; n < puyoPuyo.Count; n++)
+                {
+                    if (puyoListPlus[i].getPos().x == puyoPuyo[n].getPos().x)
+                    {
+                        if (puyoListPlus[i].getPos().y - puyoPuyo[n].getPos().y == 1) //  1 - 3
+                        {
+                            ;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if (field.getPuyo(puyoListPlus[i].getPos()) == null)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void addPuyo(Puyo puyo)
     {
         Vector2 pos = puyo.getPos();
