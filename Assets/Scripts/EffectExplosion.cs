@@ -49,7 +49,7 @@ public class EffectExplosion
                                         + new Vector2(0, 0.2f) * (2 - i) * (i % 2);
         }
 
-        if (cnt == 10)
+        if (cnt == 15)
         {
             return false;
         }
