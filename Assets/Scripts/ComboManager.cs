@@ -7,6 +7,7 @@ public class ComboManager
 {
 
     int combo;
+    int plus;
     int cnt;
     TextMeshPro text;
     Transform t;
@@ -23,40 +24,36 @@ public class ComboManager
     public void init()
     {
         combo = 0;
-        cnt = C.COMBO_CNT;
+        cnt = 0;
+        plus = 0;
         text.text = "";
-
     }
 
     public void update()
     {
-        if (0 < cnt && cnt < C.COMBO_CNT)
+        if (cnt > 0)
         {
-            text.color = text.color - new Color(0, 0, 0, (1f / (float)(C.COMBO_CNT)));
             cnt++;
         }
-        if (cnt == C.COMBO_CNT)
-        {
-            combo = 0;
-            text.text = "";
-        }
+        if (cnt == C.COMBO_CNT) init();
     }
 
-    public void comboPlus(Vector2 pos)
+    public void setCombo(Vector2 pos)
     {
-        combo++;
+        combo = combo + plus;
+        plus = 0;
+        cnt = 0;
         text.text = combo + " COMBO";
         t.position = pos;
-        text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
     }
 
+    public void setPlus(int p)
+    {
+        plus = p;
+    }
     public void setCnt(int c)
     {
         cnt = c;
-    }
-    public int getCnt()
-    {
-        return cnt;
     }
 
 }

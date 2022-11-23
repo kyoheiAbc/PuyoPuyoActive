@@ -15,17 +15,12 @@ public class PuyoPuyo
         cnt = 0;
     }
 
-    public Vector2 update(List<Puyo> pList)
-    {
-        return move(C.VEC_DROP, pList);
-    }
-
     public Vector2 move(Vector2 vec, List<Puyo> pList)
     {
         Vector2 initPos = puyo[0].getPos();
         for (int i = 0; i < 2; i++)
         {
-            if (puyo[i].move(vec, pList) != vec)
+            if (puyo[i].move(vec, pList, true) != vec)
             {
                 sync(i);
                 if (!puyo[1 - i].canPut(pList))
@@ -36,12 +31,7 @@ public class PuyoPuyo
                 break;
             }
         }
-        if (puyo[0].getPos() == initPos)
-        {
-            if (cnt < C.FIX_CNT) cnt++;
-        }
-        else cnt = 0;
-
+        if (puyo[0].getPos() != initPos) cnt = 0;
         return puyo[0].getPos() - initPos;
     }
 
@@ -59,7 +49,7 @@ public class PuyoPuyo
 
         Vector2 pos = puyo[0].getPos();
         puyo[1].setPos(pos);
-        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2), pList);
+        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2), pList, true);
         sync(1);
 
         if (!puyo[0].canPut(pList))
@@ -83,8 +73,8 @@ public class PuyoPuyo
     private void sync(int i)
     {
         puyo[1 - i].setPos(
-            puyo[i].getPos() +
-            new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
+            puyo[i].getPos()
+            + new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
         );
     }
     public void setCnt(int c)

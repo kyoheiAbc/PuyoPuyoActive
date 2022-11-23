@@ -63,19 +63,17 @@ public class EffectExplosion
 
     public bool update()
     {
-        if (cnt == 15) return false;
-
         cnt++;
-
         for (int i = 0; i < 4; i++)
         {
             children[i].localPosition = (Vector2)children[i].localPosition
                                         + new Vector2(0.2f, 0) * (1 - i) * ((i + 1) % 2)
                                         + new Vector2(0, 0.2f) * (2 - i) * (i % 2);
         }
+
+        if (cnt == 15) return false;
         return true;
     }
-
     public void rm()
     {
         gameObject.tag = "REMOVE";

@@ -80,30 +80,30 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        // int oldTime = DateTime.Now.Millisecond;
+        // debug
+        int oldTime = DateTime.Now.Millisecond;
 
-        if (cnt >= 300)
+        // game over
+        if (cnt >= 900)
         {
             cnt++;
-            if (cnt == 300 + C.NEXT_GAME_CNT) reset();
-            return;
+            if (cnt - 900 - 1 != (int)C.NEXT_GAME_CNT) return;
+            reset();
         }
-
-        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null ||
-            field.getPuyo(new Vector2(4.5f, 12.5f)) != null)
+        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null || field.getPuyo(new Vector2(4.5f, 12.5f)) != null)
         {
-            cnt = 300;
+            cnt = 900;
             return;
         }
 
+        // generate
         if (puyoPuyo == null)
         {
             nextPuyo();
             inputController.init();
         }
 
-        comboManager.update();
-
+        // move puyoPuyo
         int input = inputController.update();
         switch (input)
         {
@@ -112,21 +112,24 @@ public class Main : MonoBehaviour
                 puyoPuyo.move(C.VEC_X * Mathf.Sign(input - 5), puyoManager.getList());
                 break;
             case 2:
-                if (C.VEC_0 == puyoPuyo.move(-C.VEC_Y / 2, puyoManager.getList()))
+                if (puyoPuyo.move(-C.VEC_Y / 2, puyoManager.getList()) == C.VEC_0)
                 {
-                    puyoPuyo.setCnt((int)C.FIX_CNT);
-                    List<Puyo> puyo = puyoPuyo.getPuyo();
-                    for (int i = 0; i < puyo.Count; i++) puyo[i].setCnt(0);
+                    // ready fix
+                    puyoPuyo.setCnt(C.FIX_CNT);
+                    puyoPuyo.getPuyo()[0].setCnt(0);
+                    puyoPuyo.getPuyo()[1].setCnt(0);
                 }
                 break;
             case 8:
-                for (int n = 0; n < C.FIELD_SIZE_Y; n++)
+                for (int n = 0; n < C.FIELD_SIZE_Y - 1; n++)
                 {
-                    if (C.VEC_0 == puyoPuyo.move(-C.VEC_Y, puyoManager.getList())) break;
+                    puyoPuyo.move(-C.VEC_Y, puyoManager.getList());
                 }
-                puyoPuyo.setCnt((int)C.FIX_CNT);
-                List<Puyo> pL = puyoPuyo.getPuyo();
-                for (int i = 0; i < pL.Count; i++) pL[i].setCnt(0);
+                // ready fix
+                puyoPuyo.setCnt(C.FIX_CNT);
+                puyoPuyo.getPuyo()[0].setCnt(0);
+                puyoPuyo.getPuyo()[1].setCnt(0);
+
                 break;
             case 14:
             case 16:
@@ -135,62 +138,64 @@ public class Main : MonoBehaviour
         }
 
 
-        puyoPuyo.update(puyoManager.getList());
+        // drop
+        puyoPuyo.move(C.VEC_DROP, puyoManager.getList());
+        puyoManager.move(C.VEC_DROP_QUICK, puyoPuyo.getPuyo());
 
 
-        if (puyoPuyo.getCnt() == C.FIX_CNT)
+        // field set
+        puyoPuyo.setCnt(puyoPuyo.getCnt() + 1);
+        if (puyoPuyo.getCnt() > C.FIX_CNT)
         {
             List<Puyo> puyo = puyoPuyo.getPuyo();
-            if (field.getPuyo(puyo[0].getPos() - new Vector2(0, 0.5f + C.RESOLUTION)) == null &&
-                field.getPuyo(puyo[1].getPos() - new Vector2(0, 0.5f + C.RESOLUTION)) == null)
+            if (field.getPuyo(puyo[0].getPos() + C.UNDER) == null && field.getPuyo(puyo[1].getPos() + C.UNDER) == null)
             {
-                puyoPuyo.setCnt(C.FIX_CNT - 1);
-                for (int i = 0; i < puyo.Count; i++) puyo[i].setCnt((int)C.EFFECT_FIX_CNT);
+                // ready fix cancel
+                puyoPuyo.setCnt(0);
+                puyoPuyo.getPuyo()[0].setCnt(C.EFFECT_FIX_CNT);
+                puyoPuyo.getPuyo()[1].setCnt(C.EFFECT_FIX_CNT);
             }
             else
             {
                 puyoPuyo = null;
                 for (int i = 0; i < puyo.Count; i++) puyoManager.addPuyo(puyo[i]);
-
-                if (cnt == 0) cnt = 100;
+                if (cnt < 200) cnt = 100;
             }
         }
+        puyoManager.setPuyo(field);
 
 
+
+        // fix effect
+        field.effect();
+
+
+
+        // rm check
         List<Puyo> puyoPuyoList;
         if (puyoPuyo != null) puyoPuyoList = puyoPuyo.getPuyo();
         else puyoPuyoList = new List<Puyo>();
 
-        if (!puyoManager.update(field, puyoPuyoList))
+        if (cnt == 100 &&
+            !field.effectIng() &&
+            !puyoManager.canDrop(puyoPuyoList)
+        )
         {
-            if (cnt == 100)
+            int rmCnt = field.rmCheck();
+            if (rmCnt > 0)
             {
-                {
-                    if (field.rmCheck(false))
-                    {
-                        cnt = 200;
-                    }
-                    else cnt = 0;
-                }
-            }
-        }
-
-        if (comboManager.getCnt() == 0 && cnt < 200)
-        {
-            if (!puyoManager.canDrop(field, puyoPuyoList))
-            {
-                if (!field.rmCheck(true))
-                {
-                    comboManager.setCnt(1);
-                }
-                else
-                {
-                }
+                cnt = 200;
+                comboManager.setPlus(rmCnt);
             }
             else
             {
+                cnt = 0;
+                comboManager.setCnt(1);
             }
         }
+
+
+        // rm
         if (cnt >= 200)
         {
             cnt++;
@@ -201,17 +206,22 @@ public class Main : MonoBehaviour
                 field.rm();
                 puyoManager.rm();
                 GameObject[] gO = GameObject.FindGameObjectsWithTag("REMOVE");
-                Vector2 pos = C.VEC_0;
+
+                Vector2 p = C.VEC_0;
                 for (int i = 0; i < gO.Length; i++)
                 {
-                    pos = pos + (Vector2)gO[i].transform.position / gO.Length;
+                    p = p + (Vector2)gO[i].transform.position / gO.Length;
                     effectManager.add(gO[i], Instantiate(C.EFFECT_EXPLOSION));
                     Destroy(gO[i]);
                 }
-                comboManager.comboPlus(pos);
-                comboManager.setCnt(0);
+
+                comboManager.setCombo(p);
             }
         }
+
+        // combo
+        comboManager.update();
+
 
         // render
         if (puyoPuyo != null) puyoPuyo.render();
@@ -221,10 +231,10 @@ public class Main : MonoBehaviour
         for (int i = 0; i < gOe.Length; i++) Destroy(gOe[i]);
 
 
-        // int nowTime = DateTime.Now.Millisecond;
-        // if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
-    }
+        int nowTime = DateTime.Now.Millisecond;
+        // if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
 
+    }
     private bool nextPuyo()
     {
         puyoPuyo = puyoPuyoNext[0];

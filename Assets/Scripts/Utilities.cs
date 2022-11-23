@@ -13,14 +13,14 @@ public static class C
     public static readonly Vector2 VEC_0 = new Vector2(0, 0);
     public static readonly Vector2 VEC_X = new Vector2(1, 0);
     public static readonly Vector2 VEC_Y = new Vector2(0, 1);
+    public static readonly Vector2 UNDER = new Vector2(0, -0.501f);
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
     public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
-    public static readonly float RESOLUTION = 0.001f;
     public static readonly int NEXT_GAME_CNT = 30;
     public static readonly int FIX_CNT = 30;
-    public static readonly float EFFECT_REMOVE_CNT = 30;
-    public static readonly float EFFECT_FIX_CNT = 10;
-    public static readonly int COMBO_CNT = 75;
+    public static readonly int EFFECT_REMOVE_CNT = 30;
+    public static readonly int EFFECT_FIX_CNT = 10;
+    public static readonly int COMBO_CNT = 45;
     public static readonly GameObject[] PUYO = new GameObject[4] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),

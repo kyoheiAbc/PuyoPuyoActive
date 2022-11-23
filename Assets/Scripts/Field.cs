@@ -22,14 +22,9 @@ public class Field
         return ary[(int)pos.y, (int)pos.x];
     }
 
-    private void rmPuyo(Puyo p)
+    public int rmCheck()
     {
-        Vector2 pos = p.getPos();
-        ary[(int)pos.y, (int)pos.x] = null;
-    }
-    public bool rmCheck(bool simple)
-    {
-        bool remove = false;
+        int removeCnt = 0;
         for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
         {
             for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
@@ -37,14 +32,12 @@ public class Field
                 int cnt = 0;
                 if (cntSameColor(ary[y, x], cnt) >= C.REMOVE_NUMBER)
                 {
-                    remove = true;
-                    if (simple) goto reset;
+                    removeCnt++;
                     rmSameColor(ary[y, x]);
                 }
             }
         }
 
-    reset:
         for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
         {
             for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
@@ -57,7 +50,7 @@ public class Field
                 }
             }
         }
-        return remove;
+        return removeCnt;
     }
 
 
@@ -74,10 +67,11 @@ public class Field
                     ary[y, x] = null;
                     continue;
                 }
-
-
-                Vector2 p = ary[y, x].getPos() - new Vector2(0, 0.5f + C.RESOLUTION);
-                if (getPuyo(p) == null) rmPuyo(ary[y, x]);
+                if (getPuyo(ary[y, x].getPos() + C.UNDER) == null)
+                {
+                    Vector2 pos = ary[y, x].getPos();
+                    ary[(int)pos.y, (int)pos.x] = null;
+                }
 
             }
         }
@@ -130,6 +124,33 @@ public class Field
             );
         }
         return rtlb;
+    }
+    public void effect()
+    {
+        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        {
+            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            {
+                if (ary[y, x] == null) continue;
+                ary[y, x].effect();
+            }
+        }
+    }
+
+    public bool effectIng()
+    {
+        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        {
+            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            {
+                if (ary[y, x] == null) continue;
+                int cnt = ary[y, x].getCnt();
+                if (cnt == C.EFFECT_FIX_CNT) continue;
+                if (cnt == C.EFFECT_REMOVE_CNT + 100) continue;
+                return true;
+            }
+        }
+        return false;
     }
 
     public void init()
