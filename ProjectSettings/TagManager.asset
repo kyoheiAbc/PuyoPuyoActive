@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PUYO
   - REMOVE
+  - EFFECT
   layers:
   - Default
   - TransparentFX

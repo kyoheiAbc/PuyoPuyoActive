@@ -10,7 +10,7 @@ public class Main : MonoBehaviour
     PuyoPuyo[] puyoPuyoNext;
     ColorBag colorBag;
     ComboManager comboManager;
-    List<EffectExplosion> eElist;
+    EffectManager effectManager;
     int cnt;
 
     private void Awake()
@@ -33,7 +33,7 @@ public class Main : MonoBehaviour
         puyoPuyoNext = new PuyoPuyo[2];
         colorBag = new ColorBag();
         comboManager = new ComboManager();
-        eElist = new List<EffectExplosion>();
+        effectManager = new EffectManager();
 
         reset();
     }
@@ -47,6 +47,8 @@ public class Main : MonoBehaviour
         gOary = GameObject.FindGameObjectsWithTag("REMOVE");
         for (int i = 0; i < gOary.Length; i++) Destroy(gOary[i]);
 
+        gOary = GameObject.FindGameObjectsWithTag("EFFECT");
+        for (int i = 0; i < gOary.Length; i++) Destroy(gOary[i]);
 
         inputController.init();
         field.init();
@@ -78,7 +80,7 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        int oldTime = DateTime.Now.Millisecond;
+        // int oldTime = DateTime.Now.Millisecond;
 
         if (cnt >= 300)
         {
@@ -101,7 +103,6 @@ public class Main : MonoBehaviour
         }
 
         comboManager.update();
-
 
         int input = inputController.update();
         switch (input)
@@ -204,7 +205,7 @@ public class Main : MonoBehaviour
                 for (int i = 0; i < gO.Length; i++)
                 {
                     pos = pos + (Vector2)gO[i].transform.position / gO.Length;
-                    eElist.Add(new EffectExplosion(gO[i], Instantiate(C.EFFECT_EXPLOSION)));
+                    effectManager.add(gO[i], Instantiate(C.EFFECT_EXPLOSION));
                     Destroy(gO[i]);
                 }
                 comboManager.comboPlus(pos);
@@ -215,24 +216,13 @@ public class Main : MonoBehaviour
         // render
         if (puyoPuyo != null) puyoPuyo.render();
         puyoManager.render();
-
-        for (int i = 0; i < eElist.Count; i++)
-        {
-            if (!eElist[i].update())
-            {
-                Destroy(eElist[i].getGameObject());
-                eElist.Remove(eElist[i]);
-                i--;
-            }
-        }
+        effectManager.render();
+        GameObject[] gOe = GameObject.FindGameObjectsWithTag("REMOVE");
+        for (int i = 0; i < gOe.Length; i++) Destroy(gOe[i]);
 
 
-
-        int nowTime = DateTime.Now.Millisecond;
-        if (nowTime - oldTime > 0)
-        {
-            Debug.Log(nowTime - oldTime);
-        }
+        // int nowTime = DateTime.Now.Millisecond;
+        // if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
     }
 
     private bool nextPuyo()
@@ -252,8 +242,6 @@ public class Main : MonoBehaviour
         return true;
     }
 
-
-
     private PuyoPuyo newPuyoPuyo(Vector2 pos)
     {
         return new PuyoPuyo(
@@ -266,6 +254,4 @@ public class Main : MonoBehaviour
     {
         return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
     }
-
-
 }
