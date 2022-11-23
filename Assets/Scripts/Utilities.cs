@@ -20,7 +20,7 @@ public static class C
     public static readonly int FIX_CNT = 30;
     public static readonly float EFFECT_REMOVE_CNT = 30;
     public static readonly float EFFECT_FIX_CNT = 10;
-    public static readonly int COMBO_CNT = 60;
+    public static readonly int COMBO_CNT = 75;
     public static readonly GameObject[] PUYO = new GameObject[4] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),

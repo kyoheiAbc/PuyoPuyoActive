@@ -200,12 +200,14 @@ public class Main : MonoBehaviour
                 field.rm();
                 puyoManager.rm();
                 GameObject[] gO = GameObject.FindGameObjectsWithTag("REMOVE");
+                Vector2 pos = C.VEC_0;
                 for (int i = 0; i < gO.Length; i++)
                 {
+                    pos = pos + (Vector2)gO[i].transform.position / gO.Length;
                     eElist.Add(new EffectExplosion(gO[i], Instantiate(C.EFFECT_EXPLOSION)));
                     Destroy(gO[i]);
                 }
-                comboManager.comboPlus();
+                comboManager.comboPlus(pos);
                 comboManager.setCnt(0);
             }
         }
