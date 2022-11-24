@@ -11,6 +11,7 @@ public class Main : MonoBehaviour
     ColorBag colorBag;
     ComboManager comboManager;
     EffectManager effectManager;
+    Gauge[] gauge;
     int cnt;
 
     private void Awake()
@@ -34,6 +35,17 @@ public class Main : MonoBehaviour
         colorBag = new ColorBag();
         comboManager = new ComboManager();
         effectManager = new EffectManager();
+
+        gauge = new Gauge[2];
+        gauge[0] = new Gauge(
+            Instantiate(C.GAUGE, new Vector2(0f, -0.75f), Quaternion.identity),
+            new Vector2(3.5f, 0.25f)
+        );
+
+        gauge[1] = new Gauge(
+            Instantiate(C.GAUGE, new Vector2(8f, -0.75f), Quaternion.identity),
+            new Vector2(3.5f, 0.25f)
+        );
 
         reset();
     }
@@ -191,6 +203,12 @@ public class Main : MonoBehaviour
             {
                 cnt = 0;
                 comboManager.setCnt(1);
+
+                if (UnityEngine.Random.Range(0, 101) > 75)
+                {
+                    gauge[0].addPoint(-10);
+                    gauge[0].setUi();
+                }
             }
         }
 
@@ -213,9 +231,14 @@ public class Main : MonoBehaviour
                     p = p + (Vector2)gO[i].transform.position / gO.Length;
                     effectManager.add(gO[i], Instantiate(C.EFFECT_EXPLOSION));
                     Destroy(gO[i]);
+                    gauge[1].addPoint(-1);
+                    gauge[1].setUi();
+
                 }
+                attack(C.I);
 
                 comboManager.setCombo(p);
+
             }
         }
 
@@ -264,4 +287,10 @@ public class Main : MonoBehaviour
     {
         return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
     }
+
+    private void attack(Transform t)
+    {
+        t.position = (Vector2)t.position + new Vector2(1, 0);
+    }
+
 }

@@ -28,6 +28,10 @@ public static class C
         Resources.Load<GameObject>("puyoD")
     };
     public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
+    public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
+
+    public static readonly Transform I = GameObject.Find("I").transform;
+    public static readonly Transform YOU = GameObject.Find("You").transform;
 
     public static float QuadraticF(float x, float max)
     {
