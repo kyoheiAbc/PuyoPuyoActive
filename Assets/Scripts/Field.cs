@@ -82,6 +82,7 @@ public class Field
         if (p == null) return cnt;
         int color = p.getColor();
         if (color >= 100) return cnt;
+        if (color == 9) return cnt;
 
         cnt++;
 
@@ -104,6 +105,7 @@ public class Field
         if (p == null) return;
         int color = p.getColor();
         if (color == 255) return;
+        if (color == 9) return;
         p.setColor(255);
 
         Puyo[] rtlb = getRtlb(p);
@@ -111,6 +113,7 @@ public class Field
         {
             if (rtlb[i] == null) continue;
             if (color == rtlb[i].getColor()) rmSameColor(rtlb[i]);
+            if (9 == rtlb[i].getColor()) rtlb[i].setColor(255);
         }
     }
 

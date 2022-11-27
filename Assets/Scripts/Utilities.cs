@@ -21,17 +21,20 @@ public static class C
     public static readonly int EFFECT_REMOVE_CNT = 30;
     public static readonly int EFFECT_FIX_CNT = 10;
     public static readonly int COMBO_CNT = 45;
-    public static readonly GameObject[] PUYO = new GameObject[4] {
+    public static readonly GameObject[] PUYO = new GameObject[10] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),
         Resources.Load<GameObject>("puyoC"),
-        Resources.Load<GameObject>("puyoD")
+        Resources.Load<GameObject>("puyoD"),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>("puyoZ")
     };
     public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
     public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
-
-    public static readonly Transform I = GameObject.Find("I").transform;
-    public static readonly Transform YOU = GameObject.Find("You").transform;
 
     public static float QuadraticF(float x, float max)
     {

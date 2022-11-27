@@ -21,6 +21,7 @@ public class Puyo
             case "puyoB(Clone)": color = 1; break;
             case "puyoC(Clone)": color = 2; break;
             case "puyoD(Clone)": color = 3; break;
+            case "puyoZ(Clone)": color = 9; break;
             default: color = 255; break;
         }
         cnt = C.EFFECT_FIX_CNT;
@@ -123,6 +124,7 @@ public class Puyo
         if (cnt == C.EFFECT_FIX_CNT)
         {
             if (color == 255) cnt = 100 - 1;
+            // if (color == 255 && gO.name != "puyoZ(Clone)") cnt = 100 - 1;
             else return;
         }
         if (cnt == C.EFFECT_REMOVE_CNT + 100) return;

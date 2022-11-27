@@ -11,7 +11,7 @@ public class PuyoPuyo
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
         puyo = new List<Puyo> { p0, p1 };
-        rot = 0;
+        rot = 3;
         cnt = 0;
     }
 

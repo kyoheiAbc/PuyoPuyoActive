@@ -44,6 +44,7 @@ public class PuyoManager
 
         for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
         {
+            if (puyoListPlus[i].getColor() == 9) continue;
             if (puyoListPlus[i].canDrop(puyoListPlus)) return true;
         }
         return false;

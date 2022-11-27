@@ -11,7 +11,6 @@ public class Main : MonoBehaviour
     ColorBag colorBag;
     ComboManager comboManager;
     EffectManager effectManager;
-    Gauge[] gauge;
     int cnt;
 
     private void Awake()
@@ -36,16 +35,6 @@ public class Main : MonoBehaviour
         comboManager = new ComboManager();
         effectManager = new EffectManager();
 
-        gauge = new Gauge[2];
-        gauge[0] = new Gauge(
-            Instantiate(C.GAUGE, new Vector2(0f, -0.75f), Quaternion.identity),
-            new Vector2(3.5f, 0.25f)
-        );
-
-        gauge[1] = new Gauge(
-            Instantiate(C.GAUGE, new Vector2(8f, -0.75f), Quaternion.identity),
-            new Vector2(3.5f, 0.25f)
-        );
 
         reset();
     }
@@ -84,8 +73,8 @@ public class Main : MonoBehaviour
         }
 
         puyoPuyo = newPuyoPuyo(new Vector2(3.5f, 12.5f));
-        puyoPuyoNext[0] = newPuyoPuyo(new Vector2(3.5f, 15.5f));
-        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(6.5f, 15.5f));
+        puyoPuyoNext[0] = newPuyoPuyo(new Vector2(8.5f, 11f));
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
 
         cnt = 0;
     }
@@ -102,7 +91,7 @@ public class Main : MonoBehaviour
             if (cnt - 900 - 1 != (int)C.NEXT_GAME_CNT) return;
             reset();
         }
-        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null || field.getPuyo(new Vector2(4.5f, 12.5f)) != null)
+        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null)
         {
             cnt = 900;
             return;
@@ -204,11 +193,6 @@ public class Main : MonoBehaviour
                 cnt = 0;
                 comboManager.setCnt(1);
 
-                if (UnityEngine.Random.Range(0, 101) > 75)
-                {
-                    gauge[0].addPoint(-10);
-                    gauge[0].setUi();
-                }
             }
         }
 
@@ -231,12 +215,7 @@ public class Main : MonoBehaviour
                     p = p + (Vector2)gO[i].transform.position / gO.Length;
                     effectManager.add(gO[i], Instantiate(C.EFFECT_EXPLOSION));
                     Destroy(gO[i]);
-                    gauge[1].addPoint(-1);
-                    gauge[1].setUi();
-
                 }
-                attack(C.I);
-
                 comboManager.setCombo(p);
 
             }
@@ -262,11 +241,11 @@ public class Main : MonoBehaviour
     {
         puyoPuyo = puyoPuyoNext[0];
         puyoPuyoNext[0] = puyoPuyoNext[1];
-        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(6.5f, 15.5f));
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
 
         puyoPuyo.setPos(new Vector2(3.5f, 12.5f));
-        puyoPuyoNext[0].setPos(new Vector2(3.5f, 15.5f));
-        puyoPuyoNext[1].setPos(new Vector2(6.5f, 15.5f));
+        puyoPuyoNext[0].setPos(new Vector2(8.5f, 11));
+        puyoPuyoNext[1].setPos(new Vector2(8.5f, 7.5f));
 
         puyoPuyo.render();
         puyoPuyoNext[0].render();
@@ -279,7 +258,7 @@ public class Main : MonoBehaviour
     {
         return new PuyoPuyo(
             newPuyo(colorBag.getColor(), pos),
-            newPuyo(colorBag.getColor(), pos + C.VEC_X)
+            newPuyo(colorBag.getColor(), pos + C.VEC_Y)
         );
     }
 
@@ -288,9 +267,5 @@ public class Main : MonoBehaviour
         return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
     }
 
-    private void attack(Transform t)
-    {
-        t.position = (Vector2)t.position + new Vector2(1, 0);
-    }
 
 }
