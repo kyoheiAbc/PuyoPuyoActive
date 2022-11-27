@@ -8,6 +8,11 @@ public class EffectManager
 
     public EffectManager()
     {
+        init();
+    }
+
+    public void init()
+    {
         eElist = new List<EffectExplosion>();
     }
 

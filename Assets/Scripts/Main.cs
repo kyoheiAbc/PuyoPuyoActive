@@ -35,7 +35,6 @@ public class Main : MonoBehaviour
         comboManager = new ComboManager();
         effectManager = new EffectManager();
 
-
         reset();
     }
 
@@ -55,6 +54,7 @@ public class Main : MonoBehaviour
         field.init();
         puyoManager.init();
         colorBag.init();
+        effectManager.init();
 
         GameObject gO = Resources.Load<GameObject>("puyo");
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)
@@ -166,10 +166,8 @@ public class Main : MonoBehaviour
         puyoManager.setPuyo(field);
 
 
-
         // fix effect
         field.effect();
-
 
 
         // rm check
@@ -177,10 +175,7 @@ public class Main : MonoBehaviour
         if (puyoPuyo != null) puyoPuyoList = puyoPuyo.getPuyo();
         else puyoPuyoList = new List<Puyo>();
 
-        if (cnt == 100 &&
-            !field.effectIng() &&
-            !puyoManager.canDrop(puyoPuyoList)
-        )
+        if (cnt == 100 && !field.effectIng() && !puyoManager.canDrop(puyoPuyoList))
         {
             int rmCnt = field.rmCheck();
             if (rmCnt > 0)
@@ -192,7 +187,6 @@ public class Main : MonoBehaviour
             {
                 cnt = 0;
                 comboManager.setCnt(1);
-
             }
         }
 
@@ -217,7 +211,6 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
-
             }
         }
 
@@ -228,30 +221,31 @@ public class Main : MonoBehaviour
         // render
         if (puyoPuyo != null) puyoPuyo.render();
         puyoManager.render();
+
         effectManager.render();
         GameObject[] gOe = GameObject.FindGameObjectsWithTag("REMOVE");
         for (int i = 0; i < gOe.Length; i++) Destroy(gOe[i]);
 
 
+        // debug
         int nowTime = DateTime.Now.Millisecond;
         // if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
 
     }
-    private bool nextPuyo()
+
+    private void nextPuyo()
     {
         puyoPuyo = puyoPuyoNext[0];
-        puyoPuyoNext[0] = puyoPuyoNext[1];
-        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
-
         puyoPuyo.setPos(new Vector2(3.5f, 12.5f));
+
+        puyoPuyoNext[0] = puyoPuyoNext[1];
         puyoPuyoNext[0].setPos(new Vector2(8.5f, 11));
-        puyoPuyoNext[1].setPos(new Vector2(8.5f, 7.5f));
+
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
 
         puyoPuyo.render();
         puyoPuyoNext[0].render();
         puyoPuyoNext[1].render();
-
-        return true;
     }
 
     private PuyoPuyo newPuyoPuyo(Vector2 pos)
@@ -266,6 +260,4 @@ public class Main : MonoBehaviour
     {
         return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
     }
-
-
 }

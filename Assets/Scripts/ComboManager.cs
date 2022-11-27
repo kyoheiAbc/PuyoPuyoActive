@@ -18,8 +18,6 @@ public class ComboManager
         text = GameObject.Find("ComboUI").GetComponent<TextMeshPro>();
         t.gameObject.GetComponent<MeshRenderer>().sortingOrder = 99;
         init();
-        plus = 0;
-
     }
 
     public void init()
