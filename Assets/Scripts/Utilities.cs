@@ -21,6 +21,9 @@ public static class C
     public static readonly int EFFECT_REMOVE_CNT = 30;
     public static readonly int EFFECT_FIX_CNT = 10;
     public static readonly int COMBO_CNT = 45;
+
+    public static readonly int BOSS_HP = 7;
+
     public static readonly GameObject[] PUYO = new GameObject[10] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),
@@ -40,6 +43,19 @@ public static class C
     {
         return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
     }
+
+    public static int COMBO_TO_OJAMA(int c)
+    {
+        switch (c)
+        {
+            case 0:
+            case 1: return c;
+            case 2: return 3;
+            case 3: return 6;
+        }
+        return (int)(9 * Mathf.Pow(2, c - 4));
+    }
+
 }
 
 public class ColorBag

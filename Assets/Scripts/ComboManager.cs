@@ -45,6 +45,11 @@ public class ComboManager
         t.position = pos;
     }
 
+    public int getCombo()
+    {
+        return combo;
+    }
+
     public void setPlus(int p)
     {
         plus = p;

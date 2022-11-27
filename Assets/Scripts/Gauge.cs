@@ -7,7 +7,8 @@ public class Gauge
     GameObject gameObject;
     Transform transform;
     Transform[] children;
-    float point;
+    float max;
+    float hp;
     public Gauge(GameObject gO, Vector2 t)
     {
         gameObject = gO;
@@ -17,21 +18,31 @@ public class Gauge
         children[0] = transform.GetChild(0).gameObject.transform;
         children[1] = transform.GetChild(1).gameObject.transform;
 
-        point = 100;
+        max = (float)C.COMBO_TO_OJAMA(C.BOSS_HP) * 2f; // + 1f;
     }
 
-    public void addPoint(float p)
+    public void init()
     {
-        point = point + p;
-        if (point > 100) point = 100;
-        if (point < 0) point = 0;
+        hp = max;
+        setUi();
+    }
+
+    public void addPoint(float h)
+    {
+        hp = hp + h;
+        if (hp > max) hp = max;
+        if (hp < 0) hp = 0;
+    }
+
+    public int getHp()
+    {
+        return (int)hp;
     }
 
     public void setUi()
     {
-        Debug.Log(point);
-        children[1].transform.localScale = new Vector2(point / 100f, 1);
-        children[1].transform.localPosition = new Vector2(-(100f - point) / 200f, 0);
+        children[1].transform.localScale = new Vector2(hp / max, 1);
+        children[1].transform.localPosition = new Vector2(-(max - hp) / (2 * max), 0);
     }
 
 }
