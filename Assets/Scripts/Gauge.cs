@@ -9,7 +9,7 @@ public class Gauge
     Transform[] children;
     float max;
     float point;
-    public Gauge(float m, Vector2 t, GameObject gO)
+    public Gauge(float m, Vector2 t, GameObject gO, Color c)
     {
         gameObject = gO;
         transform = gO.transform;
@@ -17,6 +17,7 @@ public class Gauge
         children = new Transform[2];
         children[0] = transform.GetChild(0).gameObject.transform;
         children[1] = transform.GetChild(1).gameObject.transform;
+        children[1].GetComponent<SpriteRenderer>().color = c;
 
         max = m;
         init();
