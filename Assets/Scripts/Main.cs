@@ -68,7 +68,7 @@ public class Main : MonoBehaviour
         {
             for (int x = 0; x < C.FIELD_SIZE_X; x++)
             {
-                if (y == 0 || y == C.FIELD_SIZE_Y - 1 ||
+                if (y == 0 || // y == C.FIELD_SIZE_Y - 1 ||
                     x == 0 || x == C.FIELD_SIZE_X - 1)
                 {
                     gO.transform.position = new Vector2(x + 0.5f, y + 0.5f);
