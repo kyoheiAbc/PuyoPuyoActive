@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public static class C
 {
@@ -21,6 +22,7 @@ public static class C
     public static readonly int EFFECT_REMOVE_CNT = 30;
     public static readonly int EFFECT_FIX_CNT = 10;
     public static readonly int COMBO_CNT = 45;
+    public static readonly int GAME_TIME_SEC = 120;
 
     public static readonly GameObject[] PUYO = new GameObject[10] {
         Resources.Load<GameObject>("puyoA"),
@@ -36,6 +38,7 @@ public static class C
     };
     public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
     public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
+    public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
 
     public static float QuadraticF(float x, float max)
     {
