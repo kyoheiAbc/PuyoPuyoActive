@@ -19,7 +19,7 @@ public class PuyoManager
         List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
         puyoListPlus.AddRange(puyoPuyo);
 
-        for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
+        for (int i = 0 + 40; i < puyoListPlus.Count - puyoPuyo.Count; i++)
         {
             puyoListPlus[i].move(vec, puyoListPlus, false);
 
@@ -28,7 +28,7 @@ public class PuyoManager
 
     public void setPuyo(Field field)
     {
-        for (int i = 0 + 46; i < puyoList.Count; i++)
+        for (int i = 0 + 40; i < puyoList.Count; i++)
         {
             if (field.getPuyo(puyoList[i].getPos() + C.UNDER) != null)
             {
@@ -42,10 +42,20 @@ public class PuyoManager
         List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
         puyoListPlus.AddRange(puyoPuyo);
 
-        for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
+        for (int i = 0 + 40; i < puyoListPlus.Count - puyoPuyo.Count; i++)
         {
-            if (puyoListPlus[i].getColor() == 9) continue;
+            // if (puyoListPlus[i].getColor() == 9) continue;
             if (puyoListPlus[i].canDrop(puyoListPlus)) return true;
+        }
+        return false;
+    }
+
+    public bool ojamaDrop()
+    {
+        for (int i = 0 + 40; i < puyoList.Count; i++)
+        {
+            if (puyoList[i].getColor() != 9) continue;
+            if (puyoList[i].canDrop(puyoList)) return true;
         }
         return false;
     }
@@ -53,7 +63,7 @@ public class PuyoManager
     public void addPuyo(Puyo puyo)
     {
         Vector2 pos = puyo.getPos();
-        for (int i = 0 + 46; i < puyoList.Count; i++)
+        for (int i = 0 + 40; i < puyoList.Count; i++)
         {
             if (pos.x == puyoList[i].getPos().x)
             {
@@ -69,7 +79,7 @@ public class PuyoManager
 
     public void rm()
     {
-        for (int i = 0 + 46; i < puyoList.Count; i++)
+        for (int i = 0 + 40; i < puyoList.Count; i++)
         {
             if (puyoList[i].getColor() == 255)
             {
@@ -93,6 +103,6 @@ public class PuyoManager
 
     public void render()
     {
-        for (int i = 0 + 46; i < puyoList.Count; i++) puyoList[i].render();
+        for (int i = 0 + 40; i < puyoList.Count; i++) puyoList[i].render();
     }
 }
