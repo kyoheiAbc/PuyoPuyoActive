@@ -28,6 +28,13 @@ public class Gauge
         setUi();
     }
 
+    public void setPoint(float p)
+    {
+        point = p;
+        if (point < 0) point = 0;
+        setUi();
+    }
+
     public void setUi()
     {
         children[1].transform.localScale = new Vector2(point / max, 1);

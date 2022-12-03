@@ -36,7 +36,7 @@ public class Main : MonoBehaviour
         colorBag = new ColorBag();
         comboManager = new ComboManager();
         effectManager = new EffectManager();
-        boss = new Boss(C.COMBO_TO_OJAMA(7), Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity));
+        boss = new Boss(C.COMBO_TO_OJAMA(5), Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity));
 
         reset();
     }
@@ -59,6 +59,7 @@ public class Main : MonoBehaviour
         colorBag.init();
         effectManager.init();
         comboManager.init();
+        boss.init();
 
         GameObject gO = Resources.Load<GameObject>("puyo");
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)
@@ -96,6 +97,11 @@ public class Main : MonoBehaviour
             reset();
         }
         if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null)
+        {
+            cnt = 900;
+            return;
+        }
+        if (boss.getHp() == 0)
         {
             cnt = 900;
             return;
@@ -215,6 +221,8 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
+
+                boss.setHp(boss.getHp() - C.COMBO_TO_OJAMA(comboManager.getCombo()));
             }
         }
 
