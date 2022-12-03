@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 public class Main : MonoBehaviour
 {
     InputController inputController;
@@ -13,6 +14,7 @@ public class Main : MonoBehaviour
     EffectManager effectManager;
     Boss boss;
 
+    int gameTimer;
     int cnt;
 
     private void Awake()
@@ -82,6 +84,7 @@ public class Main : MonoBehaviour
         puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
 
         cnt = 0;
+        gameTimer = C.GAME_TIME_SEC * C.FPS;
     }
 
     void Update()
@@ -96,6 +99,16 @@ public class Main : MonoBehaviour
             if (cnt - 900 - 1 != (int)C.NEXT_GAME_CNT) return;
             reset();
         }
+
+        gameTimer--;
+        C.GAME_TIME_TEXT.text = ((int)(gameTimer / C.FPS) + 1).ToString();
+        if (gameTimer == -1)
+        {
+            C.GAME_TIME_TEXT.text = "0";
+            cnt = 900;
+            return;
+        }
+
         if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null)
         {
             cnt = 900;
