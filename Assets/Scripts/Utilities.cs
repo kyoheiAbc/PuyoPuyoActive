@@ -22,8 +22,6 @@ public static class C
     public static readonly int EFFECT_FIX_CNT = 10;
     public static readonly int COMBO_CNT = 45;
 
-    public static readonly int BOSS_HP = 7;
-
     public static readonly GameObject[] PUYO = new GameObject[10] {
         Resources.Load<GameObject>("puyoA"),
         Resources.Load<GameObject>("puyoB"),
