@@ -88,7 +88,18 @@ public class PuyoManager
                 i--;
             }
         }
+    }
 
+    public float getMaxY(List<Puyo> puyoPuyo)
+    {
+        List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
+        puyoListPlus.AddRange(puyoPuyo);
+        float ret = 0;
+        for (int i = 0 + 40; i < puyoListPlus.Count; i++)
+        {
+            if (puyoListPlus[i].getPos().y > ret) ret = puyoListPlus[i].getPos().y;
+        }
+        return ret;
     }
 
     public void init()

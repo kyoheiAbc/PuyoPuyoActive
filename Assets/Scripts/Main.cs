@@ -38,7 +38,15 @@ public class Main : MonoBehaviour
         colorBag = new ColorBag();
         comboManager = new ComboManager();
         effectManager = new EffectManager();
-        boss = new Boss(C.COMBO_TO_OJAMA(5), Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity));
+        boss = new Boss(
+            C.COMBO_TO_OJAMA(9),
+            270,
+            9,
+            new GameObject[2] {
+                Instantiate(C.GAUGE, new Vector2(7.5f, 20.125f), Quaternion.identity),
+                Instantiate(C.GAUGE, new Vector2(7.5f, 19.75f), Quaternion.identity)
+            }
+        );
 
         reset();
     }
@@ -109,10 +117,16 @@ public class Main : MonoBehaviour
             return;
         }
 
-        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null)
+        for (int y = 0; y < 2; y++)
         {
-            cnt = 900;
-            return;
+            for (int x = 0; x < 6; x++)
+            {
+                if (field.getPuyo(new Vector2(x + 1.5f, 14.5f + y)) != null)
+                {
+                    cnt = 900;
+                    return;
+                }
+            }
         }
         if (boss.getHp() == 0)
         {
@@ -242,6 +256,12 @@ public class Main : MonoBehaviour
         // combo
         comboManager.update();
 
+        // boss
+        if (boss.update() == 1)
+        {
+            ojameGen(boss.getAtk());
+        }
+
 
         // render
         if (puyoPuyo != null) puyoPuyo.render();
@@ -285,4 +305,33 @@ public class Main : MonoBehaviour
     {
         return new Puyo(Instantiate(C.PUYO[color], pos, Quaternion.identity));
     }
+
+    private void ojameGen(int num)
+    {
+
+        int[] xAry = new int[6];
+        for (int i = 0; i < xAry.Length; i++)
+        {
+            xAry[i] = i;
+        }
+        for (int i = xAry.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            int tmp = xAry[i];
+            xAry[i] = xAry[j];
+            xAry[j] = tmp;
+        }
+
+        int n = 0;
+        for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                n++;
+                puyoManager.addPuyo(newPuyo(9, new Vector2(xAry[x] + 1.5f, 16.5f + y)));
+                if (n == num) return;
+            }
+        }
+    }
+
 }

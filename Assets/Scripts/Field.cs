@@ -11,14 +11,23 @@ public class Field
         ary = new Puyo[C.FIELD_SIZE_Y, C.FIELD_SIZE_X];
     }
 
-    public void setPuyo(Puyo puyo)
+    public bool setPuyo(Puyo puyo)
     {
         Vector2 pos = puyo.getPos();
+        if ((int)pos.y >= ary.GetLength(0))
+        {
+            return false;
+        }
+
         ary[(int)pos.y, (int)pos.x] = puyo;
+
+        return true;
     }
 
     public Puyo getPuyo(Vector2 pos)
     {
+        if ((int)pos.y >= ary.GetLength(0)) return null;
+
         return ary[(int)pos.y, (int)pos.x];
     }
 
