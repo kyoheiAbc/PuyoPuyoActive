@@ -16,6 +16,8 @@ public class GameParameters
     public float BOSS_SPEED = 180;
     public int GAME_TIME_SEC = 120;
     public int NEXT_GAME_CNT = 90;
+    public float VEC_DROP_Y = 0.03f;
+    public float VEC_DROP_QUICK_Y = 0.4f;
 }
 
 public class Options
@@ -51,6 +53,8 @@ public class Options
         C.BOSS_SPEED = gameParams.BOSS_SPEED;
         C.GAME_TIME_SEC = gameParams.GAME_TIME_SEC;
         C.NEXT_GAME_CNT = gameParams.NEXT_GAME_CNT;
+        C.VEC_DROP = new Vector2(0, -gameParams.VEC_DROP_Y);
+        C.VEC_DROP_QUICK = new Vector2(0, -gameParams.VEC_DROP_QUICK_Y);
     }
 
 }

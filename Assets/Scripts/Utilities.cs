@@ -17,7 +17,8 @@ public static class C
     public static float BOSS_SPEED;
     public static int GAME_TIME_SEC;
     public static int NEXT_GAME_CNT;
-
+    public static Vector2 VEC_DROP;
+    public static Vector2 VEC_DROP_QUICK;
     public static readonly int FIELD_SIZE_X = 8;
     public static readonly int FIELD_SIZE_Y = 17;
     public static readonly int COLOR_ADJUST = 8;
@@ -25,8 +26,6 @@ public static class C
     public static readonly Vector2 VEC_X = new Vector2(1, 0);
     public static readonly Vector2 VEC_Y = new Vector2(0, 1);
     public static readonly Vector2 UNDER = new Vector2(0, -0.501f);
-    public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
-    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
 
     public static readonly GameObject[] PUYO = new GameObject[10] {
         Resources.Load<GameObject>("puyoA"),
