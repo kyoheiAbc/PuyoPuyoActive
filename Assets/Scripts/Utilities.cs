@@ -32,7 +32,7 @@ public static class C
         Resources.Load<GameObject>("puyoB"),
         Resources.Load<GameObject>("puyoC"),
         Resources.Load<GameObject>("puyoD"),
-        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>("puyoE"),
         Resources.Load<GameObject>(""),
         Resources.Load<GameObject>(""),
         Resources.Load<GameObject>(""),
@@ -68,13 +68,28 @@ public class ColorBag
     int cnt;
     public ColorBag()
     {
+
+    }
+    public void init()
+    {
+        int[] colors = new int[5] { 0, 1, 2, 3, 4 };
+        for (int i = colors.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            int tmp = colors[i];
+            colors[i] = colors[j];
+            colors[j] = tmp;
+        }
+
         bag = new int[C.COLOR_NUMBER * C.COLOR_ADJUST];
         for (int i = 0; i < bag.Length; i++)
         {
-            bag[i] = i % C.COLOR_NUMBER;
+            bag[i] = colors[i % C.COLOR_NUMBER];
         }
+        reset();
     }
-    public void init()
+
+    public void reset()
     {
         cnt = -1;
         for (int i = bag.Length - 1; i > 0; i--)
@@ -90,7 +105,7 @@ public class ColorBag
     {
         if (cnt == bag.Length - 1)
         {
-            init();
+            reset();
         }
         cnt++;
         return bag[cnt];

@@ -21,6 +21,7 @@ public class Puyo
             case "puyoB(Clone)": color = 1; break;
             case "puyoC(Clone)": color = 2; break;
             case "puyoD(Clone)": color = 3; break;
+            case "puyoE(Clone)": color = 4; break;
             case "puyoZ(Clone)": color = 9; break;
             default: color = 255; break;
         }
