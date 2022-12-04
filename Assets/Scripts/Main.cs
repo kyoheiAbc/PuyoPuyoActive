@@ -19,6 +19,8 @@ public class Main : MonoBehaviour
 
     private void Awake()
     {
+        new Options();
+
         Application.targetFrameRate = C.FPS;
 
         // Camera
@@ -39,9 +41,9 @@ public class Main : MonoBehaviour
         comboManager = new ComboManager();
         effectManager = new EffectManager();
         boss = new Boss(
-            C.COMBO_TO_OJAMA(9),
-            270,
-            9,
+            C.BOSS_HP,
+            C.BOSS_SPEED,
+            C.BOSS_ATTACK,
             new GameObject[2] {
                 Instantiate(C.GAUGE, new Vector2(7.5f, 20.125f), Quaternion.identity),
                 Instantiate(C.GAUGE, new Vector2(7.5f, 19.75f), Quaternion.identity)
