@@ -13,6 +13,7 @@ public class Main : MonoBehaviour
     ComboManager comboManager;
     EffectManager effectManager;
     Boss boss;
+    OjamaManager ojamaManager;
 
     int gameTimer;
     int cnt;
@@ -40,14 +41,29 @@ public class Main : MonoBehaviour
         colorBag = new ColorBag();
         comboManager = new ComboManager();
         effectManager = new EffectManager();
+
+        GameObject[,] gOary = new GameObject[12, 6];
+        GameObject gO = Resources.Load<GameObject>("puyoZ_");
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                gOary[y, x] = Instantiate(gO, new Vector2(x + 1.5f, y + 1.5f), Quaternion.identity);
+            }
+        }
+        ojamaManager = new OjamaManager(gOary);
+
         boss = new Boss(
             C.BOSS_HP,
             C.BOSS_SPEED,
             C.BOSS_ATTACK,
-            new GameObject[2] {
-                Instantiate(C.GAUGE, new Vector2(7.5f, 20.125f), Quaternion.identity),
-                Instantiate(C.GAUGE, new Vector2(7.5f, 19.75f), Quaternion.identity)
-            }
+            C.BOSS_MASK_SPEED,
+            new GameObject[3] {
+                Instantiate(C.GAUGE, new Vector2(7.5f, 21f), Quaternion.identity),
+                Instantiate(C.GAUGE, new Vector2(7.5f, 20.5f), Quaternion.identity),
+                Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity)
+            },
+            ojamaManager
         );
 
         reset();
@@ -72,6 +88,7 @@ public class Main : MonoBehaviour
         effectManager.init();
         comboManager.init();
         boss.init();
+        ojamaManager.init(false);
 
         GameObject gO = Resources.Load<GameObject>("puyo");
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)

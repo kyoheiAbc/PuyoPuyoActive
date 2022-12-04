@@ -13,6 +13,9 @@ public class GameParameters
     public int COMBO_CNT = 30;
     public float BOSS_HP = C.COMBO_TO_OJAMA(7) * 2;
     public int BOSS_ATTACK = 6;
+    public int BOSS_MASK_NUM = 18;
+    public int BOSS_MASK_TIME = 90;
+    public float BOSS_MASK_SPEED = 270;
     public float BOSS_SPEED = 180;
     public int GAME_TIME_SEC = 120;
     public int NEXT_GAME_CNT = 90;
@@ -51,6 +54,9 @@ public class Options
         C.BOSS_HP = gameParams.BOSS_HP;
         C.BOSS_ATTACK = gameParams.BOSS_ATTACK;
         C.BOSS_SPEED = gameParams.BOSS_SPEED;
+        C.BOSS_MASK_NUM = gameParams.BOSS_MASK_NUM;
+        C.BOSS_MASK_TIME = gameParams.BOSS_MASK_TIME;
+        C.BOSS_MASK_SPEED = gameParams.BOSS_MASK_SPEED;
         C.GAME_TIME_SEC = gameParams.GAME_TIME_SEC;
         C.NEXT_GAME_CNT = gameParams.NEXT_GAME_CNT;
         C.VEC_DROP = new Vector2(0, -gameParams.VEC_DROP_Y);

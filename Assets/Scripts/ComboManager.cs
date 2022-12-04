@@ -11,6 +11,7 @@ public class ComboManager
     int cnt;
     TextMeshPro text;
     Transform t;
+    Gauge gauge;
 
     public ComboManager()
     {
