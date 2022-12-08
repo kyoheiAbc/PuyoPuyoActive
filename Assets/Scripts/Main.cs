@@ -39,7 +39,7 @@ public class Main : MonoBehaviour
         puyoManager = new PuyoManager();
         puyoPuyoNext = new PuyoPuyo[2];
         colorBag = new ColorBag();
-        comboManager = new ComboManager();
+        comboManager = new ComboManager(Instantiate(C.GAUGE, new Vector2(9f, 2.5f), Quaternion.identity));
         effectManager = new EffectManager();
 
         GameObject[,] gOary = new GameObject[12, 6];
@@ -242,7 +242,10 @@ public class Main : MonoBehaviour
             else
             {
                 cnt = 0;
-                comboManager.setCnt(1);
+                if (comboManager.getCnt() == C.COMBO_CNT)
+                {
+                    comboManager.setCnt(C.COMBO_CNT - 1);
+                }
             }
         }
 

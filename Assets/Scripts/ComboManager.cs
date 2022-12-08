@@ -13,11 +13,15 @@ public class ComboManager
     Transform t;
     Gauge gauge;
 
-    public ComboManager()
+    public ComboManager(GameObject gO)
     {
         t = GameObject.Find("ComboUI").transform;
         text = GameObject.Find("ComboUI").GetComponent<TextMeshPro>();
         t.gameObject.GetComponent<MeshRenderer>().sortingOrder = 99;
+
+        gO.transform.Rotate(0, 0, 90);
+        gauge = new Gauge(C.COMBO_CNT, new Vector2(3f, 1f), gO, Color.magenta);
+
         init();
     }
 
@@ -25,23 +29,24 @@ public class ComboManager
     {
         combo = 0;
         cnt = 0;
+        gauge.setPoint(cnt);
         text.text = "";
     }
 
     public void update()
     {
-        if (cnt > 0)
-        {
-            cnt++;
-        }
-        if (cnt == C.COMBO_CNT) init();
+        if (C.COMBO_CNT > cnt) cnt--;
+        gauge.setPoint(cnt);
+        if (cnt == 0) init();
     }
 
     public void setCombo(Vector2 pos)
     {
         combo = combo + plus;
         plus = 0;
-        cnt = 0;
+        cnt = C.COMBO_CNT;
+        gauge.setPoint(cnt);
+
         text.text = combo + " COMBO";
         t.position = pos;
     }
@@ -59,5 +64,8 @@ public class ComboManager
     {
         cnt = c;
     }
-
+    public int getCnt()
+    {
+        return cnt;
+    }
 }
