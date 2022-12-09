@@ -7,7 +7,8 @@ using TMPro;
 public class OjamaManager
 {
     // GameObject[,] ary;
-    int ojama;
+    int atk, atkTmp;
+    int dmg, dmgTmp;
     TextMeshPro text;
 
     public OjamaManager(GameObject[,] g)
@@ -27,17 +28,43 @@ public class OjamaManager
         //     }
         // }
         text.text = "";
-        ojama = 0;
-    }
-    public void setOjama(int o)
-    {
-        ojama = o;
-        text.text = ojama.ToString();
+        atk = 0;
+        atkTmp = 0;
+        dmg = 0;
+        dmgTmp = 0;
     }
 
-    public int getOjama()
+    public void update()
     {
-        return ojama;
+        text.text = ((atk + atkTmp) - (dmg + dmgTmp)).ToString();
+    }
+    public void setAtkTmp(int a)
+    {
+        atkTmp += a;
+    }
+    public void setAtk()
+    {
+        atk = atk + atkTmp;
+        atkTmp = 0;
+    }
+    public void setDmgTmp(int d)
+    {
+        dmgTmp += d;
+    }
+    public void setDmg()
+    {
+        dmg = dmg + dmgTmp;
+        dmgTmp = 0;
+    }
+
+    public void reset()
+    {
+        atk = 0;
+        dmg = 0;
+    }
+    public int getAtkDmg()
+    {
+        return atk - dmg;
     }
 
 

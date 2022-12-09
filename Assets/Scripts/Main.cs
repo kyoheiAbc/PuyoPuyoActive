@@ -256,26 +256,38 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
-                ojamaManager.setOjama(ojamaManager.getOjama() + C.COMBO_TO_OJAMA(comboManager.getCombo()));
+                ojamaManager.setAtkTmp(C.COMBO_TO_OJAMA(comboManager.getCombo()));
             }
         }
 
         // combo
-        if (comboManager.update() == 0 && boss.getCombo() == 0)
+        comboManager.update();
+
+        if (comboManager.getCombo() == 0)
         {
-            if (ojamaManager.getOjama() > 0)
-            {
-                boss.setHp(boss.getHp() - ojamaManager.getOjama());
-            }
-            else if (ojamaManager.getOjama() < 0)
+            ojamaManager.setAtk();
+            if (ojamaManager.getAtkDmg() < 0)
             {
                 ojameGen(3);
+                ojamaManager.reset();
             }
-            ojamaManager.setOjama(0);
         }
 
+        // ojama
+        ojamaManager.update();
+
         // boss
-        ojamaManager.setOjama(ojamaManager.getOjama() - C.COMBO_TO_OJAMA(boss.update()));
+        ojamaManager.setDmgTmp(C.COMBO_TO_OJAMA(boss.update()));
+
+        if (boss.getCombo() == 0)
+        {
+            ojamaManager.setDmg();
+            if (ojamaManager.getAtkDmg() > 0)
+            {
+                boss.setHp(boss.getHp() - ojamaManager.getAtkDmg());
+                ojamaManager.reset();
+            }
+        }
 
 
         // render
@@ -289,7 +301,7 @@ public class Main : MonoBehaviour
 
         // debug
         int nowTime = DateTime.Now.Millisecond;
-        if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
+        // if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
 
     }
 
