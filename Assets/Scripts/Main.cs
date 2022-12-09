@@ -15,7 +15,6 @@ public class Main : MonoBehaviour
     Boss boss;
     OjamaManager ojamaManager;
 
-    int gameTimer;
     int cnt;
 
     private void Awake()
@@ -43,27 +42,22 @@ public class Main : MonoBehaviour
         effectManager = new EffectManager();
 
         GameObject[,] gOary = new GameObject[12, 6];
-        GameObject gO = Resources.Load<GameObject>("puyoZ_");
-        for (int y = 0; y < 12; y++)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                gOary[y, x] = Instantiate(gO, new Vector2(x + 1.5f, y + 1.5f), Quaternion.identity);
-            }
-        }
+        // GameObject gO = Resources.Load<GameObject>("puyoZ_");
+        // for (int y = 0; y < 12; y++)
+        // {
+        //     for (int x = 0; x < 6; x++)
+        //     {
+        //         gOary[y, x] = Instantiate(gO, new Vector2(x + 1.5f, y + 1.5f), Quaternion.identity);
+        //     }
+        // }
         ojamaManager = new OjamaManager(gOary);
 
         boss = new Boss(
-            C.BOSS_HP,
-            C.BOSS_SPEED,
-            C.BOSS_ATTACK,
-            C.BOSS_MASK_SPEED,
             new GameObject[3] {
                 Instantiate(C.GAUGE, new Vector2(7.5f, 21f), Quaternion.identity),
                 Instantiate(C.GAUGE, new Vector2(7.5f, 20.5f), Quaternion.identity),
                 Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity)
-            },
-            ojamaManager
+            }
         );
 
         reset();
@@ -88,7 +82,7 @@ public class Main : MonoBehaviour
         effectManager.init();
         comboManager.init();
         boss.init();
-        ojamaManager.init(false);
+        ojamaManager.init();
 
         GameObject gO = Resources.Load<GameObject>("puyo");
         for (int y = 0; y < C.FIELD_SIZE_Y; y++)
@@ -111,7 +105,6 @@ public class Main : MonoBehaviour
         puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
 
         cnt = 0;
-        gameTimer = C.GAME_TIME_SEC * C.FPS;
     }
 
     void Update()
@@ -127,31 +120,23 @@ public class Main : MonoBehaviour
             reset();
         }
 
-        gameTimer--;
-        C.GAME_TIME_TEXT.text = ((int)(gameTimer / C.FPS) + 1).ToString();
-        if (gameTimer == -1)
-        {
-            C.GAME_TIME_TEXT.text = "0";
-            cnt = 900;
-            return;
-        }
 
-        for (int y = 0; y < 2; y++)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                if (field.getPuyo(new Vector2(x + 1.5f, 14.5f + y)) != null)
-                {
-                    cnt = 900;
-                    return;
-                }
-            }
-        }
-        if (boss.getHp() == 0)
-        {
-            cnt = 900;
-            return;
-        }
+        // for (int y = 0; y < 2; y++)
+        // {
+        //     for (int x = 0; x < 6; x++)
+        //     {
+        //         if (field.getPuyo(new Vector2(x + 1.5f, 14.5f + y)) != null)
+        //         {
+        //             cnt = 900;
+        //             return;
+        //         }
+        //     }
+        // }
+        // if (boss.getHp() == 0)
+        // {
+        //     cnt = 900;
+        //     return;
+        // }
 
         // generate
         if (puyoPuyo == null)
@@ -198,6 +183,7 @@ public class Main : MonoBehaviour
         // drop
         puyoPuyo.move(C.VEC_DROP, puyoManager.getList());
         puyoManager.move(C.VEC_DROP_QUICK, puyoPuyo.getPuyo());
+
 
 
         // field set
@@ -270,19 +256,26 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
-
-                boss.setHp(boss.getHp() - C.COMBO_TO_OJAMA(comboManager.getCombo()));
+                ojamaManager.setOjama(ojamaManager.getOjama() + C.COMBO_TO_OJAMA(comboManager.getCombo()));
             }
         }
 
         // combo
-        comboManager.update();
+        if (comboManager.update() == 0 && boss.getCombo() == 0)
+        {
+            if (ojamaManager.getOjama() > 0)
+            {
+                boss.setHp(boss.getHp() - ojamaManager.getOjama());
+            }
+            else if (ojamaManager.getOjama() < 0)
+            {
+                ojameGen(3);
+            }
+            ojamaManager.setOjama(0);
+        }
 
         // boss
-        if (boss.update() == 1)
-        {
-            ojameGen(boss.getAtk());
-        }
+        ojamaManager.setOjama(ojamaManager.getOjama() - C.COMBO_TO_OJAMA(boss.update()));
 
 
         // render
@@ -296,7 +289,7 @@ public class Main : MonoBehaviour
 
         // debug
         int nowTime = DateTime.Now.Millisecond;
-        // if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
+        if (nowTime - oldTime >= 0) Debug.Log("- " + (nowTime - oldTime) + " -");
 
     }
 

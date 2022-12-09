@@ -1,22 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gauge
 {
-    GameObject gameObject;
-    Transform transform;
     Transform[] children;
     float max;
     float point;
-    public Gauge(float m, Vector2 t, GameObject gO, Color c)
+    public Gauge(float m, Vector2 s, GameObject gO, Color c)
     {
-        gameObject = gO;
-        transform = gO.transform;
-        transform.localScale = t;
+        Transform t = gO.transform;
+        t.localScale = s;
         children = new Transform[2];
-        children[0] = transform.GetChild(0).gameObject.transform;
-        children[1] = transform.GetChild(1).gameObject.transform;
+        children[0] = t.GetChild(0).gameObject.transform;
+        children[1] = t.GetChild(1).gameObject.transform;
         children[1].GetComponent<SpriteRenderer>().color = c;
 
         max = m;
@@ -25,7 +20,7 @@ public class Gauge
 
     public void init()
     {
-        point = max;
+        point = 0;
         setUi();
     }
 
@@ -34,6 +29,10 @@ public class Gauge
         point = p;
         if (point < 0) point = 0;
         setUi();
+    }
+    public float getPoint()
+    {
+        return point;
     }
 
     public void setUi()

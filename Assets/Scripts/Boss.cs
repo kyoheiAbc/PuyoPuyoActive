@@ -4,101 +4,69 @@ using UnityEngine;
 
 public class Boss
 {
-    float hp;
-    float hpMax;
-
-    float sp;
-    float spMax;
-
-    float maskSp;
-    float maskSpMax;
-
-    int ak;
-
+    int cnt;
+    int combo;
     Gauge[] gauge;
 
-    OjamaManager ojamaManager;
-
-    public Boss(float hp_, float sp_, int a, float maskS, GameObject[] gO, OjamaManager oM)
+    public Boss(GameObject[] gO)
     {
-        hpMax = hp_;
-        hp = hpMax;
-
-        spMax = sp_;
-        sp = spMax;
-
-        maskSpMax = maskS;
-        maskSp = maskSpMax;
-
-        ak = a;
-
         gauge = new Gauge[3]{
-            new Gauge(hp, new Vector2(4, 0.25f), gO[0], Color.green),
-            new Gauge(sp, new Vector2(4, 0.25f), gO[1], Color.yellow),
-            new Gauge(maskSp, new Vector2(4, 0.25f), gO[2], Color.white),
+            new Gauge(C.BOSS_HP, new Vector2(4, 0.25f), gO[0], Color.green),
+            new Gauge(C.BOSS_SPEED, new Vector2(4, 0.25f), gO[1], Color.yellow),
+            new Gauge(C.BOSS_SPEED, new Vector2(4, 0.25f), gO[2], Color.white),
         };
-
-        ojamaManager = oM;
     }
+
     public void init()
     {
-        hp = hpMax;
-        sp = 0;
-        maskSp = 0;
+        cnt = 0;
+        combo = 0;
         for (int i = 0; i < 2; i++)
         {
             gauge[i].init();
         }
-        gauge[1].setPoint(0);
+        gauge[0].setPoint(C.BOSS_HP);
     }
 
     public int update()
     {
-        maskSp++;
-        if (maskSp < maskSpMax)
+        cnt++;
+        if (cnt > C.BOSS_SPEED)
         {
-            gauge[2].setPoint(maskSp);
-        }
-        else if (maskSp == maskSpMax)
-        {
-            gauge[2].setPoint(maskSp);
-            ojamaManager.setOjmField(C.BOSS_MASK_NUM);
-        }
-        else if (maskSp > maskSpMax)
-        {
-            gauge[2].setPoint(0);
-            if (maskSp == C.BOSS_MASK_TIME + maskSpMax)
+            if (cnt > C.BOSS_SPEED + C.EFFECT_FIX_CNT + C.EFFECT_REMOVE_CNT + (C.FIELD_SIZE_Y * 0.5f) / -C.VEC_DROP_QUICK.y)
             {
-                maskSp = 0;
-                ojamaManager.init(false);
+                if (gauge[1].getPoint() < 1)
+                {
+                    combo = 0;
+                    cnt = 0;
+                }
+                else
+                {
+                    combo++;
+                    gauge[1].setPoint(gauge[1].getPoint() - C.BOSS_SPEED / C.BOSS_ATTACK);
+                    cnt = (int)C.BOSS_SPEED;
+                    return combo;
+                }
             }
+            return 0;
         }
 
-        sp++;
-        if (sp > spMax)
-        {
-            sp = -1;
-            return 1;
-        }
-
-        gauge[1].setPoint(sp);
+        gauge[1].setPoint(cnt);
         return 0;
+    }
+
+    public int getCombo()
+    {
+        return combo;
     }
 
     public void setHp(float h)
     {
-        hp = h;
-        if (hp < 0) hp = 0;
-        gauge[0].setPoint(hp);
+        gauge[0].setPoint(h > 0 ? h : 0);
     }
     public float getHp()
     {
-        return hp;
-    }
-
-    public int getAtk()
-    {
-        return ak;
+        return gauge[0].getPoint();
     }
 
 }

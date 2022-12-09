@@ -33,11 +33,16 @@ public class ComboManager
         text.text = "";
     }
 
-    public void update()
+    public int update()
     {
-        if (C.COMBO_CNT > cnt) cnt--;
+        if (0 < cnt && cnt < C.COMBO_CNT) cnt--;
+        if (cnt == 0)
+        {
+            combo = 0;
+            text.text = "";
+        }
         gauge.setPoint(cnt);
-        if (cnt == 0) init();
+        return cnt;
     }
 
     public void setCombo(Vector2 pos)

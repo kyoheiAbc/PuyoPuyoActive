@@ -14,10 +14,6 @@ public static class C
     public static int COMBO_CNT;
     public static float BOSS_HP;
     public static int BOSS_ATTACK;
-    public static int BOSS_MASK_NUM;
-    public static int BOSS_MASK_TIME;
-    public static float BOSS_MASK_SPEED;
-
     public static float BOSS_SPEED;
     public static int GAME_TIME_SEC;
     public static int NEXT_GAME_CNT;
@@ -45,7 +41,7 @@ public static class C
     };
     public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
     public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
-    public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
+    // public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
 
     public static float QuadraticF(float x, float max)
     {
