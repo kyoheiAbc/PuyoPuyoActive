@@ -56,11 +56,15 @@ public class OjamaManager
         dmg = dmg + dmgTmp;
         dmgTmp = 0;
     }
+    public int getDmg()
+    {
+        return dmg;
+    }
 
-    public void reset()
+    public void reset(int r)
     {
         atk = 0;
-        dmg = 0;
+        dmg = r;
     }
     public int getAtkDmg()
     {

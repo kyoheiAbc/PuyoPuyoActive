@@ -116,27 +116,21 @@ public class Main : MonoBehaviour
         if (cnt >= 900)
         {
             cnt++;
-            if (cnt - 900 - 1 != (int)C.NEXT_GAME_CNT) return;
+            if (cnt - 900 != (int)C.NEXT_GAME_CNT) return;
             reset();
         }
 
+        if (field.getPuyo(new Vector2(3.5f, 12.5f)) != null)
+        {
+            cnt = 900;
+            return;
+        }
 
-        // for (int y = 0; y < 2; y++)
-        // {
-        //     for (int x = 0; x < 6; x++)
-        //     {
-        //         if (field.getPuyo(new Vector2(x + 1.5f, 14.5f + y)) != null)
-        //         {
-        //             cnt = 900;
-        //             return;
-        //         }
-        //     }
-        // }
-        // if (boss.getHp() == 0)
-        // {
-        //     cnt = 900;
-        //     return;
-        // }
+        if (boss.getHp() == 0)
+        {
+            cnt = 900;
+            return;
+        }
 
         // generate
         if (puyoPuyo == null)
@@ -268,8 +262,8 @@ public class Main : MonoBehaviour
             ojamaManager.setAtk();
             if (ojamaManager.getAtkDmg() < 0)
             {
-                ojameGen(3);
-                ojamaManager.reset();
+                ojameGen(-ojamaManager.getAtkDmg());
+                ojamaManager.reset(0);
             }
         }
 
@@ -284,8 +278,9 @@ public class Main : MonoBehaviour
             ojamaManager.setDmg();
             if (ojamaManager.getAtkDmg() > 0)
             {
+                Debug.Log("ATK " + ojamaManager.getAtkDmg());
                 boss.setHp(boss.getHp() - ojamaManager.getAtkDmg());
-                ojamaManager.reset();
+                ojamaManager.reset(0);
             }
         }
 
@@ -350,13 +345,17 @@ public class Main : MonoBehaviour
         }
 
         int n = 0;
-        for (int y = 0; y < 6; y++)
+        for (int y = 0; y < C.FIELD_SIZE_Y - 5; y++)
         {
-            for (int x = 0; x < 6; x++)
+            for (int x = 0; x < C.FIELD_SIZE_X - 2; x++)
             {
                 n++;
-                puyoManager.addPuyo(newPuyo(9, new Vector2(xAry[x] + 1.5f, 16.5f + y)));
-                if (n == num) return;
+                Vector2 pos = new Vector2(xAry[x] + 1.5f, 14.5f + y);
+                if (field.getPuyo(new Vector2(pos.x, 12.5f - y)) == null)
+                {
+                    puyoManager.addPuyo(newPuyo(9, pos));
+                }
+                if (n >= num) return;
             }
         }
     }

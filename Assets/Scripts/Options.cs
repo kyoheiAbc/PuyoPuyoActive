@@ -10,10 +10,10 @@ public class GameParameters
     public int FIX_CNT = 30;
     public int EFFECT_FIX_CNT = 10;
     public int EFFECT_REMOVE_CNT = 30;
-    public int COMBO_CNT = 15;
+    public int COMBO_CNT = 45;
     public float BOSS_HP = C.COMBO_TO_OJAMA(7) * 2;
-    public int BOSS_ATTACK = 3;
-    public float BOSS_SPEED = 150;
+    public int BOSS_ATTACK = 7;
+    public float BOSS_SPEED = 600;
     public int GAME_TIME_SEC = 150;
     public int NEXT_GAME_CNT = 90;
     public float VEC_DROP_Y = 0.03f;
