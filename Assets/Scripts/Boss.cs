@@ -11,9 +11,9 @@ public class Boss
     public Boss(GameObject[] gO)
     {
         gauge = new Gauge[3]{
-            new Gauge(C.BOSS_HP, new Vector2(4, 0.25f), gO[0], Color.green),
-            new Gauge(C.BOSS_SPEED, new Vector2(4, 0.25f), gO[1], Color.yellow),
-            new Gauge(C.BOSS_SPEED, new Vector2(4, 0.25f), gO[2], Color.white),
+            new Gauge(C.BOSS_HP, new Vector2(5, 0.25f), gO[0], Color.green),
+            new Gauge(C.BOSS_SPEED, new Vector2(5, 0.25f), gO[1], Color.yellow),
+            new Gauge(C.BOSS_SPEED, new Vector2(0, 0), gO[2], Color.white),
         };
     }
 

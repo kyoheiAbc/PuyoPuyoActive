@@ -28,7 +28,7 @@ public class Options
 
         GameParameters gameParams = new GameParameters();
 
-        File.WriteAllText(filePath, JsonUtility.ToJson(gameParams));
+        // File.WriteAllText(filePath, JsonUtility.ToJson(gameParams));
 
         if (System.IO.File.Exists(filePath))
         {

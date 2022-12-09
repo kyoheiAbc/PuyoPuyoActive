@@ -54,9 +54,9 @@ public class Main : MonoBehaviour
 
         boss = new Boss(
             new GameObject[3] {
-                Instantiate(C.GAUGE, new Vector2(7.5f, 21f), Quaternion.identity),
-                Instantiate(C.GAUGE, new Vector2(7.5f, 20.5f), Quaternion.identity),
-                Instantiate(C.GAUGE, new Vector2(7.5f, 20f), Quaternion.identity)
+                Instantiate(C.GAUGE, new Vector2(8f, 21.5f), Quaternion.identity),
+                Instantiate(C.GAUGE, new Vector2(8f, 21f), Quaternion.identity),
+                Instantiate(C.GAUGE, new Vector2(8f, 19f), Quaternion.identity)
             }
         );
 
