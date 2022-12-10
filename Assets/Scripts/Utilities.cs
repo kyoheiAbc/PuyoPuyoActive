@@ -11,12 +11,13 @@ public static class L
     {
         switch (c)
         {
-            case 0:
-            case 1: return c;
-            case 2: return 3;
-            case 3: return 6;
+            case 0: return 0;
+            case 1: return 1;
+            case 2: return 2;
+            case 3: return 3;
+            case 4: return 3;
         }
-        return (int)(9 * Mathf.Pow(2, c - 4));
+        return (int)(9 * Mathf.Pow(2, c - 5));
     }
 }
 

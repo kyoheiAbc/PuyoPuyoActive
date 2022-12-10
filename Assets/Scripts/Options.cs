@@ -4,9 +4,11 @@ using System.IO;
 public sealed class D
 {
     public float BOSS_HP = 72;
-    public int BOSS_ATTACK_GAUGE_MAX = 7;
-    public int BOSS_ATTACK = 7;
-    public float BOSS_SPEED = 90;
+    public int BOSS_ATTACK_GAUGE_MAX = 14;
+    public int BOSS_ATTACK = 8;
+    public float BOSS_SPEED = 30;
+    public float BOSS_SMALL_ATTACK_COEF = 1.6f;
+    public int BOSS_SMALL_ATTACK_PROB = 2;
     public int COMBO_CNT = 10;
     public int COLOR_NUMBER = 4;
     public int REMOVE_NUMBER = 4;
@@ -18,9 +20,12 @@ public sealed class D
         BOSS_ATTACK_GAUGE_MAX = d.BOSS_ATTACK_GAUGE_MAX;
         BOSS_ATTACK = d.BOSS_ATTACK;
         BOSS_SPEED = d.BOSS_SPEED;
+        BOSS_SMALL_ATTACK_PROB = d.BOSS_SMALL_ATTACK_PROB;
+        BOSS_SMALL_ATTACK_COEF = d.BOSS_SMALL_ATTACK_COEF;
         COMBO_CNT = d.COMBO_CNT;
         COLOR_NUMBER = d.COLOR_NUMBER;
         REMOVE_NUMBER = d.REMOVE_NUMBER;
+        BOSS_SMALL_ATTACK_COEF = d.BOSS_SMALL_ATTACK_COEF;
     }
 
 

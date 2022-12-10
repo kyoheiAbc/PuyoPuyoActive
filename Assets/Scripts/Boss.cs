@@ -6,7 +6,7 @@ public class Boss
 {
     int cnt;
     int combo;
-    int saisoku;
+    int[] atk;
     Gauge[] gauge;
 
     public Boss(GameObject[] gO)
@@ -16,60 +16,72 @@ public class Boss
             new Gauge(D.I().BOSS_SPEED*D.I().BOSS_ATTACK_GAUGE_MAX, new Vector2(5, 0.25f), gO[1], Color.yellow),
             new Gauge(D.I().BOSS_SPEED, new Vector2(0, 0), gO[2], Color.white),
         };
+
+        atk = new int[2];
     }
 
     public void init()
     {
         cnt = 0;
         combo = 0;
-        saisoku = 0;
         for (int i = 0; i < 3; i++)
         {
             gauge[i].init();
         }
         gauge[0].setPoint(D.I().BOSS_HP);
-        gauge[1].cover((D.I().BOSS_ATTACK_GAUGE_MAX - D.I().BOSS_ATTACK) * D.I().BOSS_SPEED);
+        gauge[1].cover((D.I().BOSS_ATTACK_GAUGE_MAX - (D.I().BOSS_ATTACK) - 1) * D.I().BOSS_SPEED);
+
+        atk[0] = UnityEngine.Random.Range((int)D.I().BOSS_ATTACK - 1, (int)D.I().BOSS_ATTACK + 1 + 1);
+        atk[1] = UnityEngine.Random.Range((int)D.I().BOSS_ATTACK - 1, (int)D.I().BOSS_ATTACK + 1 + 1);
+        atk[1] = (int)((float)atk[1] / D.I().BOSS_SMALL_ATTACK_COEF);
+
+        if (atk[0] < 1) atk[0] = 1;
+        if (atk[1] < 1) atk[1] = 1;
+        if (atk[0] <= atk[1]) atk[1] = atk[0] - 1;
+
+        Debug.Log(atk[0]);
+        Debug.Log(atk[1]);
+
     }
 
     public int update()
     {
         cnt++;
-        if (cnt > D.I().BOSS_SPEED * D.I().BOSS_ATTACK)
+        if (cnt > D.I().BOSS_SPEED * atk[0])
         {
-            if (gauge[1].getPoint() == D.I().BOSS_SPEED * D.I().BOSS_ATTACK)
+            if (gauge[1].getPoint() == D.I().BOSS_SPEED * atk[0])
             {
                 gauge[1].setUiTmp(0);
-                saisoku = D.I().BOSS_ATTACK;
+                atk[1] = atk[0];
             }
 
-            if (cnt > D.I().BOSS_SPEED * D.I().BOSS_ATTACK + D.I().EFFECT_FIX_CNT + D.I().EFFECT_REMOVE_CNT + (D.I().FIELD_SIZE_Y * 0.5f) / -D.I().VEC_DROP_QUICK.y)
+            if (cnt > D.I().BOSS_SPEED * atk[0] + D.I().EFFECT_FIX_CNT + D.I().EFFECT_REMOVE_CNT + (D.I().FIELD_SIZE_Y * 0.5f) / -D.I().VEC_DROP_QUICK.y)
             {
-                if (gauge[1].getPoint() < 1 || saisoku == 0)
+                if (gauge[1].getPoint() < 1 || atk[1] == 0)
                 {
                     combo = 0;
                     cnt = (int)gauge[1].getPoint();
+                    atk[1] = UnityEngine.Random.Range((int)D.I().BOSS_ATTACK - 1, (int)D.I().BOSS_ATTACK + 1 + 1);
+                    atk[1] = (int)((float)atk[1] / D.I().BOSS_SMALL_ATTACK_COEF);
                 }
                 else
                 {
-                    saisoku--;
+                    atk[1]--;
                     combo++;
                     gauge[1].setPoint(gauge[1].getPoint() - D.I().BOSS_SPEED);
-                    cnt = (int)D.I().BOSS_SPEED * D.I().BOSS_ATTACK;
+                    cnt = (int)D.I().BOSS_SPEED * atk[0];
                     return combo;
                 }
             }
             return 0;
         }
 
-
-        if (UnityEngine.Random.Range(0, (int)D.I().BOSS_SPEED * D.I().BOSS_ATTACK) == 0)
+        if (UnityEngine.Random.Range(0, (atk[0] - atk[1]) * (int)D.I().BOSS_SPEED * D.I().BOSS_SMALL_ATTACK_PROB) == 7)
         {
-            int s = UnityEngine.Random.Range((int)D.I().BOSS_ATTACK / 3, (int)D.I().BOSS_ATTACK / 2 + 1);
-            if (cnt / D.I().BOSS_SPEED > s)
+            if (cnt > atk[1] * (int)D.I().BOSS_SPEED)
             {
-                gauge[1].setUiTmp(gauge[1].getPoint() - D.I().BOSS_SPEED * s);
-                saisoku = s;
-                cnt = (int)D.I().BOSS_SPEED * D.I().BOSS_ATTACK;
+                gauge[1].setUiTmp(cnt - D.I().BOSS_SPEED * atk[1]);
+                cnt = (int)D.I().BOSS_SPEED * atk[0];
                 return 0;
             }
         }
