@@ -38,39 +38,41 @@ public class OjamaManager
     {
         text.text = ((atk + atkTmp) - (dmg + dmgTmp)).ToString();
     }
-    public void setAtkTmp(int a)
+    public void addAtkTmp(int a)
     {
         atkTmp += a;
     }
-    public void setAtk()
-    {
-        atk = atk + atkTmp;
-        atkTmp = 0;
-    }
-    public void setDmgTmp(int d)
+    public void addDmgTmp(int d)
     {
         dmgTmp += d;
     }
-    public void setDmg()
+    public void fixAtk()
     {
-        dmg = dmg + dmgTmp;
+        atk += atkTmp;
+        atkTmp = 0;
+    }
+    public void fixDmg()
+    {
+        dmg += dmgTmp;
         dmgTmp = 0;
+    }
+    public int getAtk()
+    {
+        return atk;
     }
     public int getDmg()
     {
         return dmg;
     }
 
-    public void reset(int r)
+    public void setAtk(int a)
     {
-        atk = 0;
-        dmg = r;
+        atk = a;
     }
-    public int getAtkDmg()
+    public void setDmg(int d)
     {
-        return atk - dmg;
+        dmg = d;
     }
-
 
     // public void setOjmField(int num)
     // {

@@ -20,7 +20,7 @@ public class ComboManager
         t.gameObject.GetComponent<MeshRenderer>().sortingOrder = 99;
 
         gO.transform.Rotate(0, 0, 90);
-        gauge = new Gauge(1000, new Vector2(3f, 1f), gO, Color.magenta);
+        gauge = new Gauge(1000000, new Vector2(3f, 1f), gO, Color.magenta);
 
         init();
     }
@@ -35,7 +35,7 @@ public class ComboManager
 
     public int update()
     {
-        if (0 < cnt && cnt < 1000) cnt = cnt - (1000 / (D.I().COMBO_CNT * combo));
+        if (0 < cnt && cnt < 1000000) cnt = cnt - (1000000 / (D.I().COMBO_CNT * combo));
         if (cnt < 0)
         {
             combo = 0;
@@ -49,7 +49,7 @@ public class ComboManager
     {
         combo = combo + plus;
         plus = 0;
-        cnt = 1000;
+        cnt = 1000000;
         gauge.setPoint(cnt);
 
         text.text = combo + " COMBO";

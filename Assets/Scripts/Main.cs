@@ -224,16 +224,21 @@ public class Main : MonoBehaviour
             else
             {
                 cnt = 0;
-                if (comboManager.getCnt() == 1000)
+                if (comboManager.getCnt() == 1000000)
                 {
-                    comboManager.setCnt(1000 - 1);
+                    comboManager.setCnt(1000000 - 1);
                 }
 
-                // if (comboManager.getCombo() == 0 && ojamaManager.getAtkDmg() < 0)
-                // {
-                //     ojameGen(ojameGen.getDmg);
-
-                // }
+                if (comboManager.getCombo() == 0 && ojamaManager.getAtk() - ojamaManager.getDmg() < 0)
+                {
+                    ojamaManager.setDmg(
+                        ojamaManager.getDmg() - ojamaManager.getAtk() -
+                        ojameGen(
+                            ojamaManager.getDmg() - ojamaManager.getAtk()
+                        )
+                    );
+                    ojamaManager.setAtk(0);
+                }
             }
         }
 
@@ -258,7 +263,7 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
-                ojamaManager.setAtkTmp(L.COMBO_TO_OJAMA(comboManager.getCombo()));
+                ojamaManager.addAtkTmp(L.COMBO_TO_OJAMA(comboManager.getCombo()));
             }
         }
 
@@ -267,27 +272,23 @@ public class Main : MonoBehaviour
 
         if (comboManager.getCombo() == 0)
         {
-            ojamaManager.setAtk();
-            if (ojamaManager.getAtkDmg() < 0)
-            {
-                ojameGen(-ojamaManager.getAtkDmg());
-                ojamaManager.reset(0);
-            }
+            ojamaManager.fixAtk();
         }
 
         // ojama
         ojamaManager.update();
 
         // boss
-        ojamaManager.setDmgTmp(L.COMBO_TO_OJAMA(boss.update()));
+        ojamaManager.addDmgTmp(L.COMBO_TO_OJAMA(boss.update()));
 
         if (boss.getCombo() == 0)
         {
-            ojamaManager.setDmg();
-            if (ojamaManager.getAtkDmg() > 0)
+            ojamaManager.fixDmg();
+            if (ojamaManager.getAtk() - ojamaManager.getDmg() > 0)
             {
-                boss.setHp(boss.getHp() - ojamaManager.getAtkDmg());
-                ojamaManager.reset(0);
+                boss.setHp(boss.getHp() - (ojamaManager.getAtk() - ojamaManager.getDmg()));
+                ojamaManager.setAtk(0);
+                ojamaManager.setDmg(0);
             }
         }
 
@@ -357,12 +358,12 @@ public class Main : MonoBehaviour
             for (int x = 0; x < 6; x++)
             {
                 n++;
-                Vector2 pos = new Vector2(xAry[x] + 1.5f, 16.5f + y);
+                Vector2 pos = new Vector2(xAry[x] + 1.5f, 14.5f + y);
                 if (field.getPuyo(new Vector2(pos.x, 13.5f - y)) == null)
                 {
                     puyoManager.addPuyo(newPuyo(9, pos));
                 }
-                if (n >= num) break;
+                if (n >= num) return n;
             }
         }
         return num;

@@ -54,8 +54,7 @@ public class Boss
                 gauge[1].setUiTmp(0);
                 atk[1] = atk[0];
             }
-
-            if (cnt > D.I().BOSS_SPEED * atk[0] + D.I().EFFECT_FIX_CNT + D.I().EFFECT_REMOVE_CNT + (D.I().FIELD_SIZE_Y * 0.5f) / -D.I().VEC_DROP_QUICK.y)
+            if (cnt > D.I().BOSS_SPEED * atk[0] + D.I().EFFECT_FIX_CNT + D.I().EFFECT_REMOVE_CNT + 3 / -D.I().VEC_DROP_QUICK.y)
             {
                 if (gauge[1].getPoint() < 1 || atk[1] == 0)
                 {

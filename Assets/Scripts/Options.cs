@@ -6,10 +6,10 @@ public sealed class D
     public float BOSS_HP = 72;
     public int BOSS_ATTACK_GAUGE_MAX = 14;
     public int BOSS_ATTACK = 7;
-    public float BOSS_SPEED = 30;
+    public float BOSS_SPEED = 45;
     public float BOSS_SMALL_ATTACK_COEF = 1.6f;
     public int BOSS_SMALL_ATTACK_PROB = 2;
-    public int OJAMA_MAX_ONE_TIME = 24;
+    public int OJAMA_MAX_ONE_TIME = 18;
     public int COMBO_CNT = 10;
     public int COLOR_NUMBER = 4;
     public int REMOVE_NUMBER = 4;
