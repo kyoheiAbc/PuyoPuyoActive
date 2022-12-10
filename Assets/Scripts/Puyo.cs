@@ -25,7 +25,7 @@ public class Puyo
             case "puyoZ(Clone)": color = 9; break;
             default: color = 255; break;
         }
-        cnt = C.EFFECT_FIX_CNT;
+        cnt = D.I().EFFECT_FIX_CNT;
     }
 
     public void setPos(Vector2 p)
@@ -54,7 +54,7 @@ public class Puyo
                     pos = initPos;
                     break;
                 }
-                pos.y = p.getPos().y + C.VEC_Y.y * Mathf.Sign(pos.y - p.getPos().y);
+                pos.y = p.getPos().y + D.I().VEC_Y.y * Mathf.Sign(pos.y - p.getPos().y);
                 if (!canPut(pList))
                 {
                     pos = initPos;
@@ -63,7 +63,7 @@ public class Puyo
             }
             else
             {
-                pos.y = p.getPos().y - C.VEC_Y.y * Mathf.Sign(vec.y);
+                pos.y = p.getPos().y - D.I().VEC_Y.y * Mathf.Sign(vec.y);
             }
         }
 
@@ -122,13 +122,13 @@ public class Puyo
 
     public void effect()
     {
-        if (cnt == C.EFFECT_FIX_CNT)
+        if (cnt == D.I().EFFECT_FIX_CNT)
         {
             if (color == 255) cnt = 100 - 1;
             // if (color == 255 && gO.name != "puyoZ(Clone)") cnt = 100 - 1;
             else return;
         }
-        if (cnt == C.EFFECT_REMOVE_CNT + 100) return;
+        if (cnt == D.I().EFFECT_REMOVE_CNT + 100) return;
         cnt++;
     }
 
@@ -136,18 +136,18 @@ public class Puyo
     {
         if (cnt < 100)
         {
-            t.position = new Vector2(pos.x, pos.y - L.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f));
-            t.localScale = new Vector2(1 + L.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f), 1);
+            t.position = new Vector2(pos.x, pos.y - L.QuadraticF((float)cnt / (float)D.I().EFFECT_FIX_CNT, 0.1f));
+            t.localScale = new Vector2(1 + L.QuadraticF((float)cnt / (float)D.I().EFFECT_FIX_CNT, 0.1f), 1);
         }
         else if (cnt == 100)
         {
             t.localScale = new Vector2(0.9f, 1.1f);
         }
-        else if (cnt == (int)(C.EFFECT_REMOVE_CNT / 3) + 100)
+        else if (cnt == (int)(D.I().EFFECT_REMOVE_CNT / 3) + 100)
         {
-            t.localScale = C.VEC_0;
+            t.localScale = D.I().VEC_0;
         }
-        else if (cnt == (int)(C.EFFECT_REMOVE_CNT * 2 / 3) + 100)
+        else if (cnt == (int)(D.I().EFFECT_REMOVE_CNT * 2 / 3) + 100)
         {
             t.localScale = new Vector2(0.9f, 1.1f);
         }

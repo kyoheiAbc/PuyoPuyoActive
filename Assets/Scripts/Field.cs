@@ -8,7 +8,7 @@ public class Field
 
     public Field()
     {
-        ary = new Puyo[C.FIELD_SIZE_Y, C.FIELD_SIZE_X];
+        ary = new Puyo[D.I().FIELD_SIZE_Y, D.I().FIELD_SIZE_X];
     }
 
     public bool setPuyo(Puyo puyo)
@@ -34,12 +34,12 @@ public class Field
     public int rmCheck()
     {
         int removeCnt = 0;
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < D.I().FIELD_SIZE_Y - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < D.I().FIELD_SIZE_X - 1; x++)
             {
                 int cnt = 0;
-                if (cntSameColor(ary[y, x], cnt) >= C.REMOVE_NUMBER)
+                if (cntSameColor(ary[y, x], cnt) >= D.I().REMOVE_NUMBER)
                 {
                     removeCnt++;
                     rmSameColor(ary[y, x]);
@@ -47,9 +47,9 @@ public class Field
             }
         }
 
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < D.I().FIELD_SIZE_Y - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < D.I().FIELD_SIZE_X - 1; x++)
             {
                 if (ary[y, x] == null) continue;
                 int color = ary[y, x].getColor();
@@ -65,9 +65,9 @@ public class Field
 
     public void rm()
     {
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < D.I().FIELD_SIZE_Y - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < D.I().FIELD_SIZE_X - 1; x++)
             {
                 if (ary[y, x] == null) continue;
 
@@ -76,7 +76,7 @@ public class Field
                     ary[y, x] = null;
                     continue;
                 }
-                if (getPuyo(ary[y, x].getPos() + C.UNDER) == null)
+                if (getPuyo(ary[y, x].getPos() + D.I().UNDER) == null)
                 {
                     Vector2 pos = ary[y, x].getPos();
                     ary[(int)pos.y, (int)pos.x] = null;
@@ -132,16 +132,16 @@ public class Field
         for (int i = 0; i < 4; i++)
         {
             rtlb[i] = getPuyo(
-                puyo.getPos() + C.VEC_X * (1 - i) * ((i + 1) % 2) + C.VEC_Y * (2 - i) * (i % 2)
+                puyo.getPos() + D.I().VEC_X * (1 - i) * ((i + 1) % 2) + D.I().VEC_Y * (2 - i) * (i % 2)
             );
         }
         return rtlb;
     }
     public void effect()
     {
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < D.I().FIELD_SIZE_Y - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < D.I().FIELD_SIZE_X - 1; x++)
             {
                 if (ary[y, x] == null) continue;
                 ary[y, x].effect();
@@ -151,14 +151,14 @@ public class Field
 
     public bool effectIng()
     {
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < D.I().FIELD_SIZE_Y - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < D.I().FIELD_SIZE_X - 1; x++)
             {
                 if (ary[y, x] == null) continue;
                 int cnt = ary[y, x].getCnt();
-                if (cnt == C.EFFECT_FIX_CNT) continue;
-                if (cnt == C.EFFECT_REMOVE_CNT + 100) continue;
+                if (cnt == D.I().EFFECT_FIX_CNT) continue;
+                if (cnt == D.I().EFFECT_REMOVE_CNT + 100) continue;
                 return true;
             }
         }
@@ -167,9 +167,9 @@ public class Field
 
     public void init()
     {
-        for (int y = 0; y < C.FIELD_SIZE_Y; y++)
+        for (int y = 0; y < D.I().FIELD_SIZE_Y; y++)
         {
-            for (int x = 0; x < C.FIELD_SIZE_X; x++)
+            for (int x = 0; x < D.I().FIELD_SIZE_X; x++)
             {
                 ary[y, x] = null;
             }

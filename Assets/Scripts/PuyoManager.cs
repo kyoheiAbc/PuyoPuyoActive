@@ -30,7 +30,7 @@ public class PuyoManager
     {
         for (int i = 0 + 40; i < puyoList.Count; i++)
         {
-            if (field.getPuyo(puyoList[i].getPos() + C.UNDER) != null)
+            if (field.getPuyo(puyoList[i].getPos() + D.I().UNDER) != null)
             {
                 field.setPuyo(puyoList[i]);
             }

@@ -13,7 +13,7 @@ public class InputController
 
     public void init()
     {
-        pos = C.VEC_0;
+        pos = D.I().VEC_0;
         ctrl = 0;
     }
 

@@ -1,49 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-public static class C
-{
-    public static int FPS;
-    public static int COLOR_NUMBER;
-    public static int REMOVE_NUMBER;
-    public static int FIX_CNT;
-    public static int EFFECT_FIX_CNT;
-    public static int EFFECT_REMOVE_CNT;
-    public static int COMBO_CNT;
-    public static int BOSS_ATTACK_GAUGE_MAX;
-    public static float BOSS_HP;
-    public static int BOSS_ATTACK;
-    public static float BOSS_SPEED;
-    public static int GAME_TIME_SEC;
-    public static int NEXT_GAME_CNT;
-    public static Vector2 VEC_DROP;
-    public static Vector2 VEC_DROP_QUICK;
-    public static readonly int FIELD_SIZE_X = 8;
-    public static readonly int FIELD_SIZE_Y = 17;
-    public static readonly int COLOR_ADJUST = 8;
-    public static readonly Vector2 VEC_0 = new Vector2(0, 0);
-    public static readonly Vector2 VEC_X = new Vector2(1, 0);
-    public static readonly Vector2 VEC_Y = new Vector2(0, 1);
-    public static readonly Vector2 UNDER = new Vector2(0, -0.501f);
-
-    public static readonly GameObject[] PUYO = new GameObject[10] {
-        Resources.Load<GameObject>("puyoA"),
-        Resources.Load<GameObject>("puyoB"),
-        Resources.Load<GameObject>("puyoC"),
-        Resources.Load<GameObject>("puyoD"),
-        Resources.Load<GameObject>("puyoE"),
-        Resources.Load<GameObject>(""),
-        Resources.Load<GameObject>(""),
-        Resources.Load<GameObject>(""),
-        Resources.Load<GameObject>(""),
-        Resources.Load<GameObject>("puyoZ")
-    };
-    public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
-    public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
-    // public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
-}
 public static class L
 {
     public static float QuadraticF(float x, float max)
@@ -84,10 +40,10 @@ public class ColorBag
             colors[j] = tmp;
         }
 
-        bag = new int[C.COLOR_NUMBER * C.COLOR_ADJUST];
+        bag = new int[D.I().COLOR_NUMBER * D.I().COLOR_ADJUST];
         for (int i = 0; i < bag.Length; i++)
         {
-            bag[i] = colors[i % C.COLOR_NUMBER];
+            bag[i] = colors[i % D.I().COLOR_NUMBER];
         }
         reset();
     }

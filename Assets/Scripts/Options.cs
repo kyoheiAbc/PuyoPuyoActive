@@ -1,66 +1,78 @@
 using UnityEngine;
 using System.IO;
 
-[System.Serializable]
-public class GameParameters
+public sealed class D
 {
-    public int FPS = 30;
+    public float BOSS_HP = 72;
+    public int BOSS_ATTACK_GAUGE_MAX = 7;
+    public int BOSS_ATTACK = 7;
+    public float BOSS_SPEED = 30;
+    public int COMBO_CNT = 30;
     public int COLOR_NUMBER = 4;
     public int REMOVE_NUMBER = 4;
-    public int FIX_CNT = 30;
-    public int EFFECT_FIX_CNT = 10;
-    public int EFFECT_REMOVE_CNT = 30;
-    public int COMBO_CNT = 60;
-    public float BOSS_HP = L.COMBO_TO_OJAMA(13) * 2;
 
-    public int BOSS_ATTACK_GAUGE_MAX = 13;
-    public int BOSS_ATTACK = 13;
-    public float BOSS_SPEED = 90;
-    public int GAME_TIME_SEC = 150;
-    public int NEXT_GAME_CNT = 90;
-    public float VEC_DROP_Y = 0.03f;
-    public float VEC_DROP_QUICK_Y = 0.4f;
+
+    public void cp(D d)
+    {
+        BOSS_HP = d.BOSS_HP;
+        BOSS_ATTACK_GAUGE_MAX = d.BOSS_ATTACK_GAUGE_MAX;
+        BOSS_ATTACK = d.BOSS_ATTACK;
+        BOSS_SPEED = d.BOSS_SPEED;
+        COMBO_CNT = d.COMBO_CNT;
+        COLOR_NUMBER = d.COLOR_NUMBER;
+        REMOVE_NUMBER = d.REMOVE_NUMBER;
+    }
+
+
+    public readonly int FPS = 30;
+    public readonly int NEXT_GAME_CNT = 90;
+    public readonly int FIX_CNT = 30;
+    public readonly int EFFECT_FIX_CNT = 10;
+    public readonly int EFFECT_REMOVE_CNT = 30;
+    public readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
+    public readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
+    public readonly int FIELD_SIZE_X = 8;
+    public readonly int FIELD_SIZE_Y = 17;
+    public readonly int COLOR_ADJUST = 8;
+    public readonly Vector2 VEC_0 = new Vector2(0, 0);
+    public readonly Vector2 VEC_X = new Vector2(1, 0);
+    public readonly Vector2 VEC_Y = new Vector2(0, 1);
+    public readonly Vector2 UNDER = new Vector2(0, -0.501f);
+    public readonly GameObject[] PUYO = new GameObject[10] {
+        Resources.Load<GameObject>("puyoA"),
+        Resources.Load<GameObject>("puyoB"),
+        Resources.Load<GameObject>("puyoC"),
+        Resources.Load<GameObject>("puyoD"),
+        Resources.Load<GameObject>("puyoE"),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>(""),
+        Resources.Load<GameObject>("puyoZ")
+    };
+    public readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
+    public readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
+    // public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
+
+
+    private static D d = new D();
+    private D() { }
+    public static D I() { return d; }
 }
 
 public class Options
 {
     public Options()
     {
-        string filePath = Path.Combine(Application.persistentDataPath, "gameParameters.json");
-
-        GameParameters gameParams = new GameParameters();
-
-        // File.WriteAllText(filePath, JsonUtility.ToJson(gameParams));
-
-        if (System.IO.File.Exists(filePath))
+        D D = D.I();
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D));
+        if (System.IO.File.Exists(Path.Combine(Application.persistentDataPath, "gameParameters.json")))
         {
-            string readStr = File.ReadAllText(filePath);
-            try
-            {
-                gameParams = JsonUtility.FromJson<GameParameters>(readStr);
-            }
-            catch { }
+            string read = File.ReadAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"));
+            try { D = JsonUtility.FromJson<D>(read); }
+            catch { return; }
+            D.I().cp(D);
         }
-        else
-        {
-            File.WriteAllText(filePath, JsonUtility.ToJson(gameParams));
-        }
-
-        C.FPS = gameParams.FPS;
-        C.COLOR_NUMBER = gameParams.COLOR_NUMBER;
-        C.REMOVE_NUMBER = gameParams.REMOVE_NUMBER;
-        C.FIX_CNT = gameParams.FIX_CNT;
-        C.EFFECT_FIX_CNT = gameParams.EFFECT_FIX_CNT;
-        C.EFFECT_REMOVE_CNT = gameParams.EFFECT_REMOVE_CNT;
-        C.COMBO_CNT = gameParams.COMBO_CNT;
-        C.BOSS_ATTACK_GAUGE_MAX = gameParams.BOSS_ATTACK_GAUGE_MAX;
-        C.BOSS_HP = gameParams.BOSS_HP;
-        C.BOSS_ATTACK = gameParams.BOSS_ATTACK;
-        C.BOSS_SPEED = gameParams.BOSS_SPEED;
-        C.GAME_TIME_SEC = gameParams.GAME_TIME_SEC;
-        C.NEXT_GAME_CNT = gameParams.NEXT_GAME_CNT;
-        C.VEC_DROP = new Vector2(0, -gameParams.VEC_DROP_Y);
-        C.VEC_DROP_QUICK = new Vector2(0, -gameParams.VEC_DROP_QUICK_Y);
+        else File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D));
     }
-
 }
