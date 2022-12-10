@@ -12,6 +12,7 @@ public static class C
     public static int EFFECT_FIX_CNT;
     public static int EFFECT_REMOVE_CNT;
     public static int COMBO_CNT;
+    public static int BOSS_ATTACK_GAUGE_MAX;
     public static float BOSS_HP;
     public static int BOSS_ATTACK;
     public static float BOSS_SPEED;
