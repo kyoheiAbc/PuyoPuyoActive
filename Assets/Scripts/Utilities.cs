@@ -18,17 +18,13 @@ public static class L
         }
         return (int)(9 * Mathf.Pow(2, c - 4));
     }
-
 }
 
 public class ColorBag
 {
     int[] bag;
     int cnt;
-    public ColorBag()
-    {
-
-    }
+    public ColorBag() { }
     public void init()
     {
         int[] colors = new int[5] { 0, 1, 2, 3, 4 };

@@ -224,9 +224,9 @@ public class Main : MonoBehaviour
             else
             {
                 cnt = 0;
-                if (comboManager.getCnt() == D.I().COMBO_CNT)
+                if (comboManager.getCnt() == 1000)
                 {
-                    comboManager.setCnt(D.I().COMBO_CNT - 1);
+                    comboManager.setCnt(1000 - 1);
                 }
             }
         }
@@ -280,7 +280,6 @@ public class Main : MonoBehaviour
             ojamaManager.setDmg();
             if (ojamaManager.getAtkDmg() > 0)
             {
-                Debug.Log("ATK " + ojamaManager.getAtkDmg());
                 boss.setHp(boss.getHp() - ojamaManager.getAtkDmg());
                 ojamaManager.reset(0);
             }
@@ -352,8 +351,8 @@ public class Main : MonoBehaviour
             for (int x = 0; x < D.I().FIELD_SIZE_X - 2; x++)
             {
                 n++;
-                Vector2 pos = new Vector2(xAry[x] + 1.5f, 14.5f + y);
-                if (field.getPuyo(new Vector2(pos.x, 12.5f - y)) == null)
+                Vector2 pos = new Vector2(xAry[x] + 1.5f, 17.5f + y);
+                if (field.getPuyo(new Vector2(pos.x, 15.5f - y)) == null)
                 {
                     puyoManager.addPuyo(newPuyo(9, pos));
                 }

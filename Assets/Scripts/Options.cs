@@ -6,8 +6,8 @@ public sealed class D
     public float BOSS_HP = 72;
     public int BOSS_ATTACK_GAUGE_MAX = 7;
     public int BOSS_ATTACK = 7;
-    public float BOSS_SPEED = 30;
-    public int COMBO_CNT = 30;
+    public float BOSS_SPEED = 90;
+    public int COMBO_CNT = 10;
     public int COLOR_NUMBER = 4;
     public int REMOVE_NUMBER = 4;
 
