@@ -228,6 +228,12 @@ public class Main : MonoBehaviour
                 {
                     comboManager.setCnt(1000 - 1);
                 }
+
+                // if (comboManager.getCombo() == 0 && ojamaManager.getAtkDmg() < 0)
+                // {
+                //     ojameGen(ojameGen.getDmg);
+
+                // }
             }
         }
 
@@ -329,9 +335,9 @@ public class Main : MonoBehaviour
         return new Puyo(Instantiate(D.I().PUYO[color], pos, Quaternion.identity));
     }
 
-    private void ojameGen(int num)
+    private int ojameGen(int num)
     {
-
+        if (num > D.I().OJAMA_MAX_ONE_TIME) num = D.I().OJAMA_MAX_ONE_TIME;
         int[] xAry = new int[6];
         for (int i = 0; i < xAry.Length; i++)
         {
@@ -346,19 +352,20 @@ public class Main : MonoBehaviour
         }
 
         int n = 0;
-        for (int y = 0; y < D.I().FIELD_SIZE_Y - 5; y++)
+        for (int y = 0; y < 12; y++)
         {
-            for (int x = 0; x < D.I().FIELD_SIZE_X - 2; x++)
+            for (int x = 0; x < 6; x++)
             {
                 n++;
-                Vector2 pos = new Vector2(xAry[x] + 1.5f, 17.5f + y);
-                if (field.getPuyo(new Vector2(pos.x, 15.5f - y)) == null)
+                Vector2 pos = new Vector2(xAry[x] + 1.5f, 16.5f + y);
+                if (field.getPuyo(new Vector2(pos.x, 13.5f - y)) == null)
                 {
                     puyoManager.addPuyo(newPuyo(9, pos));
                 }
-                if (n >= num) return;
+                if (n >= num) break;
             }
         }
+        return num;
     }
 
 }
