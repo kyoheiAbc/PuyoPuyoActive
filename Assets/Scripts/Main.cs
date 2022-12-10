@@ -224,9 +224,9 @@ public class Main : MonoBehaviour
             else
             {
                 cnt = 0;
-                if (comboManager.getCnt() == 1000000)
+                if (comboManager.getCnt() == 1000)
                 {
-                    comboManager.setCnt(1000000 - 1);
+                    comboManager.setCnt(1000 - 1);
                 }
 
                 if (comboManager.getCombo() == 0 && ojamaManager.getAtk() - ojamaManager.getDmg() < 0)
