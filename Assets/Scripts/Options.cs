@@ -65,7 +65,7 @@ public class Options
     public Options()
     {
         D D = D.I();
-        File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D));
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D, true));
         if (System.IO.File.Exists(Path.Combine(Application.persistentDataPath, "gameParameters.json")))
         {
             string read = File.ReadAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"));
@@ -73,6 +73,6 @@ public class Options
             catch { return; }
             D.I().cp(D);
         }
-        else File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D));
+        else File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D, true));
     }
 }
