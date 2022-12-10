@@ -72,7 +72,7 @@ public class Options
     public Options()
     {
         D D = D.I();
-        File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D, true));
+        // File.WriteAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"), JsonUtility.ToJson(D, true));
         if (System.IO.File.Exists(Path.Combine(Application.persistentDataPath, "gameParameters.json")))
         {
             string read = File.ReadAllText(Path.Combine(Application.persistentDataPath, "gameParameters.json"));
