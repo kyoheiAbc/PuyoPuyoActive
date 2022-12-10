@@ -250,7 +250,7 @@ public class Main : MonoBehaviour
                     Destroy(gO[i]);
                 }
                 comboManager.setCombo(p);
-                ojamaManager.setAtkTmp(C.COMBO_TO_OJAMA(comboManager.getCombo()));
+                ojamaManager.setAtkTmp(L.COMBO_TO_OJAMA(comboManager.getCombo()));
             }
         }
 
@@ -271,7 +271,7 @@ public class Main : MonoBehaviour
         ojamaManager.update();
 
         // boss
-        ojamaManager.setDmgTmp(C.COMBO_TO_OJAMA(boss.update()));
+        ojamaManager.setDmgTmp(L.COMBO_TO_OJAMA(boss.update()));
 
         if (boss.getCombo() == 0)
         {

@@ -136,8 +136,8 @@ public class Puyo
     {
         if (cnt < 100)
         {
-            t.position = new Vector2(pos.x, pos.y - C.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f));
-            t.localScale = new Vector2(1 + C.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f), 1);
+            t.position = new Vector2(pos.x, pos.y - L.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f));
+            t.localScale = new Vector2(1 + L.QuadraticF((float)cnt / (float)C.EFFECT_FIX_CNT, 0.1f), 1);
         }
         else if (cnt == 100)
         {

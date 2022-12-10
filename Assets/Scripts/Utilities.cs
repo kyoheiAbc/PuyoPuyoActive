@@ -43,7 +43,9 @@ public static class C
     public static readonly GameObject EFFECT_EXPLOSION = Resources.Load<GameObject>("EffectExplosion");
     public static readonly GameObject GAUGE = Resources.Load<GameObject>("Gauge");
     // public static readonly TextMeshProUGUI GAME_TIME_TEXT = GameObject.Find("Time").GetComponent<TextMeshProUGUI>();
-
+}
+public static class L
+{
     public static float QuadraticF(float x, float max)
     {
         return -4f * max * (x - 0.5f) * (x - 0.5f) + max;

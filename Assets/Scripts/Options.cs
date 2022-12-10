@@ -11,7 +11,7 @@ public class GameParameters
     public int EFFECT_FIX_CNT = 10;
     public int EFFECT_REMOVE_CNT = 30;
     public int COMBO_CNT = 60;
-    public float BOSS_HP = C.COMBO_TO_OJAMA(13) * 2;
+    public float BOSS_HP = L.COMBO_TO_OJAMA(13) * 2;
 
     public int BOSS_ATTACK_GAUGE_MAX = 13;
     public int BOSS_ATTACK = 13;
