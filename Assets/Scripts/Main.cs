@@ -24,10 +24,10 @@ public class Main : MonoBehaviour
         Application.targetFrameRate = D.I().FPS;
 
         // Camera
-        if ((float)Screen.height / (float)Screen.width >= 2)
+        if ((float)Screen.height / (float)Screen.width >= (2350f / 1400f))
         {
             Camera.main.orthographicSize =
-                Camera.main.orthographicSize * (float)Screen.height / (float)Screen.width / 2;
+                Camera.main.orthographicSize * (float)Screen.height / (float)Screen.width / (2350f / 1400f);
         }
     }
 
@@ -38,7 +38,7 @@ public class Main : MonoBehaviour
         puyoManager = new PuyoManager();
         puyoPuyoNext = new PuyoPuyo[2];
         colorBag = new ColorBag();
-        comboManager = new ComboManager(Instantiate(D.I().GAUGE, new Vector2(9f, 2.5f), Quaternion.identity));
+        comboManager = new ComboManager(Instantiate(D.I().GAUGE, new Vector2(8.5f, 3.5f), Quaternion.identity));
         effectManager = new EffectManager();
 
         GameObject[,] gOary = new GameObject[12, 6];
@@ -54,9 +54,9 @@ public class Main : MonoBehaviour
 
         boss = new Boss(
             new GameObject[3] {
-                Instantiate(D.I().GAUGE, new Vector2(8f, 21.5f), Quaternion.identity),
-                Instantiate(D.I().GAUGE, new Vector2(8f, 21f), Quaternion.identity),
-                Instantiate(D.I().GAUGE, new Vector2(8f, 19f), Quaternion.identity)
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 23.25f), Quaternion.identity),
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 22.25f), Quaternion.identity),
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 19f), Quaternion.identity)
             }
         );
 
