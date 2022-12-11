@@ -10,11 +10,14 @@ public class OjamaManager
     int atk, atkTmp;
     int dmg, dmgTmp;
     TextMeshPro text;
+    Gauge gauge;
 
-    public OjamaManager(GameObject[,] g)
+    public OjamaManager(GameObject[,] g, GameObject g_)
     {
         // ary = g;
-        text = GameObject.Find("OjamaUI").GetComponent<TextMeshPro>();
+        // text = GameObject.Find("OjamaUI").GetComponent<TextMeshPro>();
+        gauge = new Gauge(72 * 2, new Vector2(13f, 0.5f), g_, Color.cyan);
+
         init();
     }
 
@@ -27,16 +30,19 @@ public class OjamaManager
         //         ary[y, x].SetActive(a);
         //     }
         // }
-        text.text = "";
+        // text.text = "";
         atk = 0;
         atkTmp = 0;
         dmg = 0;
         dmgTmp = 0;
+        gauge.init();
+        gauge.setPoint(72);
     }
 
     public void update()
     {
-        text.text = ((atk + atkTmp) - (dmg + dmgTmp)).ToString();
+        // text.text = ((atk + atkTmp) - (dmg + dmgTmp)).ToString();
+        gauge.setPoint((atk + atkTmp) - (dmg + dmgTmp) + 72);
     }
     public void addAtkTmp(int a)
     {

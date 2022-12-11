@@ -39,8 +39,6 @@ public class Boss
         if (atk[1] < 1) atk[1] = 1;
         if (atk[0] <= atk[1]) atk[1] = atk[0] - 1;
 
-        Debug.Log(atk[0]);
-        Debug.Log(atk[1]);
 
     }
 

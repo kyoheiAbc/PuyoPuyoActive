@@ -50,7 +50,11 @@ public class Main : MonoBehaviour
         //         gOary[y, x] = Instantiate(gO, new Vector2(x + 1.5f, y + 1.5f), Quaternion.identity);
         //     }
         // }
-        ojamaManager = new OjamaManager(gOary);
+        ojamaManager =
+            new OjamaManager(
+                gOary,
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 14.25f), Quaternion.identity)
+            );
 
         boss = new Boss(
             new GameObject[3] {

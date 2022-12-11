@@ -39,7 +39,10 @@ public class Gauge
     {
         point = p;
         if (point < 0) point = 0;
+        if (max < point) point = max;
+
         setUi();
+
     }
     public float getPoint()
     {
