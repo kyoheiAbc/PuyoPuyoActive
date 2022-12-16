@@ -20,7 +20,7 @@ public class ComboManager
         t.gameObject.GetComponent<MeshRenderer>().sortingOrder = 99;
 
         gO.transform.Rotate(0, 0, 90);
-        gauge = new Gauge(1000, new Vector2(5f, 2f), gO, Color.magenta);
+        gauge = new Gauge(1000, new Vector2(5f, 2f), gO, UnityEngine.Color.HSVToRGB(0.9f, 0.35f, 1));
 
         init();
     }
@@ -58,7 +58,7 @@ public class ComboManager
         gauge.setPoint(cnt);
 
         text.text = combo + " COMBO";
-        if (pos.x < 3f) pos.x = 3f;
+        if (pos.x < 3.5f) pos.x = 3.5f;
         t.position = pos;
     }
 

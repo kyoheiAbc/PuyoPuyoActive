@@ -16,7 +16,7 @@ public class OjamaManager
     {
         // ary = g;
         // text = GameObject.Find("OjamaUI").GetComponent<TextMeshPro>();
-        gauge = new Gauge(72 * 2, new Vector2(13f, 0.5f), g_, Color.cyan);
+        gauge = new Gauge(72 * 2, new Vector2(8.5f, 0.5f), g_, Color.cyan);
 
         init();
     }

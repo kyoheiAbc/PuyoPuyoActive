@@ -24,10 +24,10 @@ public class Main : MonoBehaviour
         Application.targetFrameRate = D.I().FPS;
 
         // Camera
-        if ((float)Screen.height / (float)Screen.width >= (2350f / 1400f))
+        if ((float)Screen.height / (float)Screen.width >= (2050f / 950f))
         {
             Camera.main.orthographicSize =
-                Camera.main.orthographicSize * (float)Screen.height / (float)Screen.width / (2350f / 1400f);
+                Camera.main.orthographicSize * (float)Screen.height / (float)Screen.width / (2050f / 950f);
         }
     }
 
@@ -53,13 +53,13 @@ public class Main : MonoBehaviour
         ojamaManager =
             new OjamaManager(
                 gOary,
-                Instantiate(D.I().GAUGE, new Vector2(7.5f, 14.25f), Quaternion.identity)
+                Instantiate(D.I().GAUGE, new Vector2(5.25f, 13.75f), Quaternion.identity)
             );
 
         boss = new Boss(
             new GameObject[3] {
-                Instantiate(D.I().GAUGE, new Vector2(7.5f, 23.25f), Quaternion.identity),
-                Instantiate(D.I().GAUGE, new Vector2(7.5f, 22.25f), Quaternion.identity),
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 19.35f), Quaternion.identity),
+                Instantiate(D.I().GAUGE, new Vector2(7.5f, 18.85f), Quaternion.identity),
                 Instantiate(D.I().GAUGE, new Vector2(7.5f, 19f), Quaternion.identity)
             }
         );
@@ -106,7 +106,7 @@ public class Main : MonoBehaviour
 
         puyoPuyo = newPuyoPuyo(new Vector2(3.5f, 12.5f));
         puyoPuyoNext[0] = newPuyoPuyo(new Vector2(8.5f, 11f));
-        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 8.5f));
 
         cnt = 0;
     }
@@ -320,7 +320,7 @@ public class Main : MonoBehaviour
         puyoPuyoNext[0] = puyoPuyoNext[1];
         puyoPuyoNext[0].setPos(new Vector2(8.5f, 11));
 
-        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 7.5f));
+        puyoPuyoNext[1] = newPuyoPuyo(new Vector2(8.5f, 8.5f));
 
         puyoPuyo.render();
         puyoPuyoNext[0].render();
