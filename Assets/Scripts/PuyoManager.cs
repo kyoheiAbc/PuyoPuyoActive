@@ -20,9 +20,9 @@ public class PuyoManager
         List<Puyo> puyoListPlus = new List<Puyo>(puyoList);
         puyoListPlus.AddRange(puyoPuyo);
 
-        for (int i = 0 + 46; i < puyoListPlus.Count - puyoPuyo.Count; i++)
+        for (int i = 0 + 36; i < puyoListPlus.Count - puyoPuyo.Count; i++)
         {
-            if (puyoListPlus[i].update(puyoListPlus) == C.VEC_0)
+            if (puyoListPlus[i].update(puyoListPlus) == new Vector2(0, 0))
             {
                 if (field.getPuyo(puyoListPlus[i].getPos()) == puyoListPlus[i])
                 {
@@ -51,7 +51,7 @@ public class PuyoManager
     public void addPuyo(Puyo puyo)
     {
         Vector2 pos = puyo.getPos();
-        for (int i = 0 + 46; i < puyoList.Count; i++)
+        for (int i = 0 + 36; i < puyoList.Count; i++)
         {
             if (pos.x == puyoList[i].getPos().x)
             {
@@ -67,7 +67,7 @@ public class PuyoManager
 
     public void rm()
     {
-        for (int i = 0 + 46; i < puyoList.Count; i++)
+        for (int i = 0 + 36; i < puyoList.Count; i++)
         {
             if (puyoList[i].getColor() == 255)
             {
@@ -91,6 +91,6 @@ public class PuyoManager
 
     public void render()
     {
-        for (int i = 0 + 46; i < puyoList.Count; i++) puyoList[i].render();
+        for (int i = 0 + 36; i < puyoList.Count; i++) puyoList[i].render();
     }
 }

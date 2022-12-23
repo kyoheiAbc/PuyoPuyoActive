@@ -8,7 +8,7 @@ public class Field
 
     public Field()
     {
-        ary = new Puyo[C.FIELD_SIZE_Y, C.FIELD_SIZE_X];
+        ary = new Puyo[15, 8];
     }
 
     public void setPuyo(Puyo puyo)
@@ -30,9 +30,9 @@ public class Field
     public bool rmCheck()
     {
         bool remove = false;
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < 15 - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < 8 - 1; x++)
             {
                 int cnt = 0;
                 if (cntSameColor(ary[y, x], cnt) >= C.REMOVE_NUMBER)
@@ -42,9 +42,9 @@ public class Field
                 }
             }
         }
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < 15 - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < 8 - 1; x++)
             {
                 if (ary[y, x] == null) continue;
                 int color = ary[y, x].getColor();
@@ -60,9 +60,9 @@ public class Field
 
     public void rm()
     {
-        for (int y = 1; y < C.FIELD_SIZE_Y - 1; y++)
+        for (int y = 1; y < 15 - 1; y++)
         {
-            for (int x = 1; x < C.FIELD_SIZE_X - 1; x++)
+            for (int x = 1; x < 8 - 1; x++)
             {
                 if (ary[y, x] == null) continue;
 
@@ -123,7 +123,7 @@ public class Field
         for (int i = 0; i < 4; i++)
         {
             rtlb[i] = getPuyo(
-                puyo.getPos() + C.VEC_X * (1 - i) * ((i + 1) % 2) + C.VEC_Y * (2 - i) * (i % 2)
+                puyo.getPos() + new Vector2(1, 0) * (1 - i) * ((i + 1) % 2) + new Vector2(0, 1) * (2 - i) * (i % 2)
             );
         }
         return rtlb;
@@ -131,9 +131,9 @@ public class Field
 
     public void init()
     {
-        for (int y = 0; y < C.FIELD_SIZE_Y; y++)
+        for (int y = 0; y < 15; y++)
         {
-            for (int x = 0; x < C.FIELD_SIZE_X; x++)
+            for (int x = 0; x < 8; x++)
             {
                 ary[y, x] = null;
             }

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class InputController
 {
-    Camera cam;
+    readonly Camera cam;
     Vector2 pos;
-    int ctrl;
+    byte ctl;
 
     public InputController()
     {
@@ -13,47 +13,44 @@ public class InputController
 
     public void init()
     {
-        pos = C.VEC_0;
-        ctrl = 0;
+        pos = new Vector2(0, 0);
+        ctl = 0;
     }
 
     public int update()
     {
-        if (Input.GetMouseButtonDown(0) && ctrl == 0)
+        if (Input.GetMouseButtonDown(0) && ctl == 0)
         {
             pos = cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
-            ctrl = 1;
+            ctl = 1;
         }
-        else if (Input.GetMouseButton(0) && ctrl > 0)
+        else if (Input.GetMouseButton(0) && ctl > 0)
         {
             Vector2 p = (Vector2)cam.ScreenToWorldPoint((Vector2)Input.mousePosition);
             Vector2 d = p - pos;
 
-            if (d.x * d.x < 1 && d.y * d.y < 0.25) return 0;
+            if (d.x * d.x < 1 && d.y > -1)
+            {
+                return 0;
+            }
 
-            ctrl = 2;
+            ctl = 2;
             pos = p;
 
-            if (Mathf.Abs(d.x) > Mathf.Abs(d.y))
-            {
-                return 5 + (int)Mathf.Sign(d.x);
-            }
-            else
-            {
-                return 5 + (int)Mathf.Sign(d.y) * 3;
-            }
+            if (d.x > 1) return 6;
+            if (d.x < -1) return 4;
+            if (d.y < -1) return 2;
         }
-        else if (Input.GetMouseButtonUp(0) && ctrl > 0)
+        else if (Input.GetMouseButtonUp(0) && ctl > 0)
         {
-            if (ctrl == 2)
+            if (ctl == 2)
             {
                 init();
                 return 0;
             }
             init();
-            return 15 + (int)Mathf.Sign(cam.ScreenToWorldPoint((Vector2)Input.mousePosition).x - 4);
+            return 16;
         }
-
         return 0;
     }
 }

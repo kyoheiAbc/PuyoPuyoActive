@@ -2,71 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public static class C
-{
-    public static readonly int FPS = 30;
-    public static readonly int FIELD_SIZE_X = 8;
-    public static readonly int FIELD_SIZE_Y = 17;
-    public static readonly int COLOR_NUMBER = 4;
-    public static readonly int COLOR_ADJUST = 8;
-    public static readonly int REMOVE_NUMBER = 4;
-    public static readonly Vector2 VEC_0 = new Vector2(0, 0);
-    public static readonly Vector2 VEC_X = new Vector2(1, 0);
-    public static readonly Vector2 VEC_Y = new Vector2(0, 1);
-    public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
-    public static readonly Vector2 VEC_DROP_QUICK = new Vector2(0, -0.4f);
-    public static readonly float RESOLUTION = 0.001f;
-    public static readonly int NEXT_GAME_CNT = 30;
-    public static readonly int FIX_CNT = 30;
-    public static readonly float EFFECT_REMOVE_CNT = 20;
-    public static readonly float EFFECT_FIX_CNT = 10;
-    public static readonly GameObject[] PUYO = new GameObject[4] {
-        Resources.Load<GameObject>("puyoA"),
-        Resources.Load<GameObject>("puyoB"),
-        Resources.Load<GameObject>("puyoC"),
-        Resources.Load<GameObject>("puyoD")
-    };
-
-    public static float QuadraticF(float x, float max)
-    {
-        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
-    }
-}
-
-public class ColorBag
-{
-    int[] bag;
-    int cnt;
-    public ColorBag()
-    {
-        bag = new int[C.COLOR_NUMBER * C.COLOR_ADJUST];
-        for (int i = 0; i < bag.Length; i++)
-        {
-            bag[i] = i % C.COLOR_NUMBER;
-        }
-    }
-    public void init()
-    {
-        cnt = -1;
-        for (int i = bag.Length - 1; i > 0; i--)
-        {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            int tmp = bag[i];
-            bag[i] = bag[j];
-            bag[j] = tmp;
-        }
-    }
-
-    public int getColor()
-    {
-        if (cnt == bag.Length - 1)
-        {
-            init();
-        }
-        cnt++;
-        return bag[cnt];
-    }
-}
 
 public class Main : MonoBehaviour
 {
@@ -80,7 +15,7 @@ public class Main : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = C.FPS;
+        Application.targetFrameRate = 30;
 
         // Camera
         if ((float)Screen.height / (float)Screen.width >= 2)
@@ -120,12 +55,12 @@ public class Main : MonoBehaviour
         colorBag.init();
 
         GameObject gO = Resources.Load<GameObject>("puyo");
-        for (int y = 0; y < C.FIELD_SIZE_Y; y++)
+        for (int y = 0; y < 15; y++)
         {
-            for (int x = 0; x < C.FIELD_SIZE_X; x++)
+            for (int x = 0; x < 8; x++)
             {
-                if (y == 0 || y == C.FIELD_SIZE_Y - 1 ||
-                    x == 0 || x == C.FIELD_SIZE_X - 1)
+                if (y == 0 ||
+                    x == 0 || x == 8 - 1)
                 {
                     gO.transform.position = new Vector2(x + 0.5f, y + 0.5f);
                     Puyo puyo = new Puyo(gO);
@@ -149,7 +84,7 @@ public class Main : MonoBehaviour
         if (cnt >= 300)
         {
             cnt++;
-            if (cnt == 300 + C.NEXT_GAME_CNT) reset();
+            if (cnt == 300 + 90) reset();
             return;
         }
 
@@ -172,10 +107,10 @@ public class Main : MonoBehaviour
         {
             case 4:
             case 6:
-                puyoPuyo.move(C.VEC_X * Mathf.Sign(input - 5), puyoManager.getList());
+                puyoPuyo.move(new Vector2(1, 0) * Mathf.Sign(input - 5), puyoManager.getList());
                 break;
             case 2:
-                if (C.VEC_0 == puyoPuyo.move(-C.VEC_Y / 2, puyoManager.getList()))
+                if (new Vector2(0, 0) == puyoPuyo.move(-new Vector2(0, 1) / 2, puyoManager.getList()))
                 {
                     puyoPuyo.setCnt((int)C.FIX_CNT);
                     List<Puyo> puyo = puyoPuyo.getPuyo();
@@ -272,7 +207,7 @@ public class Main : MonoBehaviour
     {
         return new PuyoPuyo(
             newPuyo(colorBag.getColor(), pos),
-            newPuyo(colorBag.getColor(), pos + C.VEC_X)
+            newPuyo(colorBag.getColor(), pos + new Vector2(1, 0))
         );
     }
 
@@ -282,4 +217,63 @@ public class Main : MonoBehaviour
     }
 
 
+}
+
+
+
+public static class C
+{
+    public static readonly int COLOR_NUMBER = 4;
+    public static readonly int REMOVE_NUMBER = 4;
+    public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
+    public static readonly float RESOLUTION = 0.001f;
+    public static readonly int FIX_CNT = 30;
+    public static readonly float EFFECT_REMOVE_CNT = 20;
+    public static readonly float EFFECT_FIX_CNT = 10;
+    public static readonly GameObject[] PUYO = new GameObject[4] {
+        Resources.Load<GameObject>("puyoA"),
+        Resources.Load<GameObject>("puyoB"),
+        Resources.Load<GameObject>("puyoC"),
+        Resources.Load<GameObject>("puyoD")
+    };
+}
+
+public class ColorBag
+{
+    int[] bag;
+    int cnt;
+    public ColorBag()
+    {
+        bag = new int[C.COLOR_NUMBER * 64];
+        for (int i = 0; i < bag.Length; i++)
+        {
+            bag[i] = i % C.COLOR_NUMBER;
+        }
+    }
+    public void init()
+    {
+        for (int i = bag.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            int tmp = bag[i];
+            bag[i] = bag[j];
+            bag[j] = tmp;
+        }
+        cnt = 0;
+    }
+    public int getColor()
+    {
+        int ret;
+        try
+        {
+            ret = bag[cnt];
+        }
+        catch
+        {
+            init();
+            ret = bag[cnt];
+        }
+        cnt++;
+        return ret;
+    }
 }

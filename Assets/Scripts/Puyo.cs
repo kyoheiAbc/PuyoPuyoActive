@@ -28,8 +28,8 @@ public class Puyo
 
     public Vector2 update(List<Puyo> pList)
     {
-        Vector2 retVec = move(C.VEC_DROP_QUICK, pList);
-        if (retVec != C.VEC_0)
+        Vector2 retVec = move(10 * C.VEC_DROP, pList);
+        if (retVec != new Vector2(0, 0))
         {
             cnt = 0;
             return retVec;
@@ -41,11 +41,11 @@ public class Puyo
             {
                 cnt++;
             }
-            return C.VEC_0;
+            return new Vector2(0, 0);
         }
 
         cnt++;
-        return C.VEC_0;
+        return new Vector2(0, 0);
     }
 
     public void setPos(Vector2 p)
@@ -74,7 +74,7 @@ public class Puyo
                     pos = initPos;
                     return pos - initPos;
                 }
-                pos.y = p.getPos().y + C.VEC_Y.y * Mathf.Sign(pos.y - p.getPos().y);
+                pos.y = p.getPos().y + new Vector2(0, 1).y * Mathf.Sign(pos.y - p.getPos().y);
                 if (!canPut(pList))
                 {
                     pos = initPos;
@@ -83,7 +83,7 @@ public class Puyo
             }
             else
             {
-                pos.y = p.getPos().y - C.VEC_Y.y * Mathf.Sign(vec.y);
+                pos.y = p.getPos().y - new Vector2(0, 1).y * Mathf.Sign(vec.y);
             }
         }
 
@@ -138,7 +138,7 @@ public class Puyo
             }
             if (cnt == C.EFFECT_FIX_CNT + (int)(C.EFFECT_REMOVE_CNT / 3f))
             {
-                t.localScale = C.VEC_0;
+                t.localScale = new Vector2(0, 0);
             }
             if (cnt == C.EFFECT_FIX_CNT + (int)(C.EFFECT_REMOVE_CNT * 2f / 3f))
             {
@@ -147,8 +147,13 @@ public class Puyo
             return;
         }
 
-        t.position = new Vector2(pos.x, pos.y - C.QuadraticF(cnt / C.EFFECT_FIX_CNT, 0.1f));
-        t.localScale = new Vector2(1 + C.QuadraticF(cnt / C.EFFECT_FIX_CNT, 0.1f), 1);
+        t.position = new Vector2(pos.x, pos.y - quadratic(cnt / C.EFFECT_FIX_CNT, 0.1f));
+        t.localScale = new Vector2(1 + quadratic(cnt / C.EFFECT_FIX_CNT, 0.1f), 1);
+    }
+
+    private float quadratic(float x, float max)
+    {
+        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
     }
 
 }
