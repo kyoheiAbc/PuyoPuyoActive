@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 
 public class Puyo
 {
-    int color;
+    readonly int color;
     private Vector2 pos;
     List<Puyo> puyoList;
     GameObject gO;
@@ -41,13 +41,13 @@ public class Puyo
             cnt++;
             return true;
         }
-        if (move(10 * C.VEC_DROP) == new Vector2(0, 0))
+        if (move(10 * C.VEC_DROP) != 10 * C.VEC_DROP)
         {
             if (cnt < C.EFFECT_FIX_CNT) cnt++;
 
             if (pos.y != 1.5f && field.getPuyo(pos + new Vector2(0, -1)) == null)
             {
-                return true;
+                return false;
             }
 
             field.set(this, pos);

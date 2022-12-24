@@ -35,7 +35,7 @@ public class PuyoManager
 
         field.init(null);
 
-        colorBag.init();
+        colorBag = new ColorBag();
 
         for (int n = 0; n < 3; n++) nextPuyoPuyo();
 
@@ -78,6 +78,7 @@ public class PuyoManager
             puyoList.Sort(sortPosY);
         }
 
+
         bool update = false;
         for (int i = 0; i < puyoList.Count; i++)
         {
@@ -100,12 +101,14 @@ public class PuyoManager
         }
         if (!update)
         {
-            Debug.Log("TRY RM");
             if (field.tryRm())
             {
                 field.init(null);
             }
         }
+
+
+
 
     }
     private static int sortPosY(Puyo pA, Puyo pB)
@@ -127,21 +130,18 @@ public class ColorBag
     int cnt;
     public ColorBag()
     {
+        int[] colors = shuffle(new int[5] { 0, 1, 2, 3, 4 });
+
         bag = new int[C.COLOR_NUMBER * 64];
         for (int i = 0; i < bag.Length; i++)
         {
-            bag[i] = i % C.COLOR_NUMBER;
+            bag[i] = colors[i % C.COLOR_NUMBER];
         }
+        init();
     }
     public void init()
     {
-        for (int i = bag.Length - 1; i > 0; i--)
-        {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            int tmp = bag[i];
-            bag[i] = bag[j];
-            bag[j] = tmp;
-        }
+        bag = shuffle(bag);
         cnt = 0;
     }
     public int getColor()
@@ -158,5 +158,16 @@ public class ColorBag
         }
         cnt++;
         return ret;
+    }
+    private int[] shuffle(int[] ary)
+    {
+        for (int i = ary.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            int tmp = ary[i];
+            ary[i] = ary[j];
+            ary[j] = tmp;
+        }
+        return ary;
     }
 }

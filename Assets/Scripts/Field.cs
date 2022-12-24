@@ -3,6 +3,7 @@ using UnityEngine;
 public class Field
 {
     Puyo[,] ary;
+
     public Field()
     {
         ary = new Puyo[15, 8];
@@ -23,6 +24,7 @@ public class Field
     {
         ary[(int)pos.y, (int)pos.x] = puyo;
     }
+
     public Puyo getPuyo(Vector2 pos)
     {
         return ary[(int)pos.y, (int)pos.x];

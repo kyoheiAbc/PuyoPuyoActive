@@ -80,7 +80,7 @@ public class PuyoPuyo
 
     public bool update()
     {
-        if (move(C.VEC_DROP) != new Vector2(0, 0))
+        if (move(C.VEC_DROP) == C.VEC_DROP)
         {
             cnt = 0;
             return true;
