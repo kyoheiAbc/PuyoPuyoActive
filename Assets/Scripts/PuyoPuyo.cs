@@ -1,103 +1,101 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PuyoPuyo
 {
-    List<Puyo> puyo;
+    List<Puyo> puyos;
     int rot;
     int cnt;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
-        puyo = new List<Puyo> { p0, p1 };
-        rot = 0;
+        puyos = new List<Puyo> { p0, p1 };
+        for (int i = 0; i < 2; i++)
+        {
+            puyos[i].setParent(this);
+        }
+        rot = 3;
         cnt = 0;
     }
 
-    public Vector2 update(List<Puyo> pList)
+    public void setCnt(int c)
     {
-        return move(C.VEC_DROP, pList);
+        cnt = c;
     }
 
-    public Vector2 move(Vector2 vec, List<Puyo> pList)
+    public void setPos(Vector2 pos)
     {
-        Vector2 initPos = puyo[0].getPos();
+        puyos[0].setPos(pos);
+        sync(0);
+    }
+
+    private void sync(int i)
+    {
+        puyos[1 - i].setPos(
+            puyos[i].getPos() +
+            new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
+        );
+    }
+
+    public Vector2 move(Vector2 vec)
+    {
+        Vector2 initPos = puyos[0].getPos();
         for (int i = 0; i < 2; i++)
         {
-            if (puyo[i].move(vec, pList) != vec)
+            if (puyos[i].move(vec) != vec)
             {
                 sync(i);
-                if (!puyo[1 - i].canPut(pList))
+                if (!puyos[1 - i].canPut())
                 {
-                    puyo[0].setPos(initPos);
+                    puyos[0].setPos(initPos);
                     sync(0);
                 }
                 break;
             }
         }
-        if (puyo[0].getPos() == initPos)
-        {
-            if (cnt < C.FIX_CNT) cnt++;
-        }
-        else cnt = 0;
 
-        return puyo[0].getPos() - initPos;
+        return puyos[0].getPos() - initPos;
     }
 
-    public bool setPos(Vector2 pos)
-    {
-        puyo[0].setPos(pos);
-        sync(0);
-        return true;
-    }
-
-    public void rotate(int r, List<Puyo> pList)
+    public void rotate(int r)
     {
         rot = (rot + r) % 4;
         if (rot < 0) rot = 3;
 
-        Vector2 pos = puyo[0].getPos();
-        puyo[1].setPos(pos);
-        puyo[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2), pList);
+        Vector2 pos = puyos[0].getPos();
+        puyos[1].setPos(pos);
+        puyos[1].move(new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2));
         sync(1);
 
-        if (!puyo[0].canPut(pList))
+        if (!puyos[0].canPut())
         {
             rot = (rot - r) % 4;
             if (rot < 0) rot = 3;
 
             rot = (rot + 2) % 4;
-            puyo[1].setPos(pos);
+            puyos[1].setPos(pos);
             sync(1);
         }
-        cnt = 0;
     }
 
-    public List<Puyo> getPuyo()
+    public bool update()
     {
-        if (puyo[0].getPos().y <= puyo[1].getPos().y) return puyo;
-        else return new List<Puyo>() { puyo[1], puyo[0] };
-    }
+        if (move(C.VEC_DROP) != new Vector2(0, 0))
+        {
+            cnt = 0;
+            return true;
+        }
 
-    private void sync(int i)
-    {
-        puyo[1 - i].setPos(
-            puyo[i].getPos() +
-            new Vector2(1 - rot, rot - 2) * new Vector2((rot + 1) % 2, rot % 2) * (1 - 2 * i)
-        );
-    }
-    public void setCnt(int c)
-    {
-        cnt = c;
-    }
-    public int getCnt()
-    {
-        return cnt;
-    }
+        cnt++;
+        if (cnt > C.FIX_CNT)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                puyos[i].setParent(null);
+            }
+            return false;
+        }
 
-    public void render()
-    {
-        for (int i = 0; i < 2; i++) puyo[i].render();
+        return true;
     }
 }
