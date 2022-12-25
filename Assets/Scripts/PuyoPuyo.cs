@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class PuyoPuyo
 {
-    List<Puyo> puyos;
+    Puyo[] puyos;
     int rot;
     int cnt;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
-        puyos = new List<Puyo> { p0, p1 };
+        puyos = new Puyo[2] { p0, p1 };
         for (int i = 0; i < 2; i++)
         {
             puyos[i].setParent(this);

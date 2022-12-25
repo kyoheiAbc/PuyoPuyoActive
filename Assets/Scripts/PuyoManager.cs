@@ -5,16 +5,15 @@ public class PuyoManager
 {
     PuyoPuyo[] puyoPuyos;
     List<Puyo> puyoList;
-    Field field;
     ColorBag colorBag;
 
 
-    public PuyoManager()
+    private PuyoManager()
     {
         puyoPuyos = new PuyoPuyo[3];
         puyoList = new List<Puyo>();
-        field = new Field();
         colorBag = new ColorBag();
+        init();
     }
 
     public void init()
@@ -28,14 +27,12 @@ public class PuyoManager
             {
                 if (y == 0 || x == 0 || x == 8 - 1)
                 {
-                    puyoList.Add(new Puyo(255, new Vector2(x + 0.5f, y + 0.5f), puyoList, field));
+                    puyoList.Add(new Puyo(255, new Vector2(x + 0.5f, y + 0.5f)));
                 }
             }
         }
 
-        field.init(null);
-
-        colorBag = new ColorBag();
+        colorBag.init();
 
         for (int n = 0; n < 3; n++) nextPuyoPuyo();
 
@@ -61,8 +58,8 @@ public class PuyoManager
 
     private PuyoPuyo newPuyoPuyo()
     {
-        puyoList.Add(new Puyo(colorBag.getColor(), new Vector2(0, 0), puyoList, field));
-        puyoList.Add(new Puyo(colorBag.getColor(), new Vector2(0, 0), puyoList, field));
+        puyoList.Add(new Puyo(colorBag.getColor(), new Vector2(0, 0)));
+        puyoList.Add(new Puyo(colorBag.getColor(), new Vector2(0, 0)));
 
         PuyoPuyo puyoPuyo = new PuyoPuyo(puyoList[puyoList.Count - 2], puyoList[puyoList.Count - 1]);
         puyoPuyo.setPos(new Vector2(8.5f, 8.5f));
@@ -101,15 +98,17 @@ public class PuyoManager
         }
         if (!update)
         {
-            if (field.tryRm())
+            if (Field.I().tryRm())
             {
-                field.init(null);
+                Field.I().init();
             }
         }
 
+    }
 
-
-
+    public List<Puyo> getList()
+    {
+        return puyoList;
     }
     private static int sortPosY(Puyo pA, Puyo pB)
     {
@@ -120,54 +119,53 @@ public class PuyoManager
     {
         for (int i = 0; i < puyoList.Count; i++) puyoList[i].render();
     }
+    private static PuyoManager i = new PuyoManager();
+    public static PuyoManager I() { return i; }
 
-
-}
-
-public class ColorBag
-{
-    int[] bag;
-    int cnt;
-    public ColorBag()
+    private class ColorBag
     {
-        int[] colors = shuffle(new int[5] { 0, 1, 2, 3, 4 });
-
-        bag = new int[C.COLOR_NUMBER * 64];
-        for (int i = 0; i < bag.Length; i++)
+        int[] bag;
+        int cnt;
+        public ColorBag()
         {
-            bag[i] = colors[i % C.COLOR_NUMBER];
-        }
-        init();
-    }
-    public void init()
-    {
-        bag = shuffle(bag);
-        cnt = 0;
-    }
-    public int getColor()
-    {
-        int ret;
-        if (cnt < bag.Length)
-        {
-            ret = bag[cnt];
-        }
-        else
-        {
+            bag = new int[C.COLOR_NUMBER * 64];
             init();
-            ret = bag[cnt];
         }
-        cnt++;
-        return ret;
-    }
-    private int[] shuffle(int[] ary)
-    {
-        for (int i = ary.Length - 1; i > 0; i--)
+        public void init()
         {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            int tmp = ary[i];
-            ary[i] = ary[j];
-            ary[j] = tmp;
+            int[] colors = new int[5] { 0, 1, 2, 3, 4 };
+            shuffle(ref colors);
+            for (int i = 0; i < bag.Length; i++)
+            {
+                bag[i] = colors[i % C.COLOR_NUMBER];
+            }
+            shuffle(ref bag);
+            cnt = 0;
         }
-        return ary;
+        public int getColor()
+        {
+            if (cnt >= bag.Length)
+            {
+                shuffle(ref bag);
+                cnt = 0;
+            }
+            int ret = bag[cnt];
+            cnt++;
+            return ret;
+        }
+        private void shuffle(ref int[] ary)
+        {
+            for (int i = ary.Length - 1; i > 0; i--)
+            {
+                int r = UnityEngine.Random.Range(0, i + 1);
+                int tmp = ary[i];
+                ary[i] = ary[r];
+                ary[r] = tmp;
+            }
+        }
     }
 }
+
+
+
+

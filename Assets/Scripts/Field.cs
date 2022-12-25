@@ -2,97 +2,99 @@ using UnityEngine;
 
 public class Field
 {
-    Puyo[,] ary;
+    Puyo[][] ary;
+    Puyo[][] tmp;
 
-    public Field()
+    private Field()
     {
-        ary = new Puyo[15, 8];
+        ary = new Puyo[8][];
+        for (int i = 0; i < 8; i++) ary[i] = new Puyo[15];
+
+        tmp = new Puyo[8][];
+        for (int i = 0; i < 8; i++) tmp[i] = new Puyo[15];
+        init();
     }
 
-    public void init(Puyo[,] pA)
+    public void init()
     {
-        for (int y = 0; y < ary.GetLength(0); y++)
+        for (int y = 0; y < 15; y++)
         {
-            for (int x = 0; x < ary.GetLength(1); x++)
+            for (int x = 0; x < 8; x++)
             {
-                ary[y, x] = pA == null ? null : pA[y, x];
+                ary[x][y] = null;
+                tmp[x][y] = null;
             }
         }
     }
 
     public void set(Puyo puyo, Vector2 pos)
     {
-        ary[(int)pos.y, (int)pos.x] = puyo;
+        ary[(int)pos.x][(int)pos.y] = puyo;
     }
 
     public Puyo getPuyo(Vector2 pos)
     {
-        return ary[(int)pos.y, (int)pos.x];
+        return ary[(int)pos.x][(int)pos.y];
     }
 
     public bool tryRm()
     {
-        Field f = new Field();
-        f.init(ary);
+        for (int y = 0; y < 15; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                tmp[x][y] = ary[x][y];
+            }
+        }
 
         bool rm = false;
-        for (int y = 0; y < ary.GetLength(0); y++)
+        for (int y = 0; y < 15; y++)
         {
-            for (int x = 0; x < ary.GetLength(1); x++)
+            for (int x = 0; x < 8; x++)
             {
-                if (ary[y, x] == null) continue;
-
+                if (tmp[x][y] == null) continue;
                 int cnt = 0;
-                if (f.cntSameColor(cnt, ary[y, x]) >= C.REMOVE_NUMBER)
+                cntSameColor(ref cnt, x, y);
+                if (cnt >= C.REMOVE_NUMBER)
                 {
+                    rmSameColor(x, y);
                     rm = true;
-                    rmSameColor(ary[y, x]);
                 }
             }
         }
         return rm;
     }
 
-    private int cntSameColor(int cnt, Puyo p)
+    private void cntSameColor(ref int cnt, int x, int y)
     {
         cnt++;
-        set(null, p.getPos());
+        int color = tmp[x][y].getColor();
+        tmp[x][y] = null;
 
-        Puyo[] rtlb = getRtlb(p);
         for (int i = 0; i < 4; i++)
         {
-            if (rtlb[i] == null) continue;
-            if (rtlb[i].getColor() == p.getColor())
+            if (tmp[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)] == null) continue;
+            if (tmp[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)].getColor() == color)
             {
-                cnt = cntSameColor(cnt, rtlb[i]);
-            }
-        }
-        return cnt;
-    }
-
-    private void rmSameColor(Puyo p)
-    {
-        p.rm();
-
-        Puyo[] rtlb = getRtlb(p);
-        for (int i = 0; i < 4; i++)
-        {
-            if (rtlb[i] == null) continue;
-            if (rtlb[i].getColor() == p.getColor())
-            {
-                rmSameColor(rtlb[i]);
+                cntSameColor(ref cnt, x + (1 - i) * ((i + 1) % 2), y + (2 - i) * (i % 2));
             }
         }
     }
-
-    private Puyo[] getRtlb(Puyo puyo)
+    private void rmSameColor(int x, int y)
     {
-        Puyo[] rtlb = new Puyo[4];
+        int color = ary[x][y].getColor();
+        ary[x][y].rm();
+
         for (int i = 0; i < 4; i++)
         {
-            Vector2 pos = puyo.getPos() + new Vector2(1, 0) * (1 - i) * ((i + 1) % 2) + new Vector2(0, 1) * (2 - i) * (i % 2);
-            rtlb[i] = ary[(int)pos.y, (int)pos.x];
+            if (ary[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)] == null) continue;
+            if (ary[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)].getColor() == color)
+            {
+                rmSameColor(x + (1 - i) * ((i + 1) % 2), y + (2 - i) * (i % 2));
+            }
         }
-        return rtlb;
     }
+
+    private static Field i = new Field();
+    public static Field I() { return i; }
 }

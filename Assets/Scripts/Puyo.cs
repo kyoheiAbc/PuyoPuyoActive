@@ -6,23 +6,25 @@ public class Puyo
 {
     readonly int color;
     private Vector2 pos;
-    List<Puyo> puyoList;
     GameObject gO;
     Transform t;
     PuyoPuyo parent;
-    Field field;
     int cnt;
 
-    public Puyo(int c, Vector2 p, List<Puyo> pL, Field f)
+    public Puyo(int c, Vector2 p)
     {
         color = c;
         pos = p;
-        puyoList = pL;
-        field = f;
 
-        gO = Addressables.InstantiateAsync("Assets/Sources/puyo.prefab").WaitForCompletion();
-        gO.GetComponent<SpriteRenderer>().color =
-            color < C.PUYO_COLORS.Length ? C.PUYO_COLORS[color] : Color.black;
+        if (color == 255)
+        {
+            gO = C.PUYO_GAME_OBJECT;
+        }
+        else
+        {
+            gO = Addressables.InstantiateAsync("Assets/Sources/puyo.prefab").WaitForCompletion();
+            gO.GetComponent<SpriteRenderer>().color = C.PUYO_COLORS[color];
+        }
         t = gO.transform;
         t.position = p;
 
@@ -35,7 +37,7 @@ public class Puyo
         {
             if (cnt > C.EFFECT_REMOVE_CNT + 1000)
             {
-                puyoList.Remove(this);
+                PuyoManager.I().getList().Remove(this);
                 Addressables.ReleaseInstance(gO);
             }
             cnt++;
@@ -45,12 +47,12 @@ public class Puyo
         {
             if (cnt < C.EFFECT_FIX_CNT) cnt++;
 
-            if (pos.y != 1.5f && field.getPuyo(pos + new Vector2(0, -1)) == null)
+            if (pos.y != 1.5f && Field.I().getPuyo(pos + new Vector2(0, -1)) == null)
             {
                 return false;
             }
 
-            field.set(this, pos);
+            Field.I().set(this, pos);
 
             return (cnt < C.EFFECT_FIX_CNT);
         }
@@ -90,6 +92,7 @@ public class Puyo
 
         pos += vec;
 
+        List<Puyo> puyoList = PuyoManager.I().getList();
         for (int i = 0; i < puyoList.Count; i++)
         {
             Puyo p = puyoList[i];
@@ -124,6 +127,7 @@ public class Puyo
 
     public bool canPut()
     {
+        List<Puyo> puyoList = PuyoManager.I().getList();
         for (int i = 0; i < puyoList.Count; i++)
         {
             if (puyoList[i] == this) continue;
@@ -155,7 +159,7 @@ public class Puyo
 
     public void rm()
     {
-        field.set(null, pos);
+        Field.I().set(null, pos);
         cnt = 1000;
         t.localScale = new Vector2(0.9f, 1.1f);
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.AddressableAssets;
 
 public class Main : MonoBehaviour
 {
@@ -10,21 +11,20 @@ public class Main : MonoBehaviour
     {
         Application.targetFrameRate = 30;
 
-        inputController = new InputController();
-        puyoManager = new PuyoManager();
-
-        init();
+        inputController = InputController.I();
+        puyoManager = PuyoManager.I();
     }
 
     public void init()
     {
         inputController.init();
         puyoManager.init();
+        Field.I().init();
     }
 
     void Update()
     {
-        int oldTime = DateTime.Now.Millisecond;
+        // int oldTime = DateTime.Now.Millisecond;
 
         PuyoPuyo puyoPuyo = puyoManager.getPuyoPuyo();
         if (puyoPuyo == null)
@@ -75,19 +75,15 @@ public class Main : MonoBehaviour
 
         puyoManager.render();
 
-
-        int nowTime = DateTime.Now.Millisecond;
-        if (nowTime - oldTime > 0)
-        {
-            Debug.Log(nowTime - oldTime);
-        }
+        // int nowTime = DateTime.Now.Millisecond;
+        // if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
     }
 }
 
 
-
 public static class C
 {
+    public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
     public static readonly int REMOVE_NUMBER = 4;
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
@@ -102,6 +98,5 @@ public static class C
         Color.HSVToRGB(0.8f, 0.5f, 1.0f),
         Color.HSVToRGB(0.0f, 0.0f, 0.5f)
     };
+    public static readonly GameObject PUYO_GAME_OBJECT = Addressables.LoadAssetAsync<GameObject>("Assets/Sources/puyo.prefab").WaitForCompletion();
 }
-
-
