@@ -133,7 +133,11 @@ public class Puyo
             if (puyoList[i] == this) continue;
             if (puyoList[i].getParent() != null & puyoList[i].getParent() == parent) continue;
 
-            if (Vector2.SqrMagnitude(pos - puyoList[i].getPos()) < 1) return false;
+            float d = Vector2.SqrMagnitude(pos - puyoList[i].getPos());
+            if (d < 1 && !Mathf.Approximately(d, 1))
+            {
+                return false;
+            }
         }
         return true;
     }
