@@ -36,9 +36,9 @@ public class Field
     public bool tryRm()
     {
         bool rm = false;
-        for (int y = 0; y < 15; y++)
+        for (int y = 1; y < 14; y++)
         {
-            for (int x = 0; x < 8; x++)
+            for (int x = 1; x < 7; x++)
             {
                 if (ary[x][y] == null) continue;
                 int cnt = 0;
