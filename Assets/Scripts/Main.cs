@@ -1,11 +1,13 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 
 public class Main : MonoBehaviour
 {
     InputController inputController;
     PuyoManager puyoManager;
+    int cnt;
 
     void Start()
     {
@@ -17,19 +19,46 @@ public class Main : MonoBehaviour
 
     public void init()
     {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("PUYO");
+        for (int i = 0; i < gameObjects.Length; i++)
+        {
+            Addressables.ReleaseInstance(gameObjects[i]);
+        }
+
         inputController.init();
         puyoManager.init();
         Field.I().init();
+
+        cnt = 0;
     }
 
     void Update()
     {
         // int oldTime = DateTime.Now.Millisecond;
 
+        if (cnt > 0)
+        {
+            cnt++;
+            if (cnt > 90)
+            {
+                init();
+            }
+            goto render;
+        }
+
         PuyoPuyo puyoPuyo = puyoManager.getPuyoPuyo();
         if (puyoPuyo == null)
         {
             puyoManager.nextPuyoPuyo();
+            List<Puyo> puyoList = puyoManager.getList();
+            for (int i = 0; i < puyoList.Count; i++)
+            {
+                if (!puyoList[i].canPut())
+                {
+                    cnt++;
+                    goto render;
+                }
+            }
             puyoPuyo = puyoManager.getPuyoPuyo();
             inputController.init();
         }
@@ -73,6 +102,8 @@ public class Main : MonoBehaviour
 
         puyoManager.update();
 
+
+    render:
         puyoManager.render();
 
         // int nowTime = DateTime.Now.Millisecond;
