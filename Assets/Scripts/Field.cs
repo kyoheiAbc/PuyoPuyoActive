@@ -1,17 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Field
 {
     Puyo[][] ary;
-    Puyo[][] tmp;
 
     private Field()
     {
         ary = new Puyo[8][];
         for (int i = 0; i < 8; i++) ary[i] = new Puyo[15];
-
-        tmp = new Puyo[8][];
-        for (int i = 0; i < 8; i++) tmp[i] = new Puyo[15];
         init();
     }
 
@@ -22,7 +19,6 @@ public class Field
             for (int x = 0; x < 8; x++)
             {
                 ary[x][y] = null;
-                tmp[x][y] = null;
             }
         }
     }
@@ -39,25 +35,18 @@ public class Field
 
     public bool tryRm()
     {
-        for (int y = 0; y < 15; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                tmp[x][y] = ary[x][y];
-            }
-        }
-
         bool rm = false;
         for (int y = 0; y < 15; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                if (tmp[x][y] == null) continue;
+                if (ary[x][y] == null) continue;
                 int cnt = 0;
-                cntSameColor(ref cnt, x, y);
+                List<int> donePos = new List<int>();
+                cntGroup(x, y, ref cnt, ref donePos);
                 if (cnt >= C.REMOVE_NUMBER)
                 {
-                    rmSameColor(x, y);
+                    rmGroup(x, y);
                     rm = true;
                 }
             }
@@ -65,33 +54,30 @@ public class Field
         return rm;
     }
 
-    private void cntSameColor(ref int cnt, int x, int y)
+    private void cntGroup(int x, int y, ref int cnt, ref List<int> donePos)
     {
         cnt++;
-        int color = tmp[x][y].getColor();
-        tmp[x][y] = null;
-
+        int color = ary[x][y].getColor();
+        donePos.Add(x + 8 * y);
         for (int i = 0; i < 4; i++)
         {
-            if (tmp[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)] == null) continue;
-            if (tmp[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)].getColor() == color)
-            {
-                cntSameColor(ref cnt, x + (1 - i) * ((i + 1) % 2), y + (2 - i) * (i % 2));
-            }
+            int x_ = x + (1 - i) * ((i + 1) % 2);
+            int y_ = y + (2 - i) * (i % 2);
+            if (ary[x_][y_] == null) continue;
+            if (donePos.Contains(x_ + 8 * y_)) continue;
+            if (ary[x_][y_].getColor() == color) cntGroup(x_, y_, ref cnt, ref donePos);
         }
     }
-    private void rmSameColor(int x, int y)
+    private void rmGroup(int x, int y)
     {
         int color = ary[x][y].getColor();
         ary[x][y].rm();
-
         for (int i = 0; i < 4; i++)
         {
-            if (ary[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)] == null) continue;
-            if (ary[x + (1 - i) * ((i + 1) % 2)][y + (2 - i) * (i % 2)].getColor() == color)
-            {
-                rmSameColor(x + (1 - i) * ((i + 1) % 2), y + (2 - i) * (i % 2));
-            }
+            int x_ = x + (1 - i) * ((i + 1) % 2);
+            int y_ = y + (2 - i) * (i % 2);
+            if (ary[x_][y_] == null) continue;
+            if (ary[x_][y_].getColor() == color) rmGroup(x_, y_);
         }
     }
 
