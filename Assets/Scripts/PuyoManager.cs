@@ -90,7 +90,7 @@ public class PuyoManager
                 update = true;
             }
 
-            if (tmp != puyoList[i])
+            if (puyoList.Count <= i || tmp != puyoList[i])
             {
                 i--;
             }
