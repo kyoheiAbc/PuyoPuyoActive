@@ -65,7 +65,9 @@ public class Field
             int y_ = y + (2 - i) * (i % 2);
             if (ary[x_][y_] == null) continue;
             if (donePos.Contains(x_ + 8 * y_)) continue;
-            if (ary[x_][y_].getColor() == color) cntGroup(x_, y_, ref cnt, ref donePos);
+            int color_ = ary[x_][y_].getColor();
+            if (color_ == 5) continue;
+            if (color_ == color) cntGroup(x_, y_, ref cnt, ref donePos);
         }
     }
     private void rmGroup(int x, int y)
@@ -77,7 +79,9 @@ public class Field
             int x_ = x + (1 - i) * ((i + 1) % 2);
             int y_ = y + (2 - i) * (i % 2);
             if (ary[x_][y_] == null) continue;
-            if (ary[x_][y_].getColor() == color) rmGroup(x_, y_);
+            int color_ = ary[x_][y_].getColor();
+            if (color_ == 5) ary[x_][y_].rm();
+            if (color_ == color) rmGroup(x_, y_);
         }
     }
 
