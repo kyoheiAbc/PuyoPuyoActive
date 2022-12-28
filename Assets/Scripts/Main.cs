@@ -127,7 +127,7 @@ public static class C
         Color.HSVToRGB(0.4f, 0.5f, 1.0f),
         Color.HSVToRGB(0.6f, 0.5f, 1.0f),
         Color.HSVToRGB(0.8f, 0.5f, 1.0f),
-        Color.HSVToRGB(0.0f, 0.0f, 0.5f)
+        Color.HSVToRGB(0.0f, 0.0f, 0.8f)
     };
     public static readonly GameObject PUYO_GAME_OBJECT = Addressables.LoadAssetAsync<GameObject>("Assets/Sources/puyo.prefab").WaitForCompletion();
 }
