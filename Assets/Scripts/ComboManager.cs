@@ -27,13 +27,16 @@ public class ComboManager
     }
     public void setCombo()
     {
+        if (tmp == 0) return;
         combo += tmp;
         tmp = 0;
         text.text = combo + " combo";
     }
     public void startCnt()
     {
-        if (cnt == 0) cnt++;
+        if (cnt != 0) return;
+        if (combo == 0) return;
+        cnt++;
     }
     public void update()
     {
