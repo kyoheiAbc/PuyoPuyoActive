@@ -102,6 +102,10 @@ public class PuyoManager
             {
                 Field.I().init();
             }
+            else
+            {
+                ComboManager.I().startCnt();
+            }
         }
 
     }

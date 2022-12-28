@@ -102,6 +102,10 @@ public class Main : MonoBehaviour
 
         puyoManager.update();
 
+        Boss.I().update();
+
+        ComboManager.I().update();
+
 
     render:
         puyoManager.render();

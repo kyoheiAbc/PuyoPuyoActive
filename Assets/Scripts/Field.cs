@@ -48,6 +48,7 @@ public class Field
                 {
                     rmGroup(x, y);
                     rm = true;
+                    ComboManager.I().incTmp();
                 }
             }
         }

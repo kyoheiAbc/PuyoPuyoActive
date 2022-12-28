@@ -39,6 +39,7 @@ public class Puyo
             {
                 PuyoManager.I().getList().Remove(this);
                 Addressables.ReleaseInstance(gO);
+                ComboManager.I().setCombo();
             }
             cnt++;
             return true;
