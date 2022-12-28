@@ -134,4 +134,15 @@ public static class C
         Color.HSVToRGB(0.0f, 0.0f, 0.8f)
     };
     public static readonly GameObject PUYO_GAME_OBJECT = Addressables.LoadAssetAsync<GameObject>("Assets/Sources/puyo.prefab").WaitForCompletion();
+
+    public static void SHUFFLE(ref int[] ary)
+    {
+        for (int i = ary.Length - 1; i > 0; i--)
+        {
+            int r = UnityEngine.Random.Range(0, i + 1);
+            int tmp = ary[i];
+            ary[i] = ary[r];
+            ary[r] = tmp;
+        }
+    }
 }

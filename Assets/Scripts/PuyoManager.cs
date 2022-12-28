@@ -67,6 +67,23 @@ public class PuyoManager
         return puyoPuyo;
     }
 
+    public void newOjama(int num)
+    {
+        int[] x_ = new int[6] { 1, 2, 3, 4, 5, 6 };
+        C.SHUFFLE(ref x_);
+
+        int n = 0;
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                n++;
+                puyoList.Add(new Puyo(5, new Vector2(x_[x] + 0.5f, 15.5f + y)));
+                if (n >= num) return;
+            }
+        }
+    }
+
     public void update()
     {
         if (!puyoPuyos[0].update())
@@ -138,34 +155,24 @@ public class PuyoManager
         public void init()
         {
             int[] colors = new int[5] { 0, 1, 2, 3, 4 };
-            shuffle(ref colors);
+            C.SHUFFLE(ref colors);
             for (int i = 0; i < bag.Length; i++)
             {
                 bag[i] = colors[i % C.COLOR_NUMBER];
             }
-            shuffle(ref bag);
+            C.SHUFFLE(ref bag);
             cnt = 0;
         }
         public int getColor()
         {
             if (cnt >= bag.Length)
             {
-                shuffle(ref bag);
+                C.SHUFFLE(ref bag);
                 cnt = 0;
             }
             int ret = bag[cnt];
             cnt++;
             return ret;
-        }
-        private void shuffle(ref int[] ary)
-        {
-            for (int i = ary.Length - 1; i > 0; i--)
-            {
-                int r = UnityEngine.Random.Range(0, i + 1);
-                int tmp = ary[i];
-                ary[i] = ary[r];
-                ary[r] = tmp;
-            }
         }
     }
 }
