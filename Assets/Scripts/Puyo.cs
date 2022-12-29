@@ -48,6 +48,14 @@ public class Puyo
         {
             if (cnt < C.EFFECT_FIX_CNT) cnt++;
 
+            // ojama
+            if (pos.y >= 15)
+            {
+                PuyoManager.I().getList().Remove(this);
+                Addressables.ReleaseInstance(gO);
+                return false;
+            }
+
             if (pos.y != 1.5f && Field.I().getPuyo(pos + new Vector2(0, -1)) == null)
             {
                 return false;

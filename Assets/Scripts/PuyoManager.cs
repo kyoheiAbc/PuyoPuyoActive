@@ -67,7 +67,7 @@ public class PuyoManager
         return puyoPuyo;
     }
 
-    public void newOjama(int num)
+    public int newOjama(int num)
     {
         int[] x_ = new int[6] { 1, 2, 3, 4, 5, 6 };
         C.SHUFFLE(ref x_);
@@ -77,11 +77,12 @@ public class PuyoManager
         {
             for (int x = 0; x < 6; x++)
             {
-                n++;
+                if (n >= num) break;
                 puyoList.Add(new Puyo(5, new Vector2(x_[x] + 0.5f, 15.5f + y)));
-                if (n >= num) return;
+                n++;
             }
         }
+        return n;
     }
 
     public void update()

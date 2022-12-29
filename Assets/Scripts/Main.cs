@@ -102,9 +102,11 @@ public class Main : MonoBehaviour
 
         puyoManager.update();
 
-        Boss.I().update();
-
         ComboManager.I().update();
+
+    // Opponent.I().update();
+
+    // OjamaSystem.I().update();
 
 
     render:
@@ -118,6 +120,7 @@ public class Main : MonoBehaviour
 
 public static class C
 {
+    // public static readonly int OPPONENT_SPEED = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
     public static readonly int REMOVE_NUMBER = 4;
@@ -135,6 +138,12 @@ public static class C
     };
     public static readonly GameObject PUYO_GAME_OBJECT = Addressables.LoadAssetAsync<GameObject>("Assets/Sources/puyo.prefab").WaitForCompletion();
 
+    public static int COMBO_TO_OJAMA(int c)
+    {
+        if (c < 4) return c;
+        if (c == 4) return 3;
+        return (int)(9 * Mathf.Pow(2, c - 5));
+    }
     public static void SHUFFLE(ref int[] ary)
     {
         for (int i = ary.Length - 1; i > 0; i--)
