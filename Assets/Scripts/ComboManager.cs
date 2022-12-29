@@ -28,6 +28,8 @@ public class ComboManager
     public void setCombo()
     {
         if (tmp == 0) return;
+        OjamaSystem.I().incAtkTmp(C.COMBO_TO_OJAMA(combo));
+
         combo += tmp;
         tmp = 0;
         text.text = combo + " combo";
@@ -40,11 +42,16 @@ public class ComboManager
     }
     public void update()
     {
-        if (cnt == 0) return;
+        if (combo == 0)
+        {
+            OjamaSystem.I().fixDmg();
+        }
 
+        if (cnt == 0) return;
         cnt++;
         if (cnt > C.COMBO_CNT)
         {
+            OjamaSystem.I().setAtk();
             init();
         }
     }

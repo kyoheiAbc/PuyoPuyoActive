@@ -28,6 +28,9 @@ public class Main : MonoBehaviour
         inputController.init();
         puyoManager.init();
         Field.I().init();
+        ComboManager.I().init();
+        Opponent.I().init();
+        OjamaSystem.I().init();
 
         cnt = 0;
     }
@@ -104,9 +107,9 @@ public class Main : MonoBehaviour
 
         ComboManager.I().update();
 
-    // Opponent.I().update();
+        Opponent.I().update();
 
-    // OjamaSystem.I().update();
+        OjamaSystem.I().update();
 
 
     render:
@@ -120,7 +123,7 @@ public class Main : MonoBehaviour
 
 public static class C
 {
-    // public static readonly int OPPONENT_SPEED = 30;
+    public static readonly int OPPONENT_SPEED = 10;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
     public static readonly int REMOVE_NUMBER = 4;
