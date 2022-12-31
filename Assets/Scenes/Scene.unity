@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 1015006967}
   - component: {fileID: 1015006966}
   m_Layer: 0
-  m_Name: Ojama
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

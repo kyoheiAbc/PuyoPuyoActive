@@ -5,16 +5,11 @@ using UnityEngine.AddressableAssets;
 
 public class Main : MonoBehaviour
 {
-    InputController inputController;
-    PuyoManager puyoManager;
     int cnt;
 
     void Start()
     {
         Application.targetFrameRate = 30;
-
-        inputController = InputController.I();
-        puyoManager = PuyoManager.I();
     }
 
     public void init()
@@ -25,12 +20,12 @@ public class Main : MonoBehaviour
             Addressables.ReleaseInstance(gameObjects[i]);
         }
 
-        inputController.init();
-        puyoManager.init();
-        Field.I().init();
         ComboManager.I().init();
+        Field.I().init();
+        InputController.I().init();
         Opponent.I().init();
-        OjamaSystem.I().init();
+        PuyoManager.I().init();
+        ScoreSystem.I().init();
 
         cnt = 0;
     }
@@ -49,24 +44,24 @@ public class Main : MonoBehaviour
             goto render;
         }
 
-        PuyoPuyo puyoPuyo = puyoManager.getPuyoPuyo();
+        PuyoPuyo puyoPuyo = PuyoManager.I().getPuyoPuyo();
         if (puyoPuyo == null)
         {
-            puyoManager.nextPuyoPuyo();
-            List<Puyo> puyoList = puyoManager.getList();
-            for (int i = 0; i < puyoList.Count; i++)
-            {
-                if (!puyoList[i].canPut())
-                {
-                    cnt++;
-                    goto render;
-                }
-            }
-            puyoPuyo = puyoManager.getPuyoPuyo();
-            inputController.init();
+            PuyoManager.I().nextPuyoPuyo();
+            // List<Puyo> puyoList = PuyoManager.I().getList();
+            // for (int i = 0; i < puyoList.Count; i++)
+            // {
+            //     if (!puyoList[i].canPut())
+            //     {
+            //         cnt++;
+            //         goto render;
+            //     }
+            // }
+            puyoPuyo = PuyoManager.I().getPuyoPuyo();
+            InputController.I().init();
         }
 
-        switch (inputController.update())
+        switch (InputController.I().update())
         {
             case 4:
                 if (puyoPuyo.move(new Vector2(-1, 0)) != new Vector2(0, 0))
@@ -103,17 +98,17 @@ public class Main : MonoBehaviour
                 break;
         }
 
-        puyoManager.update();
+        PuyoManager.I().update();
 
         ComboManager.I().update();
 
         Opponent.I().update();
 
-        OjamaSystem.I().update();
+        ScoreSystem.I().update();
 
 
     render:
-        puyoManager.render();
+        PuyoManager.I().render();
 
         // int nowTime = DateTime.Now.Millisecond;
         // if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
@@ -123,7 +118,10 @@ public class Main : MonoBehaviour
 
 public static class C
 {
+    public static readonly int OPPONENT_HP = 300;
+    public static readonly int[] OPPONENT_ATTACK = new int[3] { 1, 3, 3 };
     public static readonly int OPPONENT_SPEED = 10;
+    public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
     public static readonly int REMOVE_NUMBER = 4;

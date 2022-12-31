@@ -27,12 +27,17 @@ public class ComboManager
     }
     public void setCombo()
     {
+        // for ScoreSystem
         if (tmp == 0) return;
-        OjamaSystem.I().incAtkTmp(C.COMBO_TO_OJAMA(combo));
 
         combo += tmp;
+        ScoreSystem.I().incTmp(0, C.COMBO_TO_OJAMA(combo));
         tmp = 0;
         text.text = combo + " combo";
+    }
+    public int getCombo()
+    {
+        return combo;
     }
     public void startCnt()
     {
@@ -42,16 +47,19 @@ public class ComboManager
     }
     public void update()
     {
-        if (combo == 0)
-        {
-            OjamaSystem.I().fixDmg();
-        }
 
         if (cnt == 0) return;
         cnt++;
         if (cnt > C.COMBO_CNT)
         {
-            OjamaSystem.I().setAtk();
+            if (Opponent.I().getCombo() == 0)
+            {
+                Opponent.I().setAtk(combo);
+                Opponent.I().incCombo();
+            }
+            else Opponent.I().setAtk(Opponent.I().getAtk() + combo);
+
+            ScoreSystem.I().setScore(0);
             init();
         }
     }

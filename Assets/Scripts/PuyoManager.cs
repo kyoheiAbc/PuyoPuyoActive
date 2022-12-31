@@ -82,6 +82,8 @@ public class PuyoManager
                 n++;
             }
         }
+        Debug.Log("new ojm: " + n);
+
     }
 
     public void update()
