@@ -9,14 +9,30 @@ public class Opponent
     int cnt;
     int atk;
     readonly int energyMax;
-    TextMeshPro debugE;
-    TextMeshPro debugH;
+    Gauge hpGauge;
+    Gauge energyGauge;
+    PopUp hp_;
+    Transform icon;
+    int iconCnt;
+    GameObject dmg;
+    int dmgCnt;
+
+
 
     private Opponent()
     {
         energyMax = C.OPPONENT_ATTACK[C.OPPONENT_ATTACK.Length - 1] * 1000;
-        debugH = GameObject.Find("OpponentH").GetComponent<TextMeshPro>();
-        debugE = GameObject.Find("OpponentE").GetComponent<TextMeshPro>();
+
+        hpGauge = new Gauge(C.OPPONENT_HP, GameObject.Find("Opponent").transform.Find("HpGauge").gameObject);
+        energyGauge = new Gauge(energyMax, GameObject.Find("Opponent").transform.Find("EnergyGauge").gameObject);
+
+        hp_ = new PopUp(GameObject.Find("Hp_").GetComponent<TextMeshPro>());
+
+        icon = GameObject.Find("Opponent").transform.Find("Icon").transform;
+
+        dmg = GameObject.Find("Opponent").transform.Find("Damage").gameObject;
+
+
         init();
     }
     public void init()
@@ -25,6 +41,13 @@ public class Opponent
         energy = 0;
         combo = 0;
         cnt = 0;
+        hpGauge.init();
+        energyGauge.init();
+        hp_.init();
+
+        iconCnt = 0;
+        dmgCnt = 0;
+        dmg.SetActive(false);
 
         resetAtk();
 
@@ -44,9 +67,14 @@ public class Opponent
     public void decHp(int h)
     {
         hp -= h;
+
+        hp_.set(-h);
+
+
         if (hp < 0) hp = 0;
 
-        Debug.Log("dec hp: " + h);
+        hpGauge.setPoint(hp);
+
 
     }
     public int getCombo()
@@ -63,11 +91,9 @@ public class Opponent
     }
     public void incCombo()
     {
-        Debug.Log("incCombo");
 
         if (energy < 1000)
         {
-            Debug.Log("incCombo cancel");
 
             combo = 0;
             return;
@@ -75,13 +101,48 @@ public class Opponent
 
         combo++;
         energy -= 1000;
-        ScoreSystem.I().incTmp(1, C.COMBO_TO_OJAMA(combo));
-        Debug.Log("combo: " + combo);
 
+        ScoreSystem.I().incTmp(1, C.COMBO_TO_OJAMA(combo));
+
+        if (iconCnt == 0) iconCnt = 1;
+
+
+    }
+
+    public void setDmgEffect()
+    {
+        dmgCnt = 1;
     }
 
     public void update()
     {
+
+        if (dmgCnt != 0)
+        {
+            if (dmgCnt == 1) dmg.SetActive(true);
+            dmgCnt++;
+            if (dmgCnt == 30)
+            {
+                dmgCnt = 0;
+                dmg.SetActive(false);
+            }
+        }
+
+        if (iconCnt != 0)
+        {
+            iconCnt++;
+            icon.localPosition = new Vector2(-C.QUADRATIC((float)iconCnt / C.EFFECT_ICON_CNT, C.EFFECT_ICON), 0);
+            if (iconCnt == C.EFFECT_ICON_CNT) iconCnt = 0;
+        }
+
+
+
+        hp_.update();
+
+
+        energyGauge.setPoint(energy);
+
+
         if (combo == 0 && energy / 1000 >= atk)
         {
             float tmp = ((float)energyMax - (float)energy) / (float)C.OPPONENT_SPEED;
@@ -126,8 +187,6 @@ public class Opponent
 
 
 
-        debugE.text = energy.ToString();
-        debugH.text = hp.ToString();
     }
 
 

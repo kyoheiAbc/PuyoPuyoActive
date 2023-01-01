@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Sources/puyo.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: c75569cfa7447414682772fbbc2c021d
+    m_Address: Assets/Sources/Explosion.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 188802c07091644c282cf61270f50953, type: 2}
   m_SchemaSet:

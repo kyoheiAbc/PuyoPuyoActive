@@ -18,6 +18,11 @@ public class PuyoPuyo
         cnt = 0;
     }
 
+    public Puyo[] getPuyos()
+    {
+        return puyos;
+    }
+
     public void setCnt(int c)
     {
         cnt = c;

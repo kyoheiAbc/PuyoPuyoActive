@@ -40,6 +40,8 @@ public class Puyo
                 PuyoManager.I().getList().Remove(this);
                 Addressables.ReleaseInstance(gO);
                 ComboManager.I().setCombo();
+                ComboManager.I().setPos(pos);
+                Field.I().setExp(color, pos);
             }
             cnt++;
             return true;
@@ -166,8 +168,8 @@ public class Puyo
             return;
         }
         float x = (float)cnt / (float)C.EFFECT_FIX_CNT;
-        t.position = new Vector2(pos.x, pos.y - quadratic(x, 0.1f));
-        t.localScale = new Vector2(1 + quadratic(x, 0.1f), 1);
+        t.position = new Vector2(pos.x, pos.y - C.QUADRATIC(x, 0.1f));
+        t.localScale = new Vector2(1 + C.QUADRATIC(x, 0.1f), 1);
     }
 
     public void rm()
@@ -178,9 +180,6 @@ public class Puyo
     }
 
 
-    private static float quadratic(float x, float max)
-    {
-        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
-    }
+
 
 }

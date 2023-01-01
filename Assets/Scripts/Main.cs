@@ -6,10 +6,16 @@ using UnityEngine.AddressableAssets;
 public class Main : MonoBehaviour
 {
     int cnt;
-
     void Start()
     {
         Application.targetFrameRate = 30;
+
+        // Camera
+        if ((float)Screen.height / (float)Screen.width >= (2050f / 1050f))
+        {
+            Camera.main.orthographicSize =
+                Camera.main.orthographicSize * (float)Screen.height / (float)Screen.width / (2050f / 1050f);
+        }
     }
 
     public void init()
@@ -48,16 +54,17 @@ public class Main : MonoBehaviour
         if (puyoPuyo == null)
         {
             PuyoManager.I().nextPuyoPuyo();
-            // List<Puyo> puyoList = PuyoManager.I().getList();
-            // for (int i = 0; i < puyoList.Count; i++)
-            // {
-            //     if (!puyoList[i].canPut())
-            //     {
-            //         cnt++;
-            //         goto render;
-            //     }
-            // }
             puyoPuyo = PuyoManager.I().getPuyoPuyo();
+
+            Puyo[] puyos = puyoPuyo.getPuyos();
+            for (int i = 0; i < puyos.Length; i++)
+            {
+                if (!puyos[i].canPut())
+                {
+                    cnt++;
+                    goto render;
+                }
+            }
             InputController.I().init();
         }
 
@@ -106,6 +113,8 @@ public class Main : MonoBehaviour
 
         ScoreSystem.I().update();
 
+        Field.I().update();
+
 
     render:
         PuyoManager.I().render();
@@ -119,8 +128,8 @@ public class Main : MonoBehaviour
 public static class C
 {
     public static readonly int OPPONENT_HP = 300;
-    public static readonly int[] OPPONENT_ATTACK = new int[3] { 1, 3, 3 };
-    public static readonly int OPPONENT_SPEED = 10;
+    public static readonly int[] OPPONENT_ATTACK = new int[4] { 1, 2, 3, 3 };
+    public static readonly int OPPONENT_SPEED = 30;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
@@ -129,6 +138,9 @@ public static class C
     public static readonly int FIX_CNT = 30;
     public static readonly int EFFECT_REMOVE_CNT = 20;
     public static readonly int EFFECT_FIX_CNT = 10;
+    public static readonly float EFFECT_ICON = 2.5f;
+    public static readonly int EFFECT_ICON_CNT = 15;
+
     public static readonly Color[] PUYO_COLORS = new Color[6]{
         Color.HSVToRGB(0.0f, 0.5f, 1.0f),
         Color.HSVToRGB(0.2f, 0.5f, 1.0f),
@@ -139,6 +151,10 @@ public static class C
     };
     public static readonly GameObject PUYO_GAME_OBJECT = Addressables.LoadAssetAsync<GameObject>("Assets/Sources/puyo.prefab").WaitForCompletion();
 
+    public static float QUADRATIC(float x, float max)
+    {
+        return -4f * max * (x - 0.5f) * (x - 0.5f) + max;
+    }
     public static int COMBO_TO_OJAMA(int c)
     {
         if (c < 4) return c;
