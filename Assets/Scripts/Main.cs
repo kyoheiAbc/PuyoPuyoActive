@@ -68,6 +68,8 @@ public class Main : MonoBehaviour
             InputController.I().init();
         }
 
+        if (puyoPuyo != null)
+        {
         switch (InputController.I().update())
         {
             case 4:
@@ -103,6 +105,7 @@ public class Main : MonoBehaviour
                 puyoPuyo.rotate(1);
                 puyoPuyo.setCnt(0);
                 break;
+            }
         }
 
         PuyoManager.I().update();
