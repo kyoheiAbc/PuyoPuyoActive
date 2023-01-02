@@ -102,10 +102,13 @@ public class PuyoManager
 
     public void update()
     {
-        if (!puyoPuyos[0].update())
+        if (puyoPuyos[0] != null)
         {
-            puyoPuyos[0] = null;
-            puyoList.Sort(sortPosY);
+            if (!puyoPuyos[0].update())
+            {
+                puyoPuyos[0] = null;
+                puyoList.Sort(sortPosY);
+            }
         }
 
 

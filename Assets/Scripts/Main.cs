@@ -128,8 +128,8 @@ public class Main : MonoBehaviour
 public static class C
 {
     public static readonly int OPPONENT_HP = 300;
-    public static readonly int[] OPPONENT_ATTACK = new int[4] { 1, 2, 3, 3 };
-    public static readonly int OPPONENT_SPEED = 30;
+    public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 4 };
+    public static readonly int OPPONENT_SPEED = 50;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;

@@ -11,7 +11,6 @@ public class ScoreSystem
     PopUp tmp_;
     PopUp tmpO_;
 
-    PopUp ojm_;
     TextMeshPro scoreText;
 
 
@@ -24,7 +23,6 @@ public class ScoreSystem
 
         tmp_ = new PopUp(GameObject.Find("Tmp_").GetComponent<TextMeshPro>());
         tmpO_ = new PopUp(GameObject.Find("TmpO_").GetComponent<TextMeshPro>());
-        ojm_ = new PopUp(GameObject.Find("Ojm_").GetComponent<TextMeshPro>());
 
         scoreText = GameObject.Find("ScoreT").transform.GetComponent<TextMeshPro>();
         scoreText.gameObject.GetComponent<MeshRenderer>().sortingOrder = 99;
@@ -68,7 +66,6 @@ public class ScoreSystem
     {
         tmp_.update();
         tmpO_.update();
-        ojm_.update();
 
 
         if (score[2] > 0)
@@ -87,7 +84,6 @@ public class ScoreSystem
                 PuyoManager.I().newOjama(-score[2]);
                 ComboManager.I().setDmgEffect();
 
-                ojm_.set(score[2]);
                 score[2] = 0;
             }
         }
