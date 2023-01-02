@@ -74,6 +74,11 @@ public class Puyo
         return true;
     }
 
+    public int getCnt()
+    {
+        return cnt;
+    }
+
     public void setPos(Vector2 p)
     {
         pos = p;

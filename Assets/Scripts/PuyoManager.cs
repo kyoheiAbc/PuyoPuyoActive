@@ -50,7 +50,7 @@ public class PuyoManager
         puyoPuyos[2] = newPuyoPuyo();
 
         if (puyoPuyos[1] == null) return;
-        puyoPuyos[1].setPos(new Vector2(8.5f, 11.5f));
+        puyoPuyos[1].setPos(new Vector2(8.5f, 11f));
 
         if (puyoPuyos[0] == null) return;
         puyoPuyos[0].setPos(new Vector2(3.5f, 12.5f));
@@ -67,23 +67,37 @@ public class PuyoManager
         return puyoPuyo;
     }
 
-    public void newOjama(int num)
+    public int newOjama(int num)
     {
         int[] x_ = new int[6] { 1, 2, 3, 4, 5, 6 };
         C.SHUFFLE(ref x_);
 
         int n = 0;
+        if (num > 3) num = 3;
         for (int y = 0; y < 12; y++)
         {
             for (int x = 0; x < 6; x++)
             {
-                if (n >= num) return;
+                if (n >= num) break;
                 puyoList.Add(new Puyo(5, new Vector2(x_[x] + 0.5f, 15.5f + y)));
                 n++;
             }
         }
-        Debug.Log("new ojm: " + n);
+        return n;
+    }
 
+    public bool ojmDropDone()
+    {
+        for (int i = 0; i < puyoList.Count; i++)
+        {
+            if (puyoList[i].getParent() != null) continue;
+            if (puyoList[i].getPos().x == 0.5f) continue;
+            if (puyoList[i].getPos().x == 7.5f) continue;
+            if (puyoList[i].getPos().y == 0.5f) continue;
+            if (puyoList[i].getColor() != 5) continue;
+            if (puyoList[i].getCnt() < C.EFFECT_FIX_CNT) return false;
+        }
+        return true;
     }
 
     public void update()
