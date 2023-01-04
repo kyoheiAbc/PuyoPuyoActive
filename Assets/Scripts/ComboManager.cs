@@ -107,6 +107,8 @@ public class ComboManager
             }
             else Opponent.I().setAtk(Opponent.I().getAtk() + combo);
 
+            ScoreSystem.I().setOjmCtl(1);
+
             ScoreSystem.I().setScore(0);
             init();
         }

@@ -53,58 +53,73 @@ public class Main : MonoBehaviour
         PuyoPuyo puyoPuyo = PuyoManager.I().getPuyoPuyo();
         if (puyoPuyo == null)
         {
-            PuyoManager.I().nextPuyoPuyo();
-            puyoPuyo = PuyoManager.I().getPuyoPuyo();
-
-            Puyo[] puyos = puyoPuyo.getPuyos();
-            for (int i = 0; i < puyos.Length; i++)
+            if (ComboManager.I().getCombo() == 0 && !PuyoManager.I().ojmDropDone())
             {
-                if (!puyos[i].canPut())
-                {
-                    cnt++;
-                    goto render;
-                }
+                goto ctl;
             }
-            InputController.I().init();
+
+            if (ScoreSystem.I().getOjmCtl() == 0 ||
+                ScoreSystem.I().getOjmCtl() == 10)
+            {
+                if (ScoreSystem.I().getOjmCtl() == 10)
+                {
+                    ScoreSystem.I().setOjmCtl(1);
+                }
+
+                PuyoManager.I().nextPuyoPuyo();
+                puyoPuyo = PuyoManager.I().getPuyoPuyo();
+
+                Puyo[] puyos = puyoPuyo.getPuyos();
+                for (int i = 0; i < puyos.Length; i++)
+                {
+                    if (!puyos[i].canPut())
+                    {
+                        cnt++;
+                        goto render;
+                    }
+                }
+                InputController.I().init();
+            }
         }
 
+    ctl:
         if (puyoPuyo != null)
         {
-        switch (InputController.I().update())
-        {
-            case 4:
-                if (puyoPuyo.move(new Vector2(-1, 0)) != new Vector2(0, 0))
-                {
-                    puyoPuyo.setCnt(0);
-                }
-                break;
-            case 6:
-                if (puyoPuyo.move(new Vector2(1, 0)) != new Vector2(0, 0))
-                {
-                    puyoPuyo.setCnt(0);
-                }
-                break;
-            case 2:
-                if (puyoPuyo.move(-new Vector2(0, 1)) != new Vector2(0, 0))
-                {
-                    puyoPuyo.setCnt(0);
-                }
-                else
-                {
+            switch (InputController.I().update())
+            {
+                case 4:
+                    if (puyoPuyo.move(new Vector2(-1, 0)) != new Vector2(0, 0))
+                    {
+                        puyoPuyo.setCnt(0);
+                    }
+                    break;
+                case 6:
+                    if (puyoPuyo.move(new Vector2(1, 0)) != new Vector2(0, 0))
+                    {
+                        puyoPuyo.setCnt(0);
+                    }
+                    break;
+                case 2:
+                    if (puyoPuyo.move(-new Vector2(0, 1)) != new Vector2(0, 0))
+                    {
+                        puyoPuyo.setCnt(0);
+                    }
+                    else
+                    {
+                        puyoPuyo.setCnt(C.FIX_CNT);
+                    }
+                    break;
+                case 8:
+                    while (true)
+                    {
+                        if (puyoPuyo.move(-new Vector2(0, 1)) == new Vector2(0, 0)) break;
+                    }
                     puyoPuyo.setCnt(C.FIX_CNT);
-                }
-                break;
-            case 8:
-                while (true)
-                {
-                    if (puyoPuyo.move(-new Vector2(0, 1)) == new Vector2(0, 0)) break;
-                }
-                puyoPuyo.setCnt(C.FIX_CNT);
-                break;
-            case 16:
-                puyoPuyo.rotate(1);
-                puyoPuyo.setCnt(0);
-                break;
+                    break;
+                case 16:
+                    puyoPuyo.rotate(1);
+                    puyoPuyo.setCnt(0);
+                    break;
             }
         }
 
@@ -131,8 +146,8 @@ public class Main : MonoBehaviour
 public static class C
 {
     public static readonly int OPPONENT_HP = 300;
-    public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 4 };
-    public static readonly int OPPONENT_SPEED = 50;
+    public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 3 };
+    public static readonly int OPPONENT_SPEED = 30;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
@@ -140,7 +155,7 @@ public static class C
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
     public static readonly int FIX_CNT = 30;
     public static readonly int EFFECT_REMOVE_CNT = 20;
-    public static readonly int EFFECT_FIX_CNT = 10;
+    public static readonly int EFFECT_FIX_CNT = 20;
     public static readonly float EFFECT_ICON = 2.5f;
     public static readonly int EFFECT_ICON_CNT = 15;
 

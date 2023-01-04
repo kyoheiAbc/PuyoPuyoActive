@@ -108,6 +108,10 @@ public class PuyoManager
             {
                 puyoPuyos[0] = null;
                 puyoList.Sort(sortPosY);
+                if (ScoreSystem.I().getOjmCtl() == 1)
+                {
+                    ScoreSystem.I().setOjmCtl(2);
+                }
             }
         }
 
@@ -136,12 +140,26 @@ public class PuyoManager
         {
             if (Field.I().tryRm())
             {
+                if (ScoreSystem.I().getOjmCtl() == 2)
+                {
+                    ScoreSystem.I().setOjmCtl(10);
+                }
+
                 Field.I().init();
             }
             else
             {
+                if (ScoreSystem.I().getOjmCtl() == 2)
+                {
+                    ScoreSystem.I().setOjmCtl(3);
+                }
                 ComboManager.I().startCnt();
             }
+        }
+
+        if (ComboManager.I().getCombo() != 0)
+        {
+            ScoreSystem.I().setOjmCtl(10);
         }
 
     }
