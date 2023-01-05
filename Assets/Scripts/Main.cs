@@ -49,35 +49,21 @@ public class Main : MonoBehaviour
         PuyoPuyo puyoPuyo = PuyoManager.I().getPuyoPuyo();
         if (puyoPuyo == null)
         {
-            if (!PuyoManager.I().ojmDropDone()) goto update;
-            if (ComboManager.I().getCombo() > 0) goto next;
-
-            if (ScoreSystem.I().getScore() < 0)
+            bool ret = true;
+            if (ComboManager.I().getCombo() > 0) ret = nextPuyoPuyo(ref puyoPuyo);
+            else
             {
-                if (PuyoManager.I().next)
+                if (!PuyoManager.I().ojmDropDone()) { }
+                else if (ScoreSystem.I().getScore() >= 0 || PuyoManager.I().getNextChance())
                 {
-                    PuyoManager.I().next = false;
-                    goto next;
-                }
-                goto update;
-            }
-
-
-
-        next:
-            PuyoManager.I().nextPuyoPuyo();
-            puyoPuyo = PuyoManager.I().getPuyoPuyo();
-
-            Puyo[] puyos = puyoPuyo.getPuyos();
-            for (int i = 0; i < puyos.Length; i++)
-            {
-                if (!puyos[i].canPut())
-                {
-                    cnt++;
-                    return;
+                    ret = nextPuyoPuyo(ref puyoPuyo);
                 }
             }
-            InputController.I().init();
+            if (!ret)
+            {
+                cnt = 1;
+                return;
+            }
         }
 
         if (puyoPuyo != null)
@@ -120,7 +106,6 @@ public class Main : MonoBehaviour
             }
         }
 
-    update:
         PuyoManager.I().update();
 
         ComboManager.I().update();
@@ -136,6 +121,19 @@ public class Main : MonoBehaviour
         int nowTime = DateTime.Now.Millisecond;
         if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
     }
+
+    private bool nextPuyoPuyo(ref PuyoPuyo puyoPuyo)
+    {
+        PuyoManager.I().nextPuyoPuyo();
+        puyoPuyo = PuyoManager.I().getPuyoPuyo();
+        Puyo[] puyos = puyoPuyo.getPuyos();
+        for (int i = 0; i < puyos.Length; i++)
+        {
+            if (!puyos[i].canPut()) return false;
+        }
+        InputController.I().init();
+        return true;
+    }
 }
 
 
@@ -143,7 +141,7 @@ public static class C
 {
     public static readonly int OPPONENT_HP = 300;
     public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 3 };
-    public static readonly int OPPONENT_SPEED = 70;
+    public static readonly int OPPONENT_SPEED = 50;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;

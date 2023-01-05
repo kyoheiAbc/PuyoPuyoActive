@@ -96,12 +96,12 @@ public class ScoreSystem
                             ComboManager.I().setDmgEffect();
                             if (score[2] <= 0)
                             {
-                                PuyoManager.I().next = true;
+                                PuyoManager.I().setNextChance(true);
                             }
                         }
                         else
                         {
-                            PuyoManager.I().next = true;
+                            PuyoManager.I().setNextChance(true);
                         }
                     }
                 }

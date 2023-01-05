@@ -6,7 +6,7 @@ public class PuyoManager
     PuyoPuyo[] puyoPuyos;
     List<Puyo> puyoList;
     ColorBag colorBag;
-    public bool next;
+    bool nextChance;
 
 
     private PuyoManager()
@@ -37,7 +37,7 @@ public class PuyoManager
 
         for (int n = 0; n < 3; n++) nextPuyoPuyo();
 
-        next = false;
+        nextChance = false;
 
     }
 
@@ -60,6 +60,16 @@ public class PuyoManager
         puyoPuyos[0].setPos(new Vector2(3.5f, 12.5f));
         puyoPuyos[0].render();
     }
+
+    public void setNextChance(bool n)
+    {
+        nextChance = n;
+    }
+    public bool getNextChance()
+    {
+        return nextChance;
+    }
+
 
     private PuyoPuyo newPuyoPuyo()
     {
@@ -125,7 +135,7 @@ public class PuyoManager
             if (!puyoPuyos[0].update())
             {
                 puyoPuyos[0] = null;
-                PuyoManager.I().next = false;
+                nextChance = false;
 
                 puyoList.Sort(sortPosY);
             }
