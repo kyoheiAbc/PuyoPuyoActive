@@ -6,6 +6,7 @@ public class PuyoManager
     PuyoPuyo[] puyoPuyos;
     List<Puyo> puyoList;
     ColorBag colorBag;
+    public bool next;
 
 
     private PuyoManager()
@@ -35,6 +36,8 @@ public class PuyoManager
         colorBag.init();
 
         for (int n = 0; n < 3; n++) nextPuyoPuyo();
+
+        next = false;
 
     }
 
@@ -95,6 +98,18 @@ public class PuyoManager
             if (puyoList[i].getPos().x == 7.5f) continue;
             if (puyoList[i].getPos().y == 0.5f) continue;
             if (puyoList[i].getColor() != 5) continue;
+            if (puyoList[i].getCnt() == 0) return false;
+        }
+        return true;
+    }
+    public bool updateDone()
+    {
+        for (int i = 0; i < puyoList.Count; i++)
+        {
+            if (puyoList[i].getParent() != null) continue;
+            if (puyoList[i].getPos().x == 0.5f) continue;
+            if (puyoList[i].getPos().x == 7.5f) continue;
+            if (puyoList[i].getPos().y == 0.5f) continue;
             if (puyoList[i].getCnt() < C.EFFECT_FIX_CNT) return false;
         }
         return true;
@@ -108,10 +123,6 @@ public class PuyoManager
             {
                 puyoPuyos[0] = null;
                 puyoList.Sort(sortPosY);
-                if (ScoreSystem.I().getOjmCtl() == 1)
-                {
-                    ScoreSystem.I().setOjmCtl(2);
-                }
             }
         }
 
@@ -140,26 +151,12 @@ public class PuyoManager
         {
             if (Field.I().tryRm())
             {
-                if (ScoreSystem.I().getOjmCtl() == 2)
-                {
-                    ScoreSystem.I().setOjmCtl(10);
-                }
-
                 Field.I().init();
             }
             else
             {
-                if (ScoreSystem.I().getOjmCtl() == 2)
-                {
-                    ScoreSystem.I().setOjmCtl(3);
-                }
                 ComboManager.I().startCnt();
             }
-        }
-
-        if (ComboManager.I().getCombo() != 0)
-        {
-            ScoreSystem.I().setOjmCtl(10);
         }
 
     }

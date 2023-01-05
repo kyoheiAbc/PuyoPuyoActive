@@ -13,7 +13,6 @@ public class ScoreSystem
 
     TextMeshPro scoreText;
 
-    int ojmCtl;
 
 
     private ScoreSystem()
@@ -34,7 +33,6 @@ public class ScoreSystem
     public void init()
     {
         score = new int[3] { 0, 0, 0 };
-        ojmCtl = 0;
     }
 
     public void incTmp(int index, int tmp)
@@ -64,14 +62,9 @@ public class ScoreSystem
         score[index] = 0;
     }
 
-    public int getOjmCtl()
+    public int getScore()
     {
-        return ojmCtl;
-    }
-
-    public void setOjmCtl(int c)
-    {
-        ojmCtl = c;
+        return score[2];
     }
 
     public void update()
@@ -93,19 +86,26 @@ public class ScoreSystem
         {
             if (ComboManager.I().getCombo() == 0)
             {
-                if (ojmCtl == 3)
+                if (PuyoManager.I().getPuyoPuyo() == null)
                 {
-                    score[2] += PuyoManager.I().newOjama(-score[2]);
-                    ComboManager.I().setDmgEffect();
-                    ScoreSystem.I().setOjmCtl(10);
+                    if (PuyoManager.I().updateDone())
+                    {
+                        if (ComboManager.I().getTmp() == 0)
+                        {
+                            score[2] += PuyoManager.I().newOjama(-score[2]);
+                            ComboManager.I().setDmgEffect();
+                            if (score[2] < 0)
+                            {
+                                PuyoManager.I().next = true;
+                            }
+                        }
+                        else
+                        {
+                            PuyoManager.I().next = true;
+                        }
+                    }
                 }
             }
-        }
-
-        if (score[2] >= 0)
-        {
-            ojmCtl = 0;
-
         }
 
         scoreText.text = (score[2] + score[0] - score[1]).ToString();

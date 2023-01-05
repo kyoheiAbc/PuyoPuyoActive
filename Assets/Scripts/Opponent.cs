@@ -179,10 +179,6 @@ public class Opponent
                     ScoreSystem.I().setScore(1);
                     resetAtk();
                     combo = 0;
-                    if (ScoreSystem.I().getOjmCtl() == 0)
-                    {
-                        ScoreSystem.I().setOjmCtl(1);
-                    }
                 }
                 else incCombo();
             }

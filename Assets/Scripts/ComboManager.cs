@@ -43,6 +43,10 @@ public class ComboManager
         tmp++;
         cnt = 0;
     }
+    public int getTmp()
+    {
+        return tmp;
+    }
     public void setPos(Vector2 p)
     {
         t.position = p;
@@ -106,8 +110,6 @@ public class ComboManager
                 Opponent.I().incCombo();
             }
             else Opponent.I().setAtk(Opponent.I().getAtk() + combo);
-
-            ScoreSystem.I().setOjmCtl(1);
 
             ScoreSystem.I().setScore(0);
             init();

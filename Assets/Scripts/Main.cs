@@ -53,36 +53,37 @@ public class Main : MonoBehaviour
         PuyoPuyo puyoPuyo = PuyoManager.I().getPuyoPuyo();
         if (puyoPuyo == null)
         {
-            if (ComboManager.I().getCombo() == 0 && !PuyoManager.I().ojmDropDone())
+            if (!PuyoManager.I().ojmDropDone()) goto update;
+            if (ComboManager.I().getCombo() > 0) goto next;
+
+            if (ScoreSystem.I().getScore() < 0)
             {
-                goto ctl;
+                if (PuyoManager.I().next)
+                {
+                    PuyoManager.I().next = false;
+                    goto next;
+                }
+                goto update;
             }
 
-            if (ScoreSystem.I().getOjmCtl() == 0 ||
-                ScoreSystem.I().getOjmCtl() == 10)
+
+
+        next:
+            PuyoManager.I().nextPuyoPuyo();
+            puyoPuyo = PuyoManager.I().getPuyoPuyo();
+
+            Puyo[] puyos = puyoPuyo.getPuyos();
+            for (int i = 0; i < puyos.Length; i++)
             {
-                if (ScoreSystem.I().getOjmCtl() == 10)
+                if (!puyos[i].canPut())
                 {
-                    ScoreSystem.I().setOjmCtl(1);
+                    cnt++;
+                    goto render;
                 }
-
-                PuyoManager.I().nextPuyoPuyo();
-                puyoPuyo = PuyoManager.I().getPuyoPuyo();
-
-                Puyo[] puyos = puyoPuyo.getPuyos();
-                for (int i = 0; i < puyos.Length; i++)
-                {
-                    if (!puyos[i].canPut())
-                    {
-                        cnt++;
-                        goto render;
-                    }
-                }
-                InputController.I().init();
             }
+            InputController.I().init();
         }
 
-    ctl:
         if (puyoPuyo != null)
         {
             switch (InputController.I().update())
@@ -123,6 +124,7 @@ public class Main : MonoBehaviour
             }
         }
 
+    update:
         PuyoManager.I().update();
 
         ComboManager.I().update();
@@ -147,7 +149,7 @@ public static class C
 {
     public static readonly int OPPONENT_HP = 300;
     public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 3 };
-    public static readonly int OPPONENT_SPEED = 30;
+    public static readonly int OPPONENT_SPEED = 50;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;
@@ -155,7 +157,7 @@ public static class C
     public static readonly Vector2 VEC_DROP = new Vector2(0, -0.03f);
     public static readonly int FIX_CNT = 30;
     public static readonly int EFFECT_REMOVE_CNT = 20;
-    public static readonly int EFFECT_FIX_CNT = 20;
+    public static readonly int EFFECT_FIX_CNT = 10;
     public static readonly float EFFECT_ICON = 2.5f;
     public static readonly int EFFECT_ICON_CNT = 15;
 
