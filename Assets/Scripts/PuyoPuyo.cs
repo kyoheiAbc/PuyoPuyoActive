@@ -83,6 +83,11 @@ public class PuyoPuyo
         }
     }
 
+    public void render()
+    {
+        for (int i = 0; i < 2; i++) puyos[i].render();
+    }
+
     public bool update()
     {
         if (move(C.VEC_DROP) == C.VEC_DROP)

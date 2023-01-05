@@ -94,7 +94,7 @@ public class ScoreSystem
                         {
                             score[2] += PuyoManager.I().newOjama(-score[2]);
                             ComboManager.I().setDmgEffect();
-                            if (score[2] < 0)
+                            if (score[2] <= 0)
                             {
                                 PuyoManager.I().next = true;
                             }
@@ -107,6 +107,7 @@ public class ScoreSystem
                 }
             }
         }
+
 
         scoreText.text = (score[2] + score[0] - score[1]).ToString();
 

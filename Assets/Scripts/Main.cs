@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 
 public class Main : MonoBehaviour
@@ -38,16 +37,13 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        // int oldTime = DateTime.Now.Millisecond;
+        int oldTime = DateTime.Now.Millisecond;
 
         if (cnt > 0)
         {
             cnt++;
-            if (cnt > 90)
-            {
-                init();
-            }
-            goto render;
+            if (cnt > 90) init();
+            return;
         }
 
         PuyoPuyo puyoPuyo = PuyoManager.I().getPuyoPuyo();
@@ -78,7 +74,7 @@ public class Main : MonoBehaviour
                 if (!puyos[i].canPut())
                 {
                     cnt++;
-                    goto render;
+                    return;
                 }
             }
             InputController.I().init();
@@ -135,12 +131,10 @@ public class Main : MonoBehaviour
 
         Field.I().update();
 
-
-    render:
         PuyoManager.I().render();
 
-        // int nowTime = DateTime.Now.Millisecond;
-        // if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
+        int nowTime = DateTime.Now.Millisecond;
+        if (nowTime - oldTime > 0) Debug.Log(nowTime - oldTime);
     }
 }
 
@@ -149,7 +143,7 @@ public static class C
 {
     public static readonly int OPPONENT_HP = 300;
     public static readonly int[] OPPONENT_ATTACK = new int[2] { 3, 3 };
-    public static readonly int OPPONENT_SPEED = 50;
+    public static readonly int OPPONENT_SPEED = 70;
     public static readonly int OPPONENT_ACT_RATE = 30;
     public static readonly int COMBO_CNT = 30;
     public static readonly int COLOR_NUMBER = 4;

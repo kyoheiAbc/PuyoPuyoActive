@@ -54,9 +54,11 @@ public class PuyoManager
 
         if (puyoPuyos[1] == null) return;
         puyoPuyos[1].setPos(new Vector2(8.5f, 11f));
+        puyoPuyos[1].render();
 
         if (puyoPuyos[0] == null) return;
         puyoPuyos[0].setPos(new Vector2(3.5f, 12.5f));
+        puyoPuyos[0].render();
     }
 
     private PuyoPuyo newPuyoPuyo()
@@ -66,6 +68,7 @@ public class PuyoManager
 
         PuyoPuyo puyoPuyo = new PuyoPuyo(puyoList[puyoList.Count - 2], puyoList[puyoList.Count - 1]);
         puyoPuyo.setPos(new Vector2(8.5f, 8.5f));
+        puyoPuyo.render();
 
         return puyoPuyo;
     }
@@ -122,6 +125,8 @@ public class PuyoManager
             if (!puyoPuyos[0].update())
             {
                 puyoPuyos[0] = null;
+                PuyoManager.I().next = false;
+
                 puyoList.Sort(sortPosY);
             }
         }
